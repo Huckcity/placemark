@@ -1,0 +1,43 @@
+<!--- Login Form --->
+<div id="login" class="">
+  <h1 class="title is-3">Login</h1>
+  <form action="/login" method="POST">
+    <div class="field">
+      <label class="label">Name</label>
+      <p class="control has-icons-left">
+        <input class="input" type="text" placeholder="Email" name="username">
+        <span class="icon is-small is-left">
+          <i class="fas fa-envelope"></i>
+        </span>
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Password</label>
+      <p class="control has-icons-left">
+        <input class="input" type="password" placeholder="Password" name="password">
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <div class="field">
+          <p class="control">
+            <button class="button is-success">
+              Login
+            </button>
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="field">
+          <p class="control">
+            <input type="checkbox" name="remember" id="remember">
+            <label for="remember">Remember me?</label>
+          </p>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
