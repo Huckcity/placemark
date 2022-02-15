@@ -1,0 +1,35 @@
+{
+  "name": "placemark",
+  "version": "1.0.0",
+  "description": "Placemark POI Service v1",
+  "main": "server.js",
+  "scripts": {
+    "css-build": "node-sass --omit-source-map-url sass/style.scss public/css/style.css",
+    "css-watch": "npm run css-build -- --watch",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huckcity/placemark.git"
+  },
+  "author": "Adam Gibbons",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/huckcity/placemark/issues"
+  },
+  "homepage": "https://github.com/huckcity/placemark#readme",
+  "dependencies": {
+    "@hapi/basic": "^6.0.0",
+    "@hapi/cookie": "^11.0.2",
+    "@hapi/hapi": "^20.2.1",
+    "@hapi/inert": "^6.0.5",
+    "@hapi/vision": "^6.1.0",
+    "dotenv": "^16.0.0",
+    "handlebars": "^4.7.7"
+  },
+  "devDependencies": {
+    "bulma": "^0.9.3",
+    "node-sass": "^7.0.1",
+    "nodemon": "^2.0.15"
+  }
+}
