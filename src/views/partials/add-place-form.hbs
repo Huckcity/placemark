@@ -1,0 +1,18 @@
+
+<form action="/dashboard/places/{{action}}" method="POST">
+  <label class="label">Place Name</label>
+  <div class="control">
+    <input class="input" type="text" placeholder="Place name" name="name"
+    {{#if place}}
+      value="{{place.name}}"
+    {{/if}}
+    >
+    {{#if place}}
+      <input type="hidden" name="id" value="{{place.id}}">
+    {{/if}}
+  </div>
+  <p class="help">This is a help text</p>
+  <div class="control">
+    <button class="button is-primary">Submit</button>
+  </div>
+</form>

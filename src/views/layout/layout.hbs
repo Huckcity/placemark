@@ -13,6 +13,9 @@
 </head>
 <body>
   <div class="container">
+    {{#if error}}
+      {{> error}}
+    {{/if}}
     {{{ content }}}
   </div>
 </body>

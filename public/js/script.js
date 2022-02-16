@@ -19,3 +19,8 @@ function switchActiveTab(e) {
   activeTab[0].classList.remove("is-active");
   e.classList.add("is-active");
 }
+
+function clearNotification() {
+  const notification = document.getElementById("notification");
+  notification.style.display = "none";
+}

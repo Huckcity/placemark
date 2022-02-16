@@ -3,9 +3,12 @@
     General
   </p>
   <ul class="menu-list">
-    <li><a>Dashboard</a></li>
-    <li><a>Customers</a></li>
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li><a href="/dashboard/places">My Places</a></li>
+    <li><a href="/dashboard/places/new">Add Place</a></li>
   </ul>
+
+  {{#if user.isAdmin }}
   <p class="menu-label">
     Administration
   </p>
@@ -19,10 +22,8 @@
         <li><a>Add a member</a></li>
       </ul>
     </li>
-    <li><a>Invitations</a></li>
-    <li><a>Cloud Storage Environment Settings</a></li>
-    <li><a>Authentication</a></li>
   </ul>
+  {{/if}}
   <p class="menu-label">
     Transactions
   </p>
