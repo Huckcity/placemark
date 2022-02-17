@@ -13,7 +13,6 @@ const UserJsonStore = {
   getById: async (id) => {
     await db.read();
     const user = db.data.users.find((u) => u.id === id);
-    console.log(`user: ${user}`);
     return user ? user : null;
   },
 
@@ -25,6 +24,9 @@ const UserJsonStore = {
 
   create: async (user) => {
     await db.read();
+    if (!user.username || !user.password || !user.email) {
+      return null;
+    }
     const newUser = {
       id: v4(),
       ...user,
@@ -44,9 +46,11 @@ const UserJsonStore = {
 
   delete: async (id) => {
     await db.read();
+    const user = db.data.users.find((u) => u.id === id);
     const index = db.data.users.findIndex((u) => u.id === id);
     db.data.users.splice(index, 1);
     await db.write();
+    return user;
   },
 
   deleteAll: async () => {

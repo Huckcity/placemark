@@ -1,12 +1,3 @@
 {
-  "places": [
-    {
-      "id": "1",
-      "name": "Cavan"
-    },
-    {
-      "id": "2",
-      "name": "Turkey"
-    }
-  ]
+  "places": []
 }

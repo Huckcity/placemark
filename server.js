@@ -15,13 +15,14 @@ import apiRoutes from "./src/routes/apiRoutes.js";
 
 import db from "./src/models/db.js";
 
-db.init();
+db.init(process.env.ENVIRONMENT);
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const init = async () => {
   const server = Hapi.server({
     port: process.env.PORT,
+    routes: { cors: true },
   });
 
   await server.register(Vision);

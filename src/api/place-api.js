@@ -50,6 +50,18 @@ const placeApi = {
     },
   },
 
+  deleteAll: {
+    auth: false,
+    handler: async (request, h) => {
+      try {
+        const places = await db.placeStore.deleteAll();
+        return h.response(places).code(204);
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+  },
+
   update: {
     auth: false,
     handler: async (request, h) => {

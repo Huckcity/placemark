@@ -1,7 +1,8 @@
+import { v4 } from "uuid";
 import { Low, JSONFile } from "lowdb";
 
 const db = new Low(new JSONFile("./src/models/json/places.json"));
-db ||= { places: [] };
+db.data ||= { places: [] };
 
 const PlacesJsonStore = {
   getAll: async () => {
@@ -18,21 +19,21 @@ const PlacesJsonStore = {
 
   create: async (place) => {
     await db.read();
-    const newPlace = {
-      id: (db.data.places.length + 1).toString(),
-      name: place,
-    };
-    db.data.places.push(newPlace);
+    place.id = v4();
+    db.data.places.push(place);
     await db.write();
     return place;
   },
 
-  update: async (place) => {
+  update: async (id, place) => {
     await db.read();
-    const index = db.data.places.findIndex((p) => place.id === p.id);
-    db.data.places[index] = place;
+    const index = db.data.places.findIndex((place) => place.id === id);
+    db.data.places[index] = {
+      id,
+      ...place,
+    };
     await db.write();
-    return place;
+    return db.data.places[index];
   },
 
   delete: async (id) => {
@@ -45,6 +46,7 @@ const PlacesJsonStore = {
 
   deleteAll: async () => {
     db.data.places = [];
+    await db.write();
     return true;
   },
 

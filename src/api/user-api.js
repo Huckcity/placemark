@@ -21,7 +21,7 @@ const userApi = {
         const user = await db.userStore.create(request.payload);
         return user;
       } catch (err) {
-        throw Boom.badImplementation(err);
+        return null;
       }
     },
   },
@@ -31,7 +31,6 @@ const userApi = {
     handler: async (request, h) => {
       try {
         const user = await db.userStore.getById(request.params.id);
-        console.log(`user: ${user}`);
         return user;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -58,7 +57,7 @@ const userApi = {
         const users = await db.userStore.deleteAll();
         return h.response(users).code(204);
       } catch (err) {
-        throw Boom.badImplementation(`delete alllllllllll ${err}`);
+        throw Boom.badImplementation(err);
       }
     },
   },
