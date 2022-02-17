@@ -7,7 +7,7 @@ const User = {
     auth: "session",
     handler: async (req, h) => {
       const user = req.auth.credentials;
-      const places = await db.placesStore.getAllPlaces();
+      const places = await db.placeStore.getAll();
       // user.isAdmin = true;
       return h.view(
         "dashboard",
@@ -21,7 +21,7 @@ const User = {
     auth: "session",
     handler: async (req, h) => {
       const user = req.auth.credentials;
-      const places = await db.placesStore.getAllPlaces();
+      const places = await db.placeStore.getAll();
       return h.view(
         "my-places",
         { user, places },
@@ -42,8 +42,8 @@ const User = {
     auth: "session",
     handler: async (req, h) => {
       const user = req.auth.credentials;
-      const { name } = req.payload;
-      const place = await db.placesStore.addPlace(name, user.id);
+      // const { name } = req.payload;
+      const place = await db.placeStore.create(req.payload, user.id);
       return h.redirect("/dashboard/places");
     },
   },
@@ -53,7 +53,7 @@ const User = {
     handler: async (req, h) => {
       const user = req.auth.credentials;
       const { id } = req.params;
-      const place = await db.placesStore.deletePlace(id);
+      const place = await db.placeStore.delete(id);
       return h.redirect("/dashboard/places");
     },
   },
@@ -62,7 +62,7 @@ const User = {
     auth: "session",
     handler: async (req, h) => {
       const user = req.auth.credentials;
-      const place = await db.placesStore.getPlaceById(req.params.id);
+      const place = await db.placeStore.getById(req.params.id);
       return h.view(
         "edit-place",
         { user, place },
@@ -75,12 +75,11 @@ const User = {
     auth: "session",
     handler: async (req, h) => {
       const user = req.auth.credentials;
-      const { id, name } = req.payload;
-      const place = {
-        id,
-        name,
+      const updatedPlace = {
+        ...req.payload,
       };
-      const updatedPlace = await db.placesStore.updatePlace(place);
+      console.log(updatedPlace);
+      await db.placeStore.update(req.payload.id, updatedPlace);
       return h.redirect("/dashboard/places");
     },
   },
