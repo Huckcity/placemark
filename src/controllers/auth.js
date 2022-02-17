@@ -1,13 +1,6 @@
 "use strict";
 
-const users = [
-  {
-    username: "test",
-    password: "test", // 'secret'
-    name: "John Doe",
-    id: "2133d32a",
-  },
-];
+import db from "../models/db.js";
 
 const Auth = {
   login: {
@@ -21,11 +14,12 @@ const Auth = {
     auth: false,
     handler: async (req, h) => {
       const { username, password } = req.payload;
-      const user = users.find((u) => u.username === username);
+      console.log(username, password);
+      const user = await db.userStore.getByUsername(username);
 
-      if (!user) {
+      if (!user || user.password !== password) {
         return h.view("login", {
-          error: "User not found",
+          error: "Incorrect login details.",
         });
       }
 
@@ -54,25 +48,26 @@ const Auth = {
   registerPost: {
     auth: false,
     handler: async (req, h) => {
-      const { username, password, name } = req.payload;
-      const user = users.find((u) => u.username === username);
+      const { username, email, password } = req.payload;
+      const user = await db.userStore.getByUsername(username);
 
+      console.log(user);
       if (user) {
         return h.view("register", {
           error: "Username already taken",
         });
       }
 
-      users.push({
+      db.userStore.create({
+        id: "1234567",
         username,
         password,
-        name,
-        id: Math.random().toString(36).substring(7),
+        email,
       });
 
-      return h.redirect("/");
+      return h.redirect("/login");
     },
   },
 };
 
-module.exports = Auth;
+export default Auth;

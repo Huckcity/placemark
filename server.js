@@ -1,17 +1,33 @@
 "use strict";
 
-require("dotenv").config();
-const path = require("path");
-const Hapi = require("@hapi/hapi");
+import dotenv from "dotenv";
+dotenv.config();
+
+import path from "path";
+import Hapi from "@hapi/hapi";
+import Vision from "@hapi/vision";
+import Inert from "@hapi/inert";
+import Cookie from "@hapi/cookie";
+import Handlebars from "handlebars";
+
+import webRoutes from "./src/routes/webRoutes.js";
+import apiRoutes from "./src/routes/apiRoutes.js";
+
+import db from "./src/models/db.js";
+
+db.init(process.env.ENVIRONMENT);
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const init = async () => {
   const server = Hapi.server({
     port: process.env.PORT,
+    routes: { cors: true },
   });
 
-  await server.register(require("@hapi/vision"));
-  await server.register(require("@hapi/inert"));
-  await server.register(require("@hapi/cookie"));
+  await server.register(Vision);
+  await server.register(Inert);
+  await server.register(Cookie);
 
   server.auth.strategy("session", "cookie", {
     cookie: {
@@ -51,7 +67,7 @@ const init = async () => {
 
   server.views({
     engines: {
-      hbs: require("handlebars"),
+      hbs: Handlebars,
     },
     layout: true,
     relativeTo: __dirname,
@@ -61,7 +77,9 @@ const init = async () => {
     isCached: false,
   });
 
-  server.route(require("./src/routes/index"));
+  server.route(webRoutes);
+  server.route(apiRoutes);
+
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);
 };

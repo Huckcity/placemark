@@ -36,32 +36,55 @@
 
       {{> loginform }}
 
-      <!--- Register Form ---->
+      <!--- Register Form --->
       <div id="register" class="" style="display: none">
         <h1 class="title is-3">Create a new account:</h1>
-        <form action="/login" method="POST">
+        <form action="/register" method="POST">
+          
           <div class="field">
-            <label class="label">Name</label>
+            <label class="label">Username</label>
             <p class="control has-icons-left">
-              <input class="input" type="email" placeholder="Email">
+              <input class="input" type="text" placeholder="Username" name="username">
+              <span class="icon is-small is-left">
+                <i class="fas fa-person"></i>
+              </span>
+            </p>
+          </div>
+
+          <div class="field">
+            <label class="label">Email</label>
+            <p class="control has-icons-left">
+              <input class="input" type="email" placeholder="Email" name="email">
               <span class="icon is-small is-left">
                 <i class="fas fa-envelope"></i>
               </span>
             </p>
           </div>
+          
           <div class="field">
             <label class="label">Password</label>
             <p class="control has-icons-left">
-              <input class="input" type="password" placeholder="Password">
+              <input class="input" type="password" placeholder="Password" name="password">
               <span class="icon is-small is-left">
                 <i class="fas fa-lock"></i>
               </span>
             </p>
           </div>
+
+          <div class="field">
+            <label class="label">Repeat Password</label>
+            <p class="control has-icons-left">
+              <input class="input" type="password" placeholder="Repeat password" name="repeat_password">
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+            </p>
+          </div>
+          
           <div class="field">
             <p class="control">
               <button class="button is-success">
-                Login
+                Register Now
               </button>
             </p>
           </div>
