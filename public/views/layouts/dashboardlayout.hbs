@@ -18,6 +18,9 @@
         {{> authnavbar }}
       </div>
       <div class="column is-three-quarters">
+        {{#if error}}
+          {{> error}}
+        {{/if}}
         {{{ content }}}
       </div>
     </div>

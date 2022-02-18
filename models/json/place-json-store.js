@@ -4,7 +4,7 @@ import { Low, JSONFile } from "lowdb";
 const db = new Low(new JSONFile("./src/models/json/places.json"));
 db.data ||= { places: [] };
 
-const PlacesJsonStore = {
+const PlaceJsonStore = {
   getAll: async () => {
     await db.read();
     const places = db.data.places;
@@ -63,4 +63,4 @@ const PlacesJsonStore = {
   },
 };
 
-export default PlacesJsonStore;
+export default PlaceJsonStore;

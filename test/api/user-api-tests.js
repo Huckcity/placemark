@@ -29,16 +29,16 @@ suite("User API Tests", () => {
   });
 
   test("getUserById() should return a user", async () => {
-    const newUser = await apiService.createUser(testData.users[0]);
-    const user = await apiService.getUserById(newUser.id);
+    const newUser = await apiService.createUser(testData.newUser);
+    const user = await apiService.getUserById(newUser._id);
     assert.equal(user.username, newUser.username);
   });
 
   test("deleteUser() should delete one user", async () => {
     const newUser = await apiService.createUser(testData.newUser);
-    const user = await apiService.getUserById(newUser.id);
+    const user = await apiService.getUserById(newUser._id);
     assert.equal(user.username, newUser.username);
-    await apiService.deleteUser(newUser.id);
+    await apiService.deleteUser(newUser._id);
     const allUsers = await apiService.getAllUsers();
     assert.equal(allUsers.length, 5);
   });

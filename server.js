@@ -10,10 +10,10 @@ import Inert from "@hapi/inert";
 import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 
-import webRoutes from "./src/routes/webRoutes.js";
-import apiRoutes from "./src/routes/apiRoutes.js";
+import webRoutes from "./routes/webRoutes.js";
+import apiRoutes from "./routes/apiRoutes.js";
 
-import db from "./src/models/db.js";
+import db from "./models/db.js";
 
 db.init(process.env.ENVIRONMENT);
 
@@ -22,12 +22,38 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const init = async () => {
   const server = Hapi.server({
     port: process.env.PORT,
-    routes: { cors: true },
+    host: process.env.HOST,
+    routes: {
+      files: {
+        relativeTo: __dirname,
+      },
+    },
   });
 
   await server.register(Vision);
   await server.register(Inert);
   await server.register(Cookie);
+
+  const viewsPath = path.resolve(__dirname, "public", "views");
+
+  server.views({
+    engines: {
+      hbs: Handlebars,
+    },
+    path: viewsPath,
+    layoutPath: path.resolve(viewsPath, "layouts"),
+    layout: true,
+    helpersPath: path.resolve(viewsPath, "helpers"),
+    partialsPath: path.resolve(viewsPath, "partials"),
+    isCached: false,
+    context: {
+      title: "Placemark",
+    },
+  });
+
+  Handlebars.registerHelper("loud", function (aString) {
+    return aString.toUpperCase() + "it worked!";
+  });
 
   server.auth.strategy("session", "cookie", {
     cookie: {
@@ -63,18 +89,6 @@ const init = async () => {
     options: {
       auth: false,
     },
-  });
-
-  server.views({
-    engines: {
-      hbs: Handlebars,
-    },
-    layout: true,
-    relativeTo: __dirname,
-    path: "./src/views",
-    layoutPath: "./src/views/layout",
-    partialsPath: "./src/views/partials",
-    isCached: false,
   });
 
   server.route(webRoutes);

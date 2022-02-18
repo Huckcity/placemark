@@ -14,7 +14,6 @@ const Auth = {
     auth: false,
     handler: async (req, h) => {
       const { username, password } = req.payload;
-      console.log(username, password);
       const user = await db.userStore.getByUsername(username);
 
       if (!user || user.password !== password) {
@@ -51,19 +50,23 @@ const Auth = {
       const { username, email, password } = req.payload;
       const user = await db.userStore.getByUsername(username);
 
-      console.log(user);
       if (user) {
         return h.view("register", {
           error: "Username already taken",
         });
       }
 
-      db.userStore.create({
-        id: "1234567",
-        username,
-        password,
-        email,
-      });
+      try {
+        db.userStore.create({
+          username,
+          password,
+          email,
+        });
+      } catch (err) {
+        return h.view("register", {
+          error: err.message,
+        });
+      }
 
       return h.redirect("/login");
     },

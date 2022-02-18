@@ -68,8 +68,20 @@ const routes = [
   },
   {
     method: "POST",
-    path: "/dashboard/places/edit",
+    path: "/dashboard/places/edit/{id}",
     config: User.editPlacePost,
+  },
+
+  {
+    method: "GET",
+    path: "/dashboard/settings",
+    config: User.settings,
+  },
+
+  {
+    method: "POST",
+    path: "/dashboard/settings/update",
+    config: User.settingsUpdate,
   },
 ];
 

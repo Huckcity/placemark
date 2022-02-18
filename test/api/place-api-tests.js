@@ -29,16 +29,16 @@ suite("Place API Tests", () => {
   });
 
   test("getPlaceById() should return a place", async () => {
-    const newPlace = await userApiService.createPlace(testData.places[0]);
-    const place = await userApiService.getPlaceById(newPlace.id);
+    const newPlace = await userApiService.createPlace(testData.newPlace);
+    const place = await userApiService.getPlaceById(newPlace._id);
     assert.equal(place.name, newPlace.name);
   });
 
   test("deletePlace() should delete one place", async () => {
     const newPlace = await userApiService.createPlace(testData.newPlace);
-    const place = await userApiService.getPlaceById(newPlace.id);
+    const place = await userApiService.getPlaceById(newPlace._id);
     assert.equal(place.name, newPlace.name);
-    await userApiService.deletePlace(newPlace.id);
+    await userApiService.deletePlace(newPlace._id);
     const allPlaces = await userApiService.getAllPlaces();
     assert.equal(allPlaces.length, 5);
   });

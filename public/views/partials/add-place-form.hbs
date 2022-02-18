@@ -1,5 +1,9 @@
 
-<form action="/dashboard/places/{{action}}" method="POST">
+<form action="/dashboard/places/{{action}}
+{{#if place}}
+/{{place._id}}
+{{/if}}
+" method="POST">
   <label class="label">Place Name</label>
   <div class="control">
     <input class="input" type="text" placeholder="Place name" name="name"
