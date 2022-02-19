@@ -6,7 +6,7 @@ const User = {
   dashboard: {
     auth: "session",
     handler: async (req, h) => {
-      const user = req.auth.credentials;
+      const user = await db.userStore.getById(req.auth.credentials.id);
       const places = await db.placeStore.getAll();
       // user.isAdmin = true;
       const viewData = {
@@ -73,7 +73,7 @@ const User = {
     auth: "session",
     handler: async (req, h) => {
       const user = req.auth.credentials;
-      const places = await db.placeStore.getAll();
+      const places = await db.placeStore.getByUserId(user);
       const viewData = {
         user,
         places,
@@ -82,6 +82,23 @@ const User = {
         },
       };
       return h.view("my-places", viewData, { layout: "dashboardlayout" });
+    },
+  },
+
+  place: {
+    auth: "session",
+    handler: async (req, h) => {
+      const user = req.auth.credentials;
+      const placeId = req.params.id;
+      const place = await db.placeStore.getById(placeId);
+      const viewData = {
+        user,
+        place,
+        // active: {
+        //   MyPlaces: true,
+        // },
+      };
+      return h.view("place", viewData, { layout: "dashboardlayout" });
     },
   },
 
@@ -103,8 +120,22 @@ const User = {
     auth: "session",
     handler: async (req, h) => {
       const user = req.auth.credentials;
-      const place = await db.placeStore.create(req.payload, user.id);
-      return h.redirect("/dashboard/places");
+      try {
+        const place = await db.placeStore.create(req.payload, user.id);
+        return h.redirect("/dashboard/places/" + place._id);
+      } catch (err) {
+        return h.view(
+          "add-place",
+          {
+            user,
+            error: err.message,
+            active: {
+              AddPlace: true,
+            },
+          },
+          { layout: "dashboardlayout" }
+        );
+      }
     },
   },
 
@@ -113,8 +144,24 @@ const User = {
     handler: async (req, h) => {
       const user = req.auth.credentials;
       const { id } = req.params;
-      const place = await db.placeStore.delete(id);
-      return h.redirect("/dashboard/places");
+      try {
+        const place = await db.placeStore.delete(id, user.id);
+        return h.redirect("/dashboard/places");
+      } catch (err) {
+        const places = await db.placeStore.getByUserId(user);
+        return h.view(
+          "my-places",
+          {
+            user,
+            places,
+            error: err.message,
+            active: {
+              MyPlaces: true,
+            },
+          },
+          { layout: "dashboardlayout" }
+        );
+      }
     },
   },
 
@@ -155,6 +202,25 @@ const User = {
       return h.redirect("/dashboard/places");
     },
   },
+
+  // placesByCategory: {
+  //   auth: "session",
+  //   handler: async (req, h) => {
+  //     const user = req.auth.credentials;
+  //     const category = req.params.category;
+  //     const places = await db.placeStore.getByCategory(category);
+  //     const viewData = {
+  //       user,
+  //       places,
+  //       active: {
+  //         Places: true,
+  //       },
+  //     };
+  //     return h.view("places-by-category", viewData, {
+  //       layout: "dashboardlayout",
+  //     });
+  //   },
+  // },
 };
 
 export default User;

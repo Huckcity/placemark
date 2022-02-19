@@ -1,4 +1,7 @@
-{{ user.id }}
+<h1>
+  Welcome, {{ user.username }}!
+</h1>
+
 {{#each places}}
-{{ name }}
+  {{> place-card }}
 {{/each}}

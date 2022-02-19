@@ -5,6 +5,7 @@ import Auth from "../controllers/auth.js";
 import User from "../controllers/user.js";
 
 const routes = [
+  // Home/Auth routes
   {
     method: "GET",
     path: "/",
@@ -35,16 +36,22 @@ const routes = [
     path: "/login",
     config: Auth.loginPost,
   },
+
+  // Place routes
   {
     method: "GET",
     path: "/dashboard",
     config: User.dashboard,
   },
-
   {
     method: "GET",
     path: "/dashboard/places",
     config: User.myPlaces,
+  },
+  {
+    method: "GET",
+    path: "/dashboard/places/{id}",
+    config: User.place,
   },
   {
     method: "GET",
@@ -72,12 +79,12 @@ const routes = [
     config: User.editPlacePost,
   },
 
+  // User routes
   {
     method: "GET",
     path: "/dashboard/settings",
     config: User.settings,
   },
-
   {
     method: "POST",
     path: "/dashboard/settings/update",

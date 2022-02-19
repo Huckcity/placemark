@@ -78,13 +78,22 @@ const placeMongoStore = {
     }
   },
 
-  async delete(id) {
+  async delete(id, userId) {
     if (!id) {
       throw new Error("Place id is required.");
     }
-    const deletedPlace = await Place.findByIdAndDelete(id);
+    if (!userId) {
+      throw new Error("User id is required.");
+    }
+
+    const deletedPlace = await Place.findOneAndDelete({
+      _id: id,
+      user: ObjectId(userId),
+    });
     if (!deletedPlace) {
-      throw new Error(`Place with id ${id} not found.`);
+      throw new Error(
+        "You do not have permission to delete that record. Your places are listed below."
+      );
     }
     return deletedPlace;
   },
