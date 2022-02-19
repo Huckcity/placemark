@@ -4,15 +4,11 @@ import * as testData from "../fixtures.js";
 
 suite("User Model Tests", () => {
   setup(async () => {
-    db.init("development");
+    db.init(process.env.ENVIRONMENT);
     await db.userStore.deleteAll();
     for (let user of testData.users) {
       await db.userStore.create(user);
     }
-  });
-
-  teardown(async () => {
-    await db.userStore.deleteAll();
   });
 
   test("Create A User", async () => {

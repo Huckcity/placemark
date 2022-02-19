@@ -1,4 +1,5 @@
 import { Place } from "./place.js";
+import { ObjectId } from "mongodb";
 
 const placeMongoStore = {
   async getById(id) {
@@ -10,6 +11,29 @@ const placeMongoStore = {
       throw new Error(`Place with id ${id} not found.`);
     }
     return place;
+  },
+
+  async getByName(name) {
+    if (!name) {
+      throw new Error("Place name is required.");
+    }
+    const place = await Place.findOne({ name }).lean();
+    if (!place) {
+      // throw new Error(`Place with name ${name} not found.`);
+      return null;
+    }
+    return place;
+  },
+
+  async getByUserId(userId) {
+    if (!userId) {
+      throw new Error("User id is required.");
+    }
+    const places = await Place.find({ user: ObjectId(userId) }).lean();
+    if (!places) {
+      return [];
+    }
+    return places;
   },
 
   async getAll() {

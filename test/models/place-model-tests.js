@@ -6,16 +6,12 @@ suite("Place Model Tests", () => {
   let testUser = {};
 
   setup(async () => {
-    db.init("development");
+    db.init(process.env.ENVIRONMENT);
     testUser = await db.userStore.create(testData.newUser);
     await db.placeStore.deleteAll();
     for (let place of testData.places) {
       await db.placeStore.create(place, testUser._id);
     }
-  });
-
-  teardown(async () => {
-    await db.placeStore.deleteAll();
   });
 
   test("Create A Place", async () => {
@@ -84,13 +80,15 @@ suite("Place Model Tests", () => {
       testData.newPlace,
       testUser._id
     );
-    const places = await db.placeStore.getByUserId(newPlace.userId);
+    console.log(newPlace);
+    const places = await db.placeStore.getByUserId(newPlace.user);
     assert.isArray(places);
     assert.equal(places.length, 1);
+    assert.equal(places[places.length - 1].name, newPlace.name);
   });
 
   test("getPlacesByUserId() should return an empty array if no places", async () => {
-    const places = await db.placeStore.getByUserId("12345");
+    const places = await db.placeStore.getByUserId("123456654321");
     assert.isArray(places);
     assert.equal(places.length, 0);
   });
@@ -105,7 +103,7 @@ suite("Place Model Tests", () => {
   });
 
   test("getPlaceByName() should return null if no place", async () => {
-    const place = await db.placeStore.getByName("12345");
+    const place = await db.placeStore.getByName("NonExistentPlace");
     assert.isNull(place);
   });
 });

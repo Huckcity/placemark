@@ -11,7 +11,7 @@ const db = {
 
   init(env) {
     switch (env) {
-      case "development":
+      case "development_json":
         console.log("Using development JSON database");
         this.userStore = UserJsonStore;
         this.placeStore = PlaceJsonStore;

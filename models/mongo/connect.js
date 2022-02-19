@@ -3,8 +3,8 @@ dotenv.config();
 
 import Mongoose from "mongoose";
 
-export function connectMongoose() {
-  Mongoose.connect(process.env.DB);
+export function connectMongoose(db_string) {
+  Mongoose.connect(db_string);
   const db = Mongoose.connection;
 
   db.on("error", (err) => {
