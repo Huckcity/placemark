@@ -22,6 +22,8 @@ const placeMongoStore = {
     }
     const newPlace = new Place(place);
     newPlace.user = userId;
+    newPlace.location.lat = place.latitude || 0;
+    newPlace.location.lng = place.longitude || 0;
     const savedPlace = await newPlace.save();
     return savedPlace;
   },
@@ -33,13 +35,23 @@ const placeMongoStore = {
     if (!place) {
       throw new Error("Place is required.");
     }
-    const updatedPlace = await Place.findByIdAndUpdate(id, place, {
-      new: true,
-    });
-    if (!updatedPlace) {
-      throw new Error(`Place with id ${id} not found.`);
+    if (!place.name) {
+      throw new Error("Place name is required.");
     }
-    return updatedPlace;
+
+    const existingPlace = await Place.findById(id);
+    if (!existingPlace) {
+      throw new Error(`Place with id ${id} not found.`);
+    } else {
+      existingPlace.name = place.name || existingPlace.name;
+      existingPlace.description =
+        place.description || existingPlace.description;
+      existingPlace.location.lat = place.latitude || existingPlace.location.lat;
+      existingPlace.location.lng =
+        place.longitude || existingPlace.location.lng;
+      const savedPlace = await existingPlace.save();
+      return savedPlace;
+    }
   },
 
   async delete(id) {

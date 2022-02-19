@@ -53,3 +53,7 @@ export const places = [
 export const newPlace = {
   name: "newtest6",
 };
+
+export const updatedPlace = {
+  name: "updatedtest6",
+};

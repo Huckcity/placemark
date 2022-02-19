@@ -103,7 +103,6 @@ const User = {
     auth: "session",
     handler: async (req, h) => {
       const user = req.auth.credentials;
-      // const { name } = req.payload;
       const place = await db.placeStore.create(req.payload, user.id);
       return h.redirect("/dashboard/places");
     },
@@ -135,12 +134,24 @@ const User = {
   editPlacePost: {
     auth: "session",
     handler: async (req, h) => {
-      const user = req.auth.credentials;
       const updatedPlace = {
         ...req.payload,
       };
       console.log(updatedPlace);
-      await db.placeStore.update(req.params.id, updatedPlace);
+      try {
+        await db.placeStore.update(req.params.id, updatedPlace);
+      } catch (error) {
+        console.log(error);
+        return h.view(
+          "edit-place",
+          {
+            user: req.auth.credentials,
+            place: req.payload,
+            error: error.message,
+          },
+          { layout: "dashboardlayout" }
+        );
+      }
       return h.redirect("/dashboard/places");
     },
   },

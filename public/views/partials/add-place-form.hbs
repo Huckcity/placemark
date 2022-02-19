@@ -4,19 +4,57 @@
 /{{place._id}}
 {{/if}}
 " method="POST">
-  <label class="label">Place Name</label>
-  <div class="control">
-    <input class="input" type="text" placeholder="Place name" name="name"
-    {{#if place}}
-      value="{{place.name}}"
-    {{/if}}
-    >
-    {{#if place}}
-      <input type="hidden" name="id" value="{{place.id}}">
-    {{/if}}
+
+  <div class="field">
+    <label class="label">Name</label>
+    <div class="control">
+      <input class="input" type="text" placeholder="Place name" name="name"
+      {{#if place}}
+        value="{{place.name}}"
+      {{/if}}
+      >
+    </div>
   </div>
-  <p class="help">This is a help text</p>
+
+  <div class="field">
+    <label class="label">Description</label>
+    <div class="control">
+      <textarea class="textarea" placeholder="Place description" name="description">{{#if place}}{{place.description}}{{/if}}</textarea>
+    </div>
+  </div>
+
+    <div class="label">
+      <label class="label">Latitude / Longitude</label>
+    </div>
+  <div class="field is-horizontal">
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <input class="input" type="text" placeholder="Latitude" name="latitude"
+          {{#if place}}
+            value="{{place.location.lat}}"
+          {{/if}}
+          >
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <input class="input" type="text" placeholder="Longitude" name="longitude"
+          {{#if place}}
+            value="{{place.location.lng}}"
+          {{/if}}
+          >
+        </div>
+      </div>      
+    </div>
+  </div>
+
   <div class="control">
     <button class="button is-primary">Submit</button>
   </div>
+
+  {{#if place}}
+    <input type="hidden" name="id" value="{{place._id}}">
+  {{/if}}
+
 </form>

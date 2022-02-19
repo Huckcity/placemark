@@ -1,7 +1,7 @@
 import { v4 } from "uuid";
-import { Low, JSONFile } from "lowdb";
+import { JSONFile, Low } from "lowdb";
 
-const db = new Low(new JSONFile("./src/models/json/users.json"));
+const db = new Low(new JSONFile("./users.json"));
 db.data ||= { users: [] };
 
 const UserJsonStore = {
@@ -12,7 +12,7 @@ const UserJsonStore = {
 
   getById: async (id) => {
     await db.read();
-    const user = db.data.users.find((u) => u.id === id);
+    const user = db.data.users.find((u) => u._id === id);
     return user ? user : null;
   },
 
@@ -28,7 +28,7 @@ const UserJsonStore = {
       return null;
     }
     const newUser = {
-      id: v4(),
+      _id: v4(),
       ...user,
     };
     db.data.users.push(newUser);
@@ -38,7 +38,7 @@ const UserJsonStore = {
 
   update: async (id, user) => {
     await db.read();
-    const index = db.data.users.findIndex((u) => u.id === id);
+    const index = db.data.users.findIndex((u) => u._id === id);
     db.data.users[index] = user;
     await db.write();
     return user;
@@ -46,8 +46,8 @@ const UserJsonStore = {
 
   delete: async (id) => {
     await db.read();
-    const user = db.data.users.find((u) => u.id === id);
-    const index = db.data.users.findIndex((u) => u.id === id);
+    const user = db.data.users.find((u) => u._id === id);
+    const index = db.data.users.findIndex((u) => u._id === id);
     db.data.users.splice(index, 1);
     await db.write();
     return user;

@@ -21,9 +21,12 @@ const placeApiService = {
     }
   },
 
-  async createPlace(place) {
+  async createPlace(place, userId) {
     try {
-      const response = await axios.post(`${serverUrl}/api/places/add`, place);
+      const response = await axios.post(`${serverUrl}/api/places/add`, {
+        place,
+        userId,
+      });
       return response.data === "" ? null : response.data;
     } catch (err) {
       return null;

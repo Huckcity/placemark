@@ -18,7 +18,10 @@ const placeApi = {
     auth: false,
     handler: async (request, h) => {
       try {
-        const place = await db.placeStore.create(request.payload);
+        const place = await db.placeStore.create(
+          request.payload.place,
+          request.payload.userId
+        );
         return place;
       } catch (err) {
         throw Boom.badImplementation(err);

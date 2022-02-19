@@ -2,5 +2,5 @@
   "restartable": "rs",
   "ignore": [".git", "node_modules/", "dist/"],
   "watch": ["./"],
-  "ext": "js,json,ts"
+  "ext": "js,ts"
 }
