@@ -60,7 +60,7 @@ suite("Place Model Tests", () => {
     );
     const place = await db.placeStore.getById(newPlace._id);
     assert.equal(place.name, newPlace.name);
-    await db.placeStore.delete(newPlace._id);
+    await db.placeStore.delete(newPlace._id, testUser._id);
     const allPlaces = await db.placeStore.getAll();
     assert.equal(allPlaces.length, 5);
   });

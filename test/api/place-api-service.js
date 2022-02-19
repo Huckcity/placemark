@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const serverUrl = `http://localhost:3000`;
+import dotenv from "dotenv";
+dotenv.config();
+
+const serverUrl = `http://localhost:${process.env.PORT}`;
 
 const placeApiService = {
   async getAllPlaces() {
@@ -33,9 +36,14 @@ const placeApiService = {
     }
   },
 
-  async deletePlace(id) {
+  async deletePlace(id, userId) {
     try {
-      const response = await axios.delete(`${serverUrl}/api/places/${id}`);
+      const response = await axios.delete(`${serverUrl}/api/places/${id}`, {
+        data: {
+          id,
+          userId,
+        },
+      });
       return response.data;
     } catch (err) {
       throw err;

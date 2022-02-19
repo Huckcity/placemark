@@ -53,7 +53,7 @@ suite("Place API Tests", () => {
     );
     const place = await placeApiService.getPlaceById(newPlace._id);
     assert.equal(place.name, newPlace.name);
-    await placeApiService.deletePlace(newPlace._id);
+    await placeApiService.deletePlace(newPlace._id, testUser._id);
     const allPlaces = await placeApiService.getAllPlaces();
     assert.equal(allPlaces.length, 5);
   });
