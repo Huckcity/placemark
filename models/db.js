@@ -12,13 +12,19 @@ const db = {
   init(env) {
     switch (env) {
       case "development":
-        console.log("Using development database");
+        console.log("Using development JSON database");
         this.userStore = UserJsonStore;
         this.placeStore = PlaceJsonStore;
         break;
+      case "development_mongo":
+        console.log("Using development Mongo database");
+        connectMongoose(process.env.MONGO_LOCAL_URL);
+        this.userStore = userMongoStore;
+        this.placeStore = placeMongoStore;
+        break;
       case "production":
-        console.log("Using production database");
-        connectMongoose();
+        console.log("Using production Mongo database");
+        connectMongoose(process.env.MONGO_LIVE_URL);
         this.userStore = userMongoStore;
         this.placeStore = placeMongoStore;
         break;
