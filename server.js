@@ -10,6 +10,8 @@ import Inert from "@hapi/inert";
 import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 
+import hbsHelpers from "./helpers/handlebars.js";
+
 import webRoutes from "./routes/webRoutes.js";
 import apiRoutes from "./routes/apiRoutes.js";
 
@@ -43,7 +45,6 @@ const init = async () => {
     path: viewsPath,
     layoutPath: path.resolve(viewsPath, "layouts"),
     layout: true,
-    helpersPath: path.resolve(viewsPath, "helpers"),
     partialsPath: path.resolve(viewsPath, "partials"),
     isCached: false,
     context: {
@@ -93,22 +94,7 @@ const init = async () => {
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);
 
-  Handlebars.registerHelper("formatDate", function (date) {
-    // Helper to format date to "Last edited at HH:MM on DD MMM"
-    if (!date) {
-      return "";
-    }
-    const options = {
-      weekday: "short",
-
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-    const prettyDate = new Date(date).toLocaleString("en-US", options);
-    return `Last edited on ${prettyDate}`;
-  });
+  hbsHelpers(Handlebars);
 };
 
 process.on("unhandledRejection", (err) => {
