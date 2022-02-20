@@ -26,7 +26,7 @@ const User = {
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
       const viewData = {
-        user: user,
+        user,
         active: {
           Settings: true,
         },
@@ -47,7 +47,7 @@ const User = {
           return h.view(
             "settings",
             {
-              user: user,
+              user,
               error: "Passwords do not match",
               active: {
                 Settings: true,
@@ -73,8 +73,8 @@ const User = {
   myPlaces: {
     auth: "session",
     handler: async (req, h) => {
-      const user = req.auth.credentials;
-      const places = await db.placeStore.getByUserId(user);
+      const user = await db.userStore.getById(req.auth.credentials.id);
+      const places = await db.placeStore.getByUserId(user._id);
       const viewData = {
         user,
         places,
@@ -106,7 +106,7 @@ const User = {
   addPlace: {
     auth: "session",
     handler: async (req, h) => {
-      const user = req.auth.credentials;
+      const user = await db.userStore.getById(req.auth.credentials.id);
       const viewData = {
         user,
         active: {
@@ -182,25 +182,26 @@ const User = {
   editPlacePost: {
     auth: "session",
     handler: async (req, h) => {
+      const userId = req.auth.credentials.id;
       const updatedPlace = {
         ...req.payload,
       };
       console.log(updatedPlace);
       try {
-        await db.placeStore.update(req.params.id, updatedPlace);
+        await db.placeStore.update(userId, req.params.id, updatedPlace);
+        return h.redirect("/dashboard/places/" + req.params.id);
       } catch (error) {
         console.log(error);
         return h.view(
-          "edit-place",
+          "place",
           {
             user: req.auth.credentials,
-            place: req.payload,
+            place: updatedPlace,
             error: error.message,
           },
           { layout: "dashboardlayout" }
         );
       }
-      return h.redirect("/dashboard/places");
     },
   },
 

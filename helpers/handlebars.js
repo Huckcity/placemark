@@ -6,7 +6,6 @@ const helpers = (hbs) => {
     }
     const options = {
       weekday: "short",
-
       month: "short",
       day: "numeric",
       hour: "numeric",
@@ -14,6 +13,15 @@ const helpers = (hbs) => {
     };
     const prettyDate = new Date(date).toLocaleString("en-US", options);
     return `Last edited on ${prettyDate}`;
+  });
+
+  hbs.registerHelper("truncateToWords", function (str, len) {
+    // Helper to truncate string to len words
+    if (!str) {
+      return "";
+    }
+    const truncated = str.split(" ").slice(0, len).join(" ");
+    return truncated + "...";
   });
 };
 
