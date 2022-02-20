@@ -10,6 +10,8 @@ import Inert from "@hapi/inert";
 import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 
+import hbsHelpers from "./helpers/handlebars.js";
+
 import webRoutes from "./routes/webRoutes.js";
 import apiRoutes from "./routes/apiRoutes.js";
 
@@ -43,16 +45,11 @@ const init = async () => {
     path: viewsPath,
     layoutPath: path.resolve(viewsPath, "layouts"),
     layout: true,
-    helpersPath: path.resolve(viewsPath, "helpers"),
     partialsPath: path.resolve(viewsPath, "partials"),
     isCached: false,
     context: {
       title: "Placemark",
     },
-  });
-
-  Handlebars.registerHelper("loud", function (aString) {
-    return aString.toUpperCase() + "it worked!";
   });
 
   server.auth.strategy("session", "cookie", {
@@ -96,6 +93,8 @@ const init = async () => {
 
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);
+
+  hbsHelpers(Handlebars);
 };
 
 process.on("unhandledRejection", (err) => {

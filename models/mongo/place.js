@@ -2,18 +2,26 @@ import Mongoose from "mongoose";
 
 const { Schema } = Mongoose;
 
-const placeSchema = new Schema({
-  name: String,
-  description: String,
-  image: String,
-  location: {
-    lat: Number,
-    lng: Number,
+const placeSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: String,
+    image: String,
+    location: {
+      lat: Number,
+      lng: Number,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 export const Place = Mongoose.model("Place", placeSchema);

@@ -37,7 +37,7 @@ const placeMongoStore = {
   },
 
   async getAll() {
-    return Place.find({}).lean();
+    return Place.find({}).populate("user").lean();
   },
 
   async create(place, userId) {
@@ -52,8 +52,11 @@ const placeMongoStore = {
     return savedPlace;
   },
 
-  async update(id, place) {
-    if (!id) {
+  async update(userId, placeId, place) {
+    if (!userId) {
+      throw new Error("User id is required.");
+    }
+    if (!placeId) {
       throw new Error("Place id is required.");
     }
     if (!place) {
@@ -63,9 +66,11 @@ const placeMongoStore = {
       throw new Error("Place name is required.");
     }
 
-    const existingPlace = await Place.findById(id);
+    const existingPlace = await Place.findById(placeId);
     if (!existingPlace) {
-      throw new Error(`Place with id ${id} not found.`);
+      throw new Error(`Place with id ${placeId} not found.`);
+    } else if (existingPlace.user.toString() !== userId) {
+      throw new Error(`You do not have permission to edit this place.`);
     } else {
       existingPlace.name = place.name || existingPlace.name;
       existingPlace.description =
