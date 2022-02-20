@@ -37,7 +37,7 @@ const placeMongoStore = {
   },
 
   async getAll() {
-    return Place.find({}).lean();
+    return Place.find({}).populate("user").lean();
   },
 
   async create(place, userId) {

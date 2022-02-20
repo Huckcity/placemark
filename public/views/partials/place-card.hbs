@@ -1,4 +1,4 @@
-  <div class="box">
+<div class="box">
   <article class="media">
     <div class="media-left">
       <figure class="image is-64x64">
@@ -8,9 +8,14 @@
     <div class="media-content">
       <div class="content">
         <p>
-          <strong>{{name}}</strong> <small>@johnsmith</small> <small>31m</small>
+          <strong>
+            <a href="/dashboard/places/{{_id}}">{{name}}</a></strong> <small class="has-text-grey">@{{user.username}}</small> 
           <br>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis.
+          <small class="has-text-grey-light">{{formatDate updatedAt}}</small>
+          <br>
+          <hr>
+          
+          {{description}}
         </p>
       </div>
       <nav class="level is-mobile">

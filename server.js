@@ -51,10 +51,6 @@ const init = async () => {
     },
   });
 
-  Handlebars.registerHelper("loud", function (aString) {
-    return aString.toUpperCase() + "it worked!";
-  });
-
   server.auth.strategy("session", "cookie", {
     cookie: {
       name: "sid-example",
@@ -96,6 +92,23 @@ const init = async () => {
 
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);
+
+  Handlebars.registerHelper("formatDate", function (date) {
+    // Helper to format date to "Last edited at HH:MM on DD MMM"
+    if (!date) {
+      return "";
+    }
+    const options = {
+      weekday: "short",
+
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    };
+    const prettyDate = new Date(date).toLocaleString("en-US", options);
+    return `Last edited on ${prettyDate}`;
+  });
 };
 
 process.on("unhandledRejection", (err) => {

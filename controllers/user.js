@@ -8,10 +8,11 @@ const User = {
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
       const places = await db.placeStore.getAll();
+      console.log(places);
       // user.isAdmin = true;
       const viewData = {
-        user: user,
-        places: places,
+        user,
+        places,
         active: {
           Dashboard: true,
         },
