@@ -27,17 +27,18 @@ const PlaceJsonStore = {
     }
 
     place._id = v4();
-    place.userId = userId;
+    place.user = userId;
     db.data.places.push(place);
     await db.write();
     return place;
   },
 
-  update: async (id, place) => {
+  update: async (userId, placeId, place) => {
     await db.read();
-    const index = db.data.places.findIndex((place) => place._id === id);
+    const index = db.data.places.findIndex((place) => place._id === placeId);
     db.data.places[index] = {
-      _id: id,
+      _id: placeId,
+      name: place.name,
       ...place,
     };
     await db.write();
@@ -69,7 +70,7 @@ const PlaceJsonStore = {
 
   getByUserId: async (userId) => {
     await db.read();
-    const places = db.data.places.filter((place) => place.userId === userId);
+    const places = db.data.places.filter((place) => place.user === userId);
     return places;
   },
 };

@@ -6,18 +6,21 @@ const User = {
   dashboard: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
-      const places = await db.placeStore.getAll();
-      console.log(places);
-      // user.isAdmin = true;
-      const viewData = {
-        user,
-        places,
-        active: {
-          Dashboard: true,
-        },
-      };
-      return h.view("dashboard", viewData, { layout: "dashboardlayout" });
+      try {
+        const user = await db.userStore.getById(req.auth.credentials.id);
+        const places = await db.placeStore.getAll();
+        const viewData = {
+          user,
+          places,
+          active: {
+            Dashboard: true,
+          },
+        };
+        return h.view("dashboard", viewData, { layout: "dashboardlayout" });
+      } catch (err) {
+        console.log(err);
+        return h.redirect("/login");
+      }
     },
   },
 
@@ -95,9 +98,6 @@ const User = {
       const viewData = {
         user,
         place,
-        // active: {
-        //   MyPlaces: true,
-        // },
       };
       return h.view("place", viewData, { layout: "dashboardlayout" });
     },

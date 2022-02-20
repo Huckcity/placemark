@@ -33,9 +33,13 @@ const placeApiService = {
     }
   },
 
-  async deletePlace(id) {
+  async deletePlace(id, userId) {
     try {
-      const response = await axios.delete(`${serverUrl}/api/places/${id}`);
+      const response = await axios.delete(`${serverUrl}/api/places/${id}`, {
+        data: {
+          userId,
+        },
+      });
       return response.data;
     } catch (err) {
       throw err;

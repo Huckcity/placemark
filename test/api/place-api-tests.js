@@ -8,8 +8,8 @@ suite("Place API Tests", () => {
 
   setup(async () => {
     await placeApiService.deleteAllPlaces();
+    await userApiService.deleteAllUsers();
     testUser = await userApiService.createUser(testData.newUser);
-
     for (let place of testData.places) {
       await placeApiService.createPlace(place, testUser._id);
     }
@@ -52,8 +52,12 @@ suite("Place API Tests", () => {
       testUser._id
     );
     const place = await placeApiService.getPlaceById(newPlace._id);
-    assert.equal(place.name, newPlace.name);
-    await placeApiService.deletePlace(newPlace._id);
+    console.log("place : newplace", place, newPlace);
+    console.log("testuserid", testUser._id);
+    console.log("fuuuuuuuuuuuuu");
+    await placeApiService.deletePlace(newPlace._id, testUser._id);
+    console.log("fuuuuuuuuuuuuu");
+
     const allPlaces = await placeApiService.getAllPlaces();
     assert.equal(allPlaces.length, 5);
   });

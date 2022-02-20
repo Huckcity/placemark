@@ -45,7 +45,10 @@ const placeApi = {
     auth: false,
     handler: async (request, h) => {
       try {
-        const place = await db.placeStore.delete(request.params.id);
+        const place = await db.placeStore.delete(
+          request.params.id,
+          request.payload.userId
+        );
         return place;
       } catch (err) {
         throw Boom.badImplementation(err);

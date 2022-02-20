@@ -69,7 +69,7 @@ const placeMongoStore = {
     const existingPlace = await Place.findById(placeId);
     if (!existingPlace) {
       throw new Error(`Place with id ${placeId} not found.`);
-    } else if (existingPlace.user.toString() !== userId) {
+    } else if (existingPlace.user.toString() != userId) {
       throw new Error(`You do not have permission to edit this place.`);
     } else {
       existingPlace.name = place.name || existingPlace.name;

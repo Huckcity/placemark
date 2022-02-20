@@ -1,3 +1,10 @@
 {
-  "users": []
+  "users": [
+    {
+      "_id": "d64e7512-7cf5-4aed-905a-88c4147968eb",
+      "username": "test",
+      "password": "test",
+      "email": "test@user.com"
+    }
+  ]
 }

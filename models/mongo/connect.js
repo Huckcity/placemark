@@ -27,6 +27,7 @@ export function connectMongoose(db_string) {
   db.on("open", function () {
     console.log(`Database connected to ${this.name} on ${this.host}`);
     if (process.env.SEED === "true") {
+      console.log("Seeding database...");
       seed();
     }
   });
