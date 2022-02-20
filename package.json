@@ -8,8 +8,8 @@
     "css-build": "node-sass --omit-source-map-url sass/style.scss public/css/style.css",
     "css-watch": "npm run css-build -- --watch",
     "test": "./node_modules/mocha/bin/mocha --ui tdd test/**/*.js",
-    "dev": "nodemon --experimental-json-modules --config .nodemonrc.json server.js --ignore 'models/json/*.json'",
-    "start": "node --experimental-json-modules server.js"
+    "dev": "nodemon --config .nodemonrc.json server.js --ignore 'models/json/*.json'",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",

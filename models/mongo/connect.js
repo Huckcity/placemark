@@ -3,7 +3,7 @@ dotenv.config();
 
 import Mongoose from "mongoose";
 import seeder from "mais-mongoose-seeder";
-import * as data from "./seed-data.json" assert { type: "json" };
+import * as data from "./seed-data.js";
 
 export function connectMongoose(db_string) {
   Mongoose.connect(db_string);
