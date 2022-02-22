@@ -23,7 +23,7 @@ const Auth = {
       }
 
       req.cookieAuth.set({
-        id: user.id,
+        id: user._id,
       });
 
       return h.redirect("/dashboard");

@@ -40,7 +40,6 @@ const placeApiService = {
     try {
       const response = await axios.delete(`${serverUrl}/api/places/${id}`, {
         data: {
-          id,
           userId,
         },
       });

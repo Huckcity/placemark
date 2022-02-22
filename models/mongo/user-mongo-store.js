@@ -27,13 +27,28 @@ const userMongoStore = {
     if (!user || !user.username || !user.email) {
       throw new Error("User is required.");
     }
+    if (user.password !== "" && user.password !== user.passwordConfirm) {
+      throw new Error("Passwords do not match.");
+    }
+    if (
+      user.password === null ||
+      user.password === undefined ||
+      user.password === ""
+    ) {
+      throw new Error("Password is required.");
+    }
+
+    // TODO: Check for uniqueness of username/email
     const newUser = new User(user);
     await newUser.save();
     return newUser;
   },
 
   async update(id, user) {
-    console.log(user);
+    if (!user.username || !user.email) {
+      throw new Error("Username/email is required.");
+    }
+    // TODO: Check for uniqueness of username/email
     if (!id) {
       throw new Error("User id is required.");
     }
@@ -41,17 +56,26 @@ const userMongoStore = {
       throw new Error("User is required.");
     }
 
-    if (user.password === null) {
+    if (
+      user.password === null ||
+      user.password === undefined ||
+      user.password === ""
+    ) {
       delete user.password;
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, user, { new: true });
-
-    if (!updatedUser) {
-      throw new Error(`User with id ${id} not found.`);
+    if (user.password !== "" && user.password !== user.passwordConfirm) {
+      throw new Error("Passwords do not match.");
     }
-    console.log(updatedUser);
-    return updatedUser;
+
+    try {
+      const updatedUser = await User.findByIdAndUpdate(id, user, {
+        new: true,
+      }).lean();
+      return updatedUser;
+    } catch (error) {
+      throw new Error("Failed to update user.");
+    }
   },
 
   async delete(id) {
@@ -70,7 +94,7 @@ const userMongoStore = {
   },
 
   async getAll() {
-    return User.find({});
+    return User.find({}).lean();
   },
 
   async getByUsername(username) {

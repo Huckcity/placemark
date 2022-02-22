@@ -1,0 +1,91 @@
+{{log userToEdit}}
+<form action="/dashboard/admin/users/{{action}}
+{{#if userToEdit}}
+/{{userToEdit._id}}
+{{/if}}
+" method="POST">
+
+  <div class="field">
+    <label class="label">Username</label>
+    <div class="control">
+      <input class="input" type="text" placeholder="Username" name="username"
+      {{#if userToEdit}}
+        value="{{userToEdit.username}}"
+      {{/if}}
+      >
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="password" class="label">Password</label>
+    <div class="control">
+      <input type="password" class="input" name="password">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="passwordConfirm" class="label">Confirm Password</label>
+    <div class="control">
+      <input type="password" class="input" name="passwordConfirm">
+    </div>
+  </div>
+  
+  <div class="field">
+    <label for="email" class="label">Email</label>
+    <div class="control">
+      <input class="input" type="email" placeholder="Email" name="email"
+      {{#if userToEdit}}
+        value="{{userToEdit.email}}"
+      {{/if}}
+      >
+    </div>
+  </div>
+
+  <div class="label">
+    <label class="label">Name</label>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <input class="input" type="text" placeholder="First name" name="firstName"
+          {{#if userToEdit}}
+            value="{{userToEdit.firstName}}"
+          {{/if}}
+          >
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control">
+          <input class="input" type="text" placeholder="Last name" name="lastName"
+          {{#if userToEdit}}
+            value="{{userToEdit.lastName}}"
+          {{/if}}
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="field">
+    <label for="role" class="label">Role</label>
+    <div class="control">
+      <div class="select">
+        <select name="isAdmin">
+          <option value="false">User</option>
+          <option value="true" {{#if userToEdit.isAdmin}}selected{{/if}}>Admin</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="control">
+    <button class="button is-primary">Submit</button>
+  </div>
+
+  {{#if userToEdit}}
+    <input type="hidden" name="id" value="{{userToEdit._id}}">
+  {{/if}}
+
+</form>

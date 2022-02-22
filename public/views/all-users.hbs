@@ -1,0 +1,28 @@
+<div class="table-container">
+  <table class="table is-striped is-fullwidth is-hoverable">
+    <thead>
+    <tr>
+      <th>Username</th>
+      <th>Email</th>
+      <th>User Role</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each allusers}}
+    <tr>
+      <td>{{username}}</td>
+      <td>{{email}}</td>
+      <td>{{role}}</td>
+      <td>
+        <a href="/dashboard/admin/users/edit/{{_id}}" class="btn btn-primary">
+          <i class="fas fa-pencil" aria-hidden="true"></i>
+        </a>
+        <a href="/dashboard/admin/users/delete/{{_id}}" class="btn btn-danger" onclick="return verifyDelete()">
+          <i class="fas fa-trash" aria-hidden="true"></i>
+        </a>
+      </td>
+    </tr>
+    {{/each}}
+  </table>
+</div>

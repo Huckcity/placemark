@@ -24,3 +24,11 @@ function clearNotification() {
   const notification = document.getElementById("notification");
   notification.style.display = "none";
 }
+
+function verifyDelete() {
+  if (confirm("Are you sure you want to delete this place?")) {
+    return true;
+  } else {
+    return false;
+  }
+}
