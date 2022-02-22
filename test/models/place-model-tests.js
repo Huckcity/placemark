@@ -39,7 +39,6 @@ suite("Place Model Tests", () => {
       testData.newPlace,
       testUser._id
     );
-    console.log(newPlace);
     const place = await db.placeStore.getById(newPlace._id);
     assert.equal(place.name, newPlace.name);
   });
@@ -84,7 +83,6 @@ suite("Place Model Tests", () => {
       testData.newPlace,
       testUser._id
     );
-    console.log(newPlace);
     const places = await db.placeStore.getByUserId(newPlace.user);
     assert.isArray(places);
     assert.equal(places.length, 6);

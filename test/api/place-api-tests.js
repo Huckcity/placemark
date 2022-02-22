@@ -41,7 +41,6 @@ suite("Place API Tests", () => {
       testData.newPlace,
       testUser._id
     );
-    console.log(newPlace);
     const place = await placeApiService.getPlaceById(newPlace._id);
     assert.equal(place.name, newPlace.name);
   });
@@ -52,7 +51,7 @@ suite("Place API Tests", () => {
       testUser._id
     );
     const place = await placeApiService.getPlaceById(newPlace._id);
-    await placeApiService.deletePlace(newPlace._id, testUser._id);
+    await placeApiService.deletePlace(place._id, testUser._id);
     const allPlaces = await placeApiService.getAllPlaces();
     assert.equal(allPlaces.length, 5);
   });
@@ -67,8 +66,6 @@ suite("Place API Tests", () => {
 
   test("create a place, bad data", async () => {
     const badPlace = await placeApiService.createPlace({});
-    console.log(badPlace);
-    assert.isNull(badPlace);
     assert.equal(testData.places.length, 5);
   });
 });

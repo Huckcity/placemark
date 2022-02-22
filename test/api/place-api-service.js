@@ -30,7 +30,7 @@ const placeApiService = {
         place,
         userId,
       });
-      return response.data === "" ? null : response.data;
+      return response.data;
     } catch (err) {
       return null;
     }
@@ -40,6 +40,7 @@ const placeApiService = {
     try {
       const response = await axios.delete(`${serverUrl}/api/places/${id}`, {
         data: {
+          id,
           userId,
         },
       });

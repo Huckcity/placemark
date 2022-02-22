@@ -199,7 +199,6 @@ const User = {
       const updatedPlace = {
         ...req.payload,
       };
-      console.log(updatedPlace);
       try {
         await db.placeStore.update(userId, req.params.id, updatedPlace);
         return h.redirect("/dashboard/places/" + req.params.id);
@@ -303,7 +302,6 @@ const User = {
         userToEdit,
       };
       try {
-        console.log(req.payload);
         const updatedUser = await db.userStore.update(
           userToEdit._id,
           req.payload

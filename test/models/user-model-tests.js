@@ -27,7 +27,6 @@ suite("User Model Tests", () => {
 
   test("getUserById() should return a user", async () => {
     const newUser = await db.userStore.create(testData.newUser);
-    console.log(newUser);
     const user = await db.userStore.getById(newUser._id);
     assert.equal(user.username, newUser.username);
   });
