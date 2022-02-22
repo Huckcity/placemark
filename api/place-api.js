@@ -44,9 +44,10 @@ const placeApi = {
   delete: {
     auth: false,
     handler: async (request, h) => {
+      console.log("this the damn thhang ", request.payload);
       try {
         const place = await db.placeStore.delete(
-          request.params.id,
+          request.payload.id,
           request.payload.userId
         );
         return place;

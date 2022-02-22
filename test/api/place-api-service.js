@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const serverUrl = `http://localhost:3000`;
+import dotenv from "dotenv";
+dotenv.config();
+
+const serverUrl = `http://localhost:${process.env.PORT}`;
 
 const placeApiService = {
   async getAllPlaces() {
