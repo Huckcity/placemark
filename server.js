@@ -91,6 +91,19 @@ const init = async () => {
   server.route(webRoutes);
   server.route(apiRoutes);
 
+  server.ext("onPreResponse", (request, h) => {
+    if (request.response.isBoom) {
+      return h.view(
+        "error-page",
+        {
+          friendlyerror: "I'm sorry Dave, I'm afraid I can't do that.",
+        },
+        { layout: "dashboardlayout" }
+      );
+    }
+    return h.continue;
+  });
+
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);
 

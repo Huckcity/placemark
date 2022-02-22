@@ -21,7 +21,7 @@ export default {
       username: "adamg",
       email: "adam.p.gibbons@gmail.com",
       password: "test",
-      isAdmin: true,
+      role: "admin",
     },
   },
   places: {

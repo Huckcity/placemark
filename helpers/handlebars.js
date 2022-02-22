@@ -23,6 +23,14 @@ const helpers = (hbs) => {
     const truncated = str.split(" ").slice(0, len).join(" ");
     return truncated + "...";
   });
+
+  hbs.registerHelper("ifEq", function (str1, str2, options) {
+    // Helper to check if two strings are equal
+    if (str1 === str2) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  });
 };
 
 export default helpers;

@@ -24,6 +24,7 @@ const Auth = {
 
       req.cookieAuth.set({
         id: user._id,
+        scope: user.role,
       });
 
       return h.redirect("/dashboard");

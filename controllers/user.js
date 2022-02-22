@@ -1,7 +1,6 @@
 "use strict";
 
 import db from "../models/db.js";
-import { checkAdmin } from "../helpers/utils.js";
 
 const User = {
   dashboard: {
@@ -222,7 +221,7 @@ const User = {
   adminUsers: {
     auth: {
       strategy: "session",
-      // scope: ["admin"],
+      scope: ["admin"],
     },
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
@@ -239,7 +238,10 @@ const User = {
   },
 
   adminAddUser: {
-    auth: "session",
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
       const viewData = {
@@ -253,27 +255,30 @@ const User = {
   },
 
   adminAddUserPost: {
-    auth: "session",
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
       const viewData = { user };
 
-      if (user.isAdmin) {
-        try {
-          await db.userStore.create(req.payload);
-          return h.redirect("/dashboard/admin/users");
-        } catch (error) {
-          viewData.error = error.message;
-          viewData.active = { AllUsers: true };
-          return h.view("add-user", viewData, { layout: "dashboardlayout" });
-        }
+      try {
+        await db.userStore.create(req.payload);
+        return h.redirect("/dashboard/admin/users");
+      } catch (error) {
+        viewData.error = error.message;
+        viewData.active = { AllUsers: true };
+        return h.view("add-user", viewData, { layout: "dashboardlayout" });
       }
-      return h.view("add-user", viewData, { layout: "dashboardlayout" });
     },
   },
 
   adminEditUser: {
-    auth: "session",
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
       const userToEdit = await db.userStore.getById(req.params.id);
@@ -286,7 +291,10 @@ const User = {
   },
 
   adminEditUserPost: {
-    auth: "session",
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
       let userToEdit = await db.userStore.getById(req.payload.id);
@@ -311,7 +319,10 @@ const User = {
   },
 
   adminDeleteUser: {
-    auth: "session",
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
       try {

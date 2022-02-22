@@ -72,9 +72,9 @@
     <label for="role" class="label">Role</label>
     <div class="control">
       <div class="select">
-        <select name="isAdmin">
-          <option value="false">User</option>
-          <option value="true" {{#if userToEdit.isAdmin}}selected{{/if}}>Admin</option>
+        <select name="role">
+          <option value="user">User</option>
+          <option value="admin" {{#ifEq userToEdit.role "admin"}}selected{{/ifEq}}>Admin</option>
         </select>
       </div>
     </div>

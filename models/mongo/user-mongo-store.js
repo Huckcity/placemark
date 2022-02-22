@@ -64,7 +64,7 @@ const userMongoStore = {
       delete user.password;
     }
 
-    if (user.password !== "" && user.password !== user.passwordConfirm) {
+    if (user.password && user.password !== user.passwordConfirm) {
       throw new Error("Passwords do not match.");
     }
 

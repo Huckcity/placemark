@@ -20,9 +20,9 @@ const userSchema = new Schema(
     },
     firstName: String,
     lastName: String,
-    isAdmin: {
-      type: Boolean,
-      default: false,
+    role: {
+      type: String,
+      default: "user",
     },
   },
   {
