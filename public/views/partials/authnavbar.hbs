@@ -19,13 +19,15 @@
     Administration
   </p>
   <ul class="menu-list">
-    <li><a>Team Settings</a></li>
     <li>
-      <a>Manage Your Team</a>
+      <a>Manage Users</a>
       <ul>
-        <li><a>Members</a></li>
-        <li><a>Plugins</a></li>
-        <li><a>Add a member</a></li>
+        <li><a 
+        class="{{#if active.AllUsers}}is-active{{/if}}"
+        href="/dashboard/admin/users">All Users</a></li>
+        <li><a 
+        class="{{#if active.AddUser}}is-active{{/if}}"
+        href="/dashboard/admin/users/add">Add a User</a></li>
       </ul>
     </li>
   </ul>

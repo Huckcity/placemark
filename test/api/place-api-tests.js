@@ -52,12 +52,7 @@ suite("Place API Tests", () => {
       testUser._id
     );
     const place = await placeApiService.getPlaceById(newPlace._id);
-    console.log("place : newplace", place, newPlace);
-    console.log("testuserid", testUser._id);
-    console.log("fuuuuuuuuuuuuu");
     await placeApiService.deletePlace(newPlace._id, testUser._id);
-    console.log("fuuuuuuuuuuuuu");
-
     const allPlaces = await placeApiService.getAllPlaces();
     assert.equal(allPlaces.length, 5);
   });

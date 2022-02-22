@@ -90,6 +90,38 @@ const routes = [
     path: "/dashboard/settings/update",
     config: User.settingsUpdate,
   },
+
+  // Admin routes
+  {
+    method: "GET",
+    path: "/dashboard/admin/users",
+    config: User.adminUsers,
+  },
+  {
+    method: "GET",
+    path: "/dashboard/admin/users/add",
+    config: User.adminAddUser,
+  },
+  {
+    method: "POST",
+    path: "/dashboard/admin/users/add",
+    config: User.adminAddUserPost,
+  },
+  {
+    method: "GET",
+    path: "/dashboard/admin/users/edit/{id}",
+    config: User.adminEditUser,
+  },
+  {
+    method: "POST",
+    path: "/dashboard/admin/users/edit/{id}",
+    config: User.adminEditUserPost,
+  },
+  {
+    method: "GET",
+    path: "/dashboard/admin/users/delete/{id}",
+    config: User.adminDeleteUser,
+  },
 ];
 
 export default routes;
