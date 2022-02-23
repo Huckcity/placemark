@@ -1,9 +1,7 @@
-"use strict";
-
 import db from "../models/db.js";
 import { registerSpec, loginSpec } from "../models/joi-schemas.js";
 
-const Auth = {
+const authController = {
   login: {
     auth: false,
     handler: async (req, h) => {
@@ -78,4 +76,4 @@ const Auth = {
   },
 };
 
-export default Auth;
+export default authController;

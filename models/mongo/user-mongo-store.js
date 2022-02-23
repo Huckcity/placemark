@@ -1,6 +1,18 @@
 import { User } from "./user.js";
 
 const userMongoStore = {
+  async getAll() {
+    return User.find({}).lean();
+  },
+
+  async getByUsername(username) {
+    if (!username) {
+      throw new Error("Username is required.");
+    }
+    const user = await User.findOne({ username }).lean();
+    return user;
+  },
+
   async getById(id) {
     if (!id) {
       throw new Error("User id is required.");
@@ -24,24 +36,11 @@ const userMongoStore = {
   },
 
   async create(user) {
-    if (!user || !user.username || !user.email) {
-      throw new Error("User is required.");
-    }
-    if (user.password !== "" && user.password !== user.passwordConfirm) {
-      throw new Error("Passwords do not match.");
-    }
-    if (
-      user.password === null ||
-      user.password === undefined ||
-      user.password === ""
-    ) {
-      throw new Error("Password is required.");
-    }
-
     // TODO: Check for uniqueness of username/email
     const newUser = new User(user);
     await newUser.save();
-    return newUser;
+    const savedUser = await this.getById(newUser._id);
+    return savedUser;
   },
 
   async update(id, user) {
@@ -91,18 +90,6 @@ const userMongoStore = {
 
   async deleteAll() {
     return User.deleteMany({});
-  },
-
-  async getAll() {
-    return User.find({}).lean();
-  },
-
-  async getByUsername(username) {
-    if (!username) {
-      throw new Error("Username is required.");
-    }
-    const user = await User.findOne({ username });
-    return user;
   },
 };
 
