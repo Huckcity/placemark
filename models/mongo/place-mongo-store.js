@@ -2,6 +2,11 @@ import { Place } from "./place.js";
 import { ObjectId } from "mongodb";
 
 const placeMongoStore = {
+  async getAll() {
+    const places = Place.find({}).populate("user").lean();
+    return places;
+  },
+
   async getById(id) {
     if (!id) {
       throw new Error("Place id is required.");
@@ -34,10 +39,6 @@ const placeMongoStore = {
       return [];
     }
     return places;
-  },
-
-  async getAll() {
-    return Place.find({}).populate("user").lean();
   },
 
   async create(place, userId) {

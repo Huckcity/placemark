@@ -122,6 +122,32 @@ const routes = [
     path: "/dashboard/admin/users/delete/{id}",
     config: User.adminDeleteUser,
   },
+
+  // Wildcard static file routes
+  {
+    method: "GET",
+    path: "/node_modules/{param*}",
+    handler: {
+      directory: {
+        path: "./node_modules",
+      },
+    },
+    options: {
+      auth: false,
+    },
+  },
+  {
+    method: "GET",
+    path: "/public/{param*}",
+    handler: {
+      directory: {
+        path: "./public",
+      },
+    },
+    options: {
+      auth: false,
+    },
+  },
 ];
 
 export default routes;

@@ -1,6 +1,7 @@
 "use strict";
 
 import db from "../models/db.js";
+import { registerSpec, loginSpec } from "../models/joi-schemas.js";
 
 const Auth = {
   login: {
@@ -12,6 +13,17 @@ const Auth = {
 
   loginPost: {
     auth: false,
+    validate: {
+      payload: loginSpec,
+      failAction: (request, h, error) => {
+        return h
+          .view("login", {
+            error: error.message,
+          })
+          .takeover()
+          .code(400);
+      },
+    },
     handler: async (req, h) => {
       const { username, password } = req.payload;
       const user = await db.userStore.getByUsername(username);
@@ -47,28 +59,20 @@ const Auth = {
 
   registerPost: {
     auth: false,
+    validate: {
+      payload: registerSpec,
+      failAction: (request, h, error) => {
+        return h
+          .view("index", {
+            error: error.message,
+          })
+          .takeover()
+          .code(400);
+      },
+    },
     handler: async (req, h) => {
-      const { username, email, password } = req.payload;
-      const user = await db.userStore.getByUsername(username);
-
-      if (user) {
-        return h.view("register", {
-          error: "Username already taken",
-        });
-      }
-
-      try {
-        db.userStore.create({
-          username,
-          password,
-          email,
-        });
-      } catch (err) {
-        return h.view("register", {
-          error: err.message,
-        });
-      }
-
+      const user = req.payload;
+      await db.userStore.create(user);
       return h.redirect("/login");
     },
   },
