@@ -19,12 +19,8 @@ const placeMongoStore = {
   },
 
   async getByName(name) {
-    if (!name) {
-      throw new Error("Place name is required.");
-    }
     const place = await Place.findOne({ name }).lean();
     if (!place) {
-      // throw new Error(`Place with name ${name} not found.`);
       return null;
     }
     return place;
@@ -42,14 +38,12 @@ const placeMongoStore = {
   },
 
   async create(place, userId) {
-    if (!place || !place.name) {
-      throw new Error("Place is required.");
-    }
     const newPlace = new Place(place);
     newPlace.user = userId;
     newPlace.location.lat = place.latitude || 0;
     newPlace.location.lng = place.longitude || 0;
-    const savedPlace = await newPlace.save();
+    await newPlace.save();
+    const savedPlace = await this.getById(newPlace._id);
     return savedPlace;
   },
 

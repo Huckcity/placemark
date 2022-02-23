@@ -1,6 +1,4 @@
-"use strict";
-
-const Home = {
+const baseController = {
   index: {
     auth: false,
     handler: async (req, h) => {
@@ -9,4 +7,4 @@ const Home = {
   },
 };
 
-export default Home;
+export default baseController;
