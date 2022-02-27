@@ -5,8 +5,6 @@ import authApiService from "./auth-api-service.js";
 import * as testData from "../fixtures.js";
 
 suite("User API Tests", () => {
-  let testUser = testData.newUser;
-
   suiteSetup(async () => {
     await userApiService.deleteAllUsers();
   });

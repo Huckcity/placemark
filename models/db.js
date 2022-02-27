@@ -5,6 +5,7 @@ import PlaceJsonStore from "./json/place-json-store.js";
 
 import userMongoStore from "./mongo/user-mongo-store.js";
 import placeMongoStore from "./mongo/place-mongo-store.js";
+import categoryMongoStore from "./mongo/category-mongo-store.js";
 
 const db = {
   userStore: null,
@@ -21,12 +22,14 @@ const db = {
         connectMongoose(process.env.MONGO_LOCAL_URL);
         this.userStore = userMongoStore;
         this.placeStore = placeMongoStore;
+        this.categoryStore = categoryMongoStore;
         break;
       case "production":
         console.log("Using production Mongo database");
         connectMongoose(process.env.MONGO_LIVE_URL);
         this.userStore = userMongoStore;
         this.placeStore = placeMongoStore;
+        this.categoryStore = categoryMongoStore;
         break;
       default:
         throw new Error(`Unknown execution environment: ${env}`);

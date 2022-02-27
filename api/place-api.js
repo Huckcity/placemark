@@ -66,7 +66,7 @@ const placeApi = {
     },
     handler: async (request, h) => {
       try {
-        const places = await db.placeStore.getByCategory(request.params.id);
+        const places = await db.placeStore.getByCategory(request.params.category);
         return places;
       } catch (err) {
         throw Boom.badImplementation(err);

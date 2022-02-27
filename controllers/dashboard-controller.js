@@ -118,8 +118,10 @@ const dashboardController = {
     auth: "session",
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
+      const categories = await db.categoryStore.getAll();
       const viewData = {
         user,
+        categories,
         active: {
           AddPlace: true,
         },
@@ -180,9 +182,18 @@ const dashboardController = {
   editPlace: {
     auth: "session",
     handler: async (req, h) => {
-      const user = req.auth.credentials;
+      const user = await db.userStore.getById(req.auth.credentials.id);
       const place = await db.placeStore.getById(req.params.id);
-      return h.view("edit-place", { user, place }, { layout: "dashboardlayout" });
+      const categories = await db.categoryStore.getAll();
+      const viewData = {
+        user,
+        place,
+        categories,
+        active: {
+          EditPlace: true,
+        },
+      };
+      return h.view("edit-place", viewData, { layout: "dashboardlayout" });
     },
   },
 
@@ -190,11 +201,8 @@ const dashboardController = {
     auth: "session",
     handler: async (req, h) => {
       const userId = req.auth.credentials.id;
-      const updatedPlace = {
-        ...req.payload,
-      };
       try {
-        await db.placeStore.update(userId, req.params.id, updatedPlace);
+        await db.placeStore.update(userId, req.params.id, req.payload);
         return h.redirect("/dashboard/places/" + req.params.id);
       } catch (error) {
         console.log(error);
@@ -204,6 +212,37 @@ const dashboardController = {
             user: req.auth.credentials,
             place: updatedPlace,
             error: error.message,
+          },
+          { layout: "dashboardlayout" }
+        );
+      }
+    },
+  },
+
+  placesByCategory: {
+    auth: "session",
+    handler: async (req, h) => {
+      try {
+        const user = await db.userStore.getById(req.auth.credentials.id);
+        const category = req.params.category;
+        const places = await db.placeStore.getByCategory(category);
+        const viewData = {
+          user,
+          places,
+          active: {
+            Places: true,
+          },
+        };
+        return h.view("places-by-category", viewData, { layout: "dashboardlayout" });
+      } catch (err) {
+        return h.view(
+          "dashboard",
+          {
+            user: req.auth.credentials,
+            error: err.message,
+            active: {
+              Places: true,
+            },
           },
           { layout: "dashboardlayout" }
         );

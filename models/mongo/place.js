@@ -14,6 +14,10 @@ const placeSchema = new Schema(
       lat: Number,
       lng: Number,
     },
+    category: {
+      type: String,
+      required: false,
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Place } from "./place.js";
+import * as utils from "../../helpers/utils.js";
 
 const placeMongoStore = {
   async getAll() {
@@ -30,7 +31,20 @@ const placeMongoStore = {
     if (!userId) {
       throw new Error("User id is required.");
     }
-    const places = await Place.find({ user: ObjectId(userId) }).lean();
+    const places = await Place.find({ user: ObjectId(userId) })
+      .populate("user")
+      .lean();
+    if (!places) {
+      return [];
+    }
+    return places;
+  },
+
+  async getByCategory(category) {
+    if (!category) {
+      throw new Error("Category is required.");
+    }
+    const places = await Place.find({ category: category }).populate("user").lean();
     if (!places) {
       return [];
     }
@@ -71,6 +85,7 @@ const placeMongoStore = {
       existingPlace.description = place.description || existingPlace.description;
       existingPlace.location.lat = place.latitude || existingPlace.location.lat;
       existingPlace.location.lng = place.longitude || existingPlace.location.lng;
+      existingPlace.category = place.category || existingPlace.category;
       const savedPlace = await existingPlace.save();
       return savedPlace;
     }

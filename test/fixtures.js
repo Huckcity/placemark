@@ -48,9 +48,11 @@ export const newUser2 = {
 export const places = [
   {
     name: "test1",
+    category: "restaurant",
   },
   {
     name: "test2",
+    category: "restaurant",
   },
   {
     name: "test3",
@@ -69,4 +71,32 @@ export const newPlace = {
 
 export const updatedPlace = {
   name: "updatedtest6",
+};
+
+export const categories = [
+  {
+    name: "City",
+    slug_name: "city",
+  },
+  {
+    name: "Landmark",
+    slug_name: "landmark",
+  },
+  {
+    name: "Monument",
+    slug_name: "monument",
+  },
+  {
+    name: "Museum",
+    slug_name: "museum",
+  },
+  {
+    name: "Park",
+    slug_name: "park",
+  },
+];
+
+export const newCategory = {
+  name: "New Category",
+  slug_name: "new-category",
 };

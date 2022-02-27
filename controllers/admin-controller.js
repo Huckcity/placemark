@@ -121,6 +121,106 @@ const adminController = {
       }
     },
   },
+
+  adminCategories: {
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
+    handler: async (req, h) => {
+      const user = await db.userStore.getById(req.auth.credentials.id);
+      const categories = await db.categoryStore.getAll();
+      const viewData = {
+        user,
+        categories,
+        active: {
+          AllCategories: true,
+        },
+      };
+      return h.view("all-categories", viewData, { layout: "dashboardlayout" });
+    },
+  },
+
+  adminAddCategory: {
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
+    handler: async (req, h) => {
+      const user = await db.userStore.getById(req.auth.credentials.id);
+      const viewData = {
+        user,
+        active: {
+          AddCategory: true,
+        },
+      };
+      return h.view("add-category", viewData, { layout: "dashboardlayout" });
+    },
+  },
+
+  adminAddCategoryPost: {
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
+    handler: async (req, h) => {
+      const category = await db.categoryStore.create(req.payload);
+      return h.redirect("/dashboard/admin/categories");
+    },
+  },
+
+  adminEditCategory: {
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
+    handler: async (req, h) => {
+      const user = await db.userStore.getById(req.auth.credentials.id);
+      const category = await db.categoryStore.getById(req.params.id);
+      const viewData = {
+        user,
+        category,
+      };
+      return h.view("edit-category", viewData, { layout: "dashboardlayout" });
+    },
+  },
+
+  adminEditCategoryPost: {
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
+    handler: async (req, h) => {
+      const user = await db.userStore.getById(req.auth.credentials.id);
+      const category = await db.categoryStore.update(req.params.id, req.payload);
+      return h.redirect("/dashboard/admin/categories");
+    },
+  },
+
+  adminDeleteCategory: {
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
+    handler: async (req, h) => {
+      const user = await db.userStore.getById(req.auth.credentials.id);
+      try {
+        await db.categoryStore.delete(req.params.id);
+        return h.redirect("/dashboard/admin/categories");
+      } catch (error) {
+        const categories = await db.categoryStore.getAll();
+        const viewData = {
+          user,
+          categories,
+          error: error.message,
+          active: {
+            AllCategories: true,
+          },
+        };
+        return h.view("all-categories", viewData, { layout: "dashboardlayout" });
+      }
+    },
+  },
 };
 
 export default adminController;

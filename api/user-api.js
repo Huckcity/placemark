@@ -68,7 +68,6 @@ const userApi = {
     handler: async (request, h) => {
       try {
         const user = await db.userStore.delete(request.params.id);
-        console.log(user);
         return user;
       } catch (err) {
         throw Boom.badImplementation(err);

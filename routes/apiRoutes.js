@@ -1,5 +1,6 @@
 import userApi from "../api/user-api.js";
 import placeApi from "../api/place-api.js";
+import categoryApi from "../api/category-api.js";
 
 const apiRoutes = [
   // User API Routes
@@ -64,6 +65,44 @@ const apiRoutes = [
     method: "PUT",
     path: "/api/places/{id}",
     config: placeApi.update,
+  },
+  {
+    method: "GET",
+    path: "/api/places/category/{category}",
+    config: placeApi.findByCategory,
+  },
+
+  // Category API Routes
+
+  {
+    method: "GET",
+    path: "/api/categories",
+    config: categoryApi.allCategories,
+  },
+  {
+    method: "POST",
+    path: "/api/categories/add",
+    config: categoryApi.create,
+  },
+  {
+    method: "GET",
+    path: "/api/categories/{id}",
+    config: categoryApi.findOne,
+  },
+  {
+    method: "DELETE",
+    path: "/api/categories/{id}",
+    config: categoryApi.delete,
+  },
+  {
+    method: "DELETE",
+    path: "/api/categories/deleteall",
+    config: categoryApi.deleteAll,
+  },
+  {
+    method: "PUT",
+    path: "/api/categories/{id}",
+    config: categoryApi.update,
   },
 
   // Auth API Routes

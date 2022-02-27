@@ -1,0 +1,117 @@
+import Boom from "@hapi/boom";
+import db from "../models/db.js";
+import { categorySpec, categoryArray, idSpec } from "../models/joi-schemas.js";
+
+import { validationError } from "./logger.js";
+
+const categoryApi = {
+  findOne: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const category = await db.categoryStore.getById(request.params.id);
+        return category;
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Get category by id",
+    notes: "Returns details of a category",
+    response: { schema: categorySpec, failAction: validationError },
+  },
+
+  allCategories: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const categories = await db.categoryStore.getAll();
+        return categories;
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Get all categories",
+    notes: "Returns details of all categories",
+    response: { schema: categoryArray, failAction: validationError },
+  },
+
+  create: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const newCategory = await db.categoryStore.create(request.payload);
+        return newCategory;
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Create a new category",
+    notes: "Creates a new category",
+    validate: { payload: categorySpec },
+    response: { schema: categorySpec, failAction: validationError },
+  },
+
+  update: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const updatedCategory = await db.categoryStore.update(request.params.id, request.payload);
+        return updatedCategory;
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Update a category",
+    notes: "Updates a category",
+    validate: { payload: categorySpec },
+    response: { schema: categorySpec, failAction: validationError },
+  },
+
+  delete: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const deletedCategory = await db.categoryStore.delete(request.params.id);
+        return deletedCategory;
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Delete a category",
+    notes: "Deletes a category",
+  },
+
+  deleteAll: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const deletedCategories = await db.categoryStore.deleteAll();
+        return deletedCategories;
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Delete all categories",
+    notes: "Deletes all categories",
+  },
+};
+
+export default categoryApi;

@@ -36,3 +36,9 @@ export const validate = async (decoded, request, h) => {
   }
   return { isValid: true };
 };
+
+export const slugify = (text) => {
+  const lower = text.toLowerCase();
+  const slug = lower.replace(/[^a-z0-9]+/g, "-");
+  return slug;
+};

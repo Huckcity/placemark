@@ -1,0 +1,18 @@
+<form action="/dashboard/admin/categories/{{action}}{{#if category}}/{{category._id}}{{/if}}" method="POST">
+  
+  <div class="field">
+    <label class="label">Category name</label>
+    <div class="control">
+      <input class="input" type="text" placeholder="Name" name="name"
+      {{#if category}}
+        value="{{category.name}}"
+      {{/if}}
+      >
+    </div>
+  </div>
+
+  <div class="control">
+    <button class="button is-primary">Submit</button>
+  </div>
+
+</form>

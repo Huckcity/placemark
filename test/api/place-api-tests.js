@@ -68,4 +68,10 @@ suite("Place API Tests", () => {
     const badPlace = await placeApiService.createPlace({});
     assert.equal(testData.places.length, 5);
   });
+
+  test("getPlacesByCategory() should return an array of places", async () => {
+    const places = await placeApiService.getPlacesByCategory("restaurant");
+    assert.isArray(places);
+    assert.equal(places.length, 2);
+  });
 });
