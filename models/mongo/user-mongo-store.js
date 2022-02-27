@@ -9,7 +9,7 @@ const userMongoStore = {
     if (!username) {
       throw new Error("Username is required.");
     }
-    const user = await User.findOne({ username }).lean();
+    const user = await User.findOne({ username });
     return user;
   },
 
@@ -24,7 +24,7 @@ const userMongoStore = {
     return user;
   },
 
-  async getUserByEmail(email) {
+  async getByEmail(email) {
     if (!email) {
       throw new Error("User email is required.");
     }
@@ -33,6 +33,29 @@ const userMongoStore = {
       throw new Error(`User with email ${email} not found.`);
     }
     return user;
+  },
+
+  async authByEmailOrUsername(user) {
+    if (!user.email && !user.username) {
+      throw new Error("Username/email is required.");
+    }
+    if (!user.password) {
+      throw new Error("User password is required.");
+    }
+
+    const login = user.email ? user.email : user.username;
+
+    const existingUser = await User.findOne({
+      $or: [{ email: login }, { username: login }],
+    });
+    if (!existingUser) {
+      throw new Error(`User with email ${login} not found.`);
+    }
+    const isMatch = await existingUser.checkPassword(user.password);
+    if (!isMatch) {
+      throw new Error("Invalid password.");
+    }
+    return existingUser;
   },
 
   async create(user) {
@@ -55,11 +78,7 @@ const userMongoStore = {
       throw new Error("User is required.");
     }
 
-    if (
-      user.password === null ||
-      user.password === undefined ||
-      user.password === ""
-    ) {
+    if (user.password === null || user.password === undefined || user.password === "") {
       delete user.password;
     }
 

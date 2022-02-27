@@ -86,10 +86,7 @@ const adminController = {
         userToEdit,
       };
       try {
-        const updatedUser = await db.userStore.update(
-          userToEdit._id,
-          req.payload
-        );
+        const updatedUser = await db.userStore.update(userToEdit._id, req.payload);
         viewData.userToEdit = updatedUser;
         viewData.message = "User details saved.";
         return h.view("edit-user", viewData, { layout: "dashboardlayout" });

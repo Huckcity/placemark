@@ -3,8 +3,8 @@ import db from "../../models/db.js";
 import * as testData from "../fixtures.js";
 
 suite("User Model Tests", () => {
+  db.init(process.env.ENVIRONMENT);
   setup(async () => {
-    db.init(process.env.ENVIRONMENT);
     await db.userStore.deleteAll();
     for (let user of testData.users) {
       await db.userStore.create(user);

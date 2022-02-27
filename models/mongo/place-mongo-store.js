@@ -1,5 +1,5 @@
-import { Place } from "./place.js";
 import { ObjectId } from "mongodb";
+import { Place } from "./place.js";
 
 const placeMongoStore = {
   async getAll() {
@@ -68,11 +68,9 @@ const placeMongoStore = {
       throw new Error(`You do not have permission to edit this place.`);
     } else {
       existingPlace.name = place.name || existingPlace.name;
-      existingPlace.description =
-        place.description || existingPlace.description;
+      existingPlace.description = place.description || existingPlace.description;
       existingPlace.location.lat = place.latitude || existingPlace.location.lat;
-      existingPlace.location.lng =
-        place.longitude || existingPlace.location.lng;
+      existingPlace.location.lng = place.longitude || existingPlace.location.lng;
       const savedPlace = await existingPlace.save();
       return savedPlace;
     }

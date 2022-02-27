@@ -38,6 +38,13 @@ export const newUser = {
   email: "newtest@user.com",
 };
 
+export const newUser2 = {
+  username: "newtest7",
+  password: "test",
+  passwordConfirm: "test",
+  email: "newtest7@user.com",
+};
+
 export const places = [
   {
     name: "test1",
