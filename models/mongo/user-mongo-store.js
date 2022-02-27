@@ -1,6 +1,18 @@
 import { User } from "./user.js";
 
 const userMongoStore = {
+  async getAll() {
+    return User.find({}).lean();
+  },
+
+  async getByUsername(username) {
+    if (!username) {
+      throw new Error("Username is required.");
+    }
+    const user = await User.findOne({ username });
+    return user;
+  },
+
   async getById(id) {
     if (!id) {
       throw new Error("User id is required.");
@@ -12,7 +24,7 @@ const userMongoStore = {
     return user;
   },
 
-  async getUserByEmail(email) {
+  async getByEmail(email) {
     if (!email) {
       throw new Error("User email is required.");
     }
@@ -23,25 +35,35 @@ const userMongoStore = {
     return user;
   },
 
-  async create(user) {
-    if (!user || !user.username || !user.email) {
-      throw new Error("User is required.");
+  async authByEmailOrUsername(user) {
+    if (!user.email && !user.username) {
+      throw new Error("Username/email is required.");
     }
-    if (user.password !== "" && user.password !== user.passwordConfirm) {
-      throw new Error("Passwords do not match.");
-    }
-    if (
-      user.password === null ||
-      user.password === undefined ||
-      user.password === ""
-    ) {
-      throw new Error("Password is required.");
+    if (!user.password) {
+      throw new Error("User password is required.");
     }
 
+    const login = user.email ? user.email : user.username;
+
+    const existingUser = await User.findOne({
+      $or: [{ email: login }, { username: login }],
+    });
+    if (!existingUser) {
+      throw new Error(`User with email ${login} not found.`);
+    }
+    const isMatch = await existingUser.checkPassword(user.password);
+    if (!isMatch) {
+      throw new Error("Invalid password.");
+    }
+    return existingUser;
+  },
+
+  async create(user) {
     // TODO: Check for uniqueness of username/email
     const newUser = new User(user);
     await newUser.save();
-    return newUser;
+    const savedUser = await this.getById(newUser._id);
+    return savedUser;
   },
 
   async update(id, user) {
@@ -56,15 +78,11 @@ const userMongoStore = {
       throw new Error("User is required.");
     }
 
-    if (
-      user.password === null ||
-      user.password === undefined ||
-      user.password === ""
-    ) {
+    if (user.password === null || user.password === undefined || user.password === "") {
       delete user.password;
     }
 
-    if (user.password !== "" && user.password !== user.passwordConfirm) {
+    if (user.password && user.password !== user.passwordConfirm) {
       throw new Error("Passwords do not match.");
     }
 
@@ -91,18 +109,6 @@ const userMongoStore = {
 
   async deleteAll() {
     return User.deleteMany({});
-  },
-
-  async getAll() {
-    return User.find({}).lean();
-  },
-
-  async getByUsername(username) {
-    if (!username) {
-      throw new Error("Username is required.");
-    }
-    const user = await User.findOne({ username });
-    return user;
   },
 };
 

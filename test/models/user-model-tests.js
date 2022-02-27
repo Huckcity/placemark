@@ -3,8 +3,8 @@ import db from "../../models/db.js";
 import * as testData from "../fixtures.js";
 
 suite("User Model Tests", () => {
+  db.init(process.env.ENVIRONMENT);
   setup(async () => {
-    db.init(process.env.ENVIRONMENT);
     await db.userStore.deleteAll();
     for (let user of testData.users) {
       await db.userStore.create(user);
@@ -27,7 +27,6 @@ suite("User Model Tests", () => {
 
   test("getUserById() should return a user", async () => {
     const newUser = await db.userStore.create(testData.newUser);
-    console.log(newUser);
     const user = await db.userStore.getById(newUser._id);
     assert.equal(user.username, newUser.username);
   });

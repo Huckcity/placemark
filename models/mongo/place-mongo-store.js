@@ -1,7 +1,12 @@
-import { Place } from "./place.js";
 import { ObjectId } from "mongodb";
+import { Place } from "./place.js";
 
 const placeMongoStore = {
+  async getAll() {
+    const places = Place.find({}).populate("user").lean();
+    return places;
+  },
+
   async getById(id) {
     if (!id) {
       throw new Error("Place id is required.");
@@ -14,12 +19,8 @@ const placeMongoStore = {
   },
 
   async getByName(name) {
-    if (!name) {
-      throw new Error("Place name is required.");
-    }
     const place = await Place.findOne({ name }).lean();
     if (!place) {
-      // throw new Error(`Place with name ${name} not found.`);
       return null;
     }
     return place;
@@ -36,19 +37,13 @@ const placeMongoStore = {
     return places;
   },
 
-  async getAll() {
-    return Place.find({}).populate("user").lean();
-  },
-
   async create(place, userId) {
-    if (!place || !place.name) {
-      throw new Error("Place is required.");
-    }
     const newPlace = new Place(place);
     newPlace.user = userId;
     newPlace.location.lat = place.latitude || 0;
     newPlace.location.lng = place.longitude || 0;
-    const savedPlace = await newPlace.save();
+    await newPlace.save();
+    const savedPlace = await this.getById(newPlace._id);
     return savedPlace;
   },
 
@@ -73,11 +68,9 @@ const placeMongoStore = {
       throw new Error(`You do not have permission to edit this place.`);
     } else {
       existingPlace.name = place.name || existingPlace.name;
-      existingPlace.description =
-        place.description || existingPlace.description;
+      existingPlace.description = place.description || existingPlace.description;
       existingPlace.location.lat = place.latitude || existingPlace.location.lat;
-      existingPlace.location.lng =
-        place.longitude || existingPlace.location.lng;
+      existingPlace.location.lng = place.longitude || existingPlace.location.lng;
       const savedPlace = await existingPlace.save();
       return savedPlace;
     }

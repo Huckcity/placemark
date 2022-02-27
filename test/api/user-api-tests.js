@@ -1,58 +1,82 @@
+import axios from "axios";
 import { assert } from "chai";
-import apiService from "./user-api-service.js";
-import * as testData from "../../test/fixtures.js";
+import userApiService from "./user-api-service.js";
+import authApiService from "./auth-api-service.js";
+import * as testData from "../fixtures.js";
 
 suite("User API Tests", () => {
+  let testUser = testData.newUser;
+
+  suiteSetup(async () => {
+    await userApiService.deleteAllUsers();
+  });
+
   setup(async () => {
-    await apiService.deleteAllUsers();
     for (let user of testData.users) {
-      await apiService.createUser(user);
+      await userApiService.createUser(user);
     }
   });
 
   teardown(async () => {
-    await apiService.deleteAllUsers();
+    await userApiService.deleteAllUsers();
+    authApiService.clearAuth();
   });
 
+  suiteTeardown(async () => {});
+
   test("Create A User", async () => {
-    const returnedUser = await apiService.createUser(testData.newUser);
+    const returnedUser = await userApiService.createUser(testData.newUser);
+    await authApiService.authenticate(testData.newUser);
     assert.equal(returnedUser.username, testData.newUser.username);
     assert.equal(returnedUser.email, testData.newUser.email);
-    const allUsers = await apiService.getAllUsers();
+    const allUsers = await userApiService.getAllUsers();
     assert.equal(allUsers.length, testData.users.length + 1);
   });
 
   test("getAllUsers() should return an array of users", async () => {
-    const users = await apiService.getAllUsers();
+    const returnedUser = await userApiService.createUser(testData.newUser);
+    await authApiService.authenticate(testData.newUser);
+    const users = await userApiService.getAllUsers();
     assert.isArray(users);
-    assert.equal(users.length, testData.users.length);
+    assert.equal(users.length, testData.users.length + 1);
   });
 
   test("getUserById() should return a user", async () => {
-    const newUser = await apiService.createUser(testData.newUser);
-    const user = await apiService.getUserById(newUser._id);
+    const newUser = await userApiService.createUser(testData.newUser);
+    await authApiService.authenticate(testData.newUser);
+
+    const user = await userApiService.getUserById(newUser._id);
     assert.equal(user.username, newUser.username);
   });
 
   test("deleteUser() should delete one user", async () => {
-    const newUser = await apiService.createUser(testData.newUser);
-    const user = await apiService.getUserById(newUser._id);
-    assert.equal(user.username, newUser.username);
-    await apiService.deleteUser(newUser._id);
-    const allUsers = await apiService.getAllUsers();
-    assert.equal(allUsers.length, 5);
+    const newUser = await userApiService.createUser(testData.newUser);
+    await authApiService.authenticate(testData.newUser);
+
+    const userToDelete = await userApiService.createUser(testData.newUser2);
+    const allUsers1 = await userApiService.getAllUsers();
+    assert.equal(allUsers1.length, 7);
+    await userApiService.deleteUser(userToDelete._id);
+    const allUsers2 = await userApiService.getAllUsers();
+    assert.equal(allUsers2.length, 6);
   });
 
   test("deleteAllUsers() should delete all users", async () => {
-    const users = await apiService.getAllUsers();
-    assert.equal(users.length, 5);
-    await apiService.deleteAllUsers();
-    const allUsers = await apiService.getAllUsers();
-    assert.equal(allUsers.length, 0);
+    const newUser = await userApiService.createUser(testData.newUser);
+    await authApiService.authenticate(testData.newUser);
+
+    const users = await userApiService.getAllUsers();
+    assert.equal(users.length, 6);
+    await userApiService.deleteAllUsers();
+
+    const onlyUser = await userApiService.createUser(testData.newUser);
+    await authApiService.authenticate(testData.newUser);
+    const allUsers = await userApiService.getAllUsers();
+    assert.equal(allUsers.length, 1);
   });
 
   test("create a user, bad data", async () => {
-    const badUser = await apiService.createUser({});
+    const badUser = await userApiService.createUser({});
     assert.isNull(badUser);
     assert.equal(testData.users.length, 5);
   });

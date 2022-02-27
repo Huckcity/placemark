@@ -4,9 +4,9 @@ import * as testData from "../fixtures.js";
 
 suite("Place Model Tests", () => {
   let testUser = {};
+  db.init(process.env.ENVIRONMENT);
 
   setup(async () => {
-    db.init(process.env.ENVIRONMENT);
     await db.placeStore.deleteAll();
     await db.userStore.deleteAll();
 
@@ -18,10 +18,7 @@ suite("Place Model Tests", () => {
   });
 
   test("Create A Place", async () => {
-    const returnedPlace = await db.placeStore.create(
-      testData.newPlace,
-      testUser._id
-    );
+    const returnedPlace = await db.placeStore.create(testData.newPlace, testUser._id);
     assert.equal(returnedPlace.name, testData.newPlace.name);
     assert.equal(returnedPlace.address, testData.newPlace.address);
     const allPlaces = await db.placeStore.getAll();
@@ -35,35 +32,21 @@ suite("Place Model Tests", () => {
   });
 
   test("getPlaceById() should return a place", async () => {
-    const newPlace = await db.placeStore.create(
-      testData.newPlace,
-      testUser._id
-    );
-    console.log(newPlace);
+    const newPlace = await db.placeStore.create(testData.newPlace, testUser._id);
     const place = await db.placeStore.getById(newPlace._id);
     assert.equal(place.name, newPlace.name);
   });
 
   test("updatePlace() should update one place", async () => {
-    const setNewPlace = await db.placeStore.create(
-      testData.newPlace,
-      testUser._id
-    );
+    const setNewPlace = await db.placeStore.create(testData.newPlace, testUser._id);
     assert.equal(setNewPlace.name, testData.newPlace.name);
-    await db.placeStore.update(
-      testUser._id,
-      setNewPlace._id,
-      testData.updatedPlace
-    );
+    await db.placeStore.update(testUser._id, setNewPlace._id, testData.updatedPlace);
     const updatedPlace = await db.placeStore.getById(setNewPlace._id);
     assert.equal(updatedPlace.name, testData.updatedPlace.name);
   });
 
   test("deletePlace() should delete one place", async () => {
-    const newPlace = await db.placeStore.create(
-      testData.newPlace,
-      testUser._id
-    );
+    const newPlace = await db.placeStore.create(testData.newPlace, testUser._id);
     const place = await db.placeStore.getById(newPlace._id);
     assert.equal(place.name, newPlace.name);
     await db.placeStore.delete(newPlace._id, testUser._id);
@@ -80,11 +63,7 @@ suite("Place Model Tests", () => {
   });
 
   test("getPlacesByUserId() should return an array of places", async () => {
-    const newPlace = await db.placeStore.create(
-      testData.newPlace,
-      testUser._id
-    );
-    console.log(newPlace);
+    const newPlace = await db.placeStore.create(testData.newPlace, testUser._id);
     const places = await db.placeStore.getByUserId(newPlace.user);
     assert.isArray(places);
     assert.equal(places.length, 6);
@@ -98,10 +77,7 @@ suite("Place Model Tests", () => {
   });
 
   test("getPlaceByName() should return a place", async () => {
-    const newPlace = await db.placeStore.create(
-      testData.newPlace,
-      testUser._id
-    );
+    const newPlace = await db.placeStore.create(testData.newPlace, testUser._id);
     const place = await db.placeStore.getByName(newPlace.name);
     assert.equal(place.name, newPlace.name);
   });

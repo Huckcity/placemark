@@ -14,7 +14,7 @@
     href="/dashboard/places/new">Add a Place</a></li>
   </ul>
 
-  {{#if user.isAdmin }}
+  {{#ifEq user.role "admin" }}
   <p class="menu-label">
     Administration
   </p>
@@ -31,7 +31,7 @@
       </ul>
     </li>
   </ul>
-  {{/if}}
+  {{/ifEq}}
 
   <p class="menu-label">
     Account

@@ -30,8 +30,9 @@ const placeApiService = {
         place,
         userId,
       });
-      return response.data === "" ? null : response.data;
+      return response.data;
     } catch (err) {
+      console.log(err);
       return null;
     }
   },
@@ -40,6 +41,7 @@ const placeApiService = {
     try {
       const response = await axios.delete(`${serverUrl}/api/places/${id}`, {
         data: {
+          id,
           userId,
         },
       });
@@ -49,7 +51,7 @@ const placeApiService = {
     }
   },
 
-  async deleteAllPlaces() {
+  async deleteAllPlaces(token) {
     try {
       const response = await axios.delete(`${serverUrl}/api/places/deleteall`);
       return response.data;

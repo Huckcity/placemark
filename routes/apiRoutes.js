@@ -28,6 +28,11 @@ const apiRoutes = [
     path: "/api/users/deleteall",
     config: userApi.removeAll,
   },
+  {
+    method: "PUT",
+    path: "/api/users/{id}",
+    config: userApi.update,
+  },
 
   // Place API Routes
   {
@@ -59,6 +64,13 @@ const apiRoutes = [
     method: "PUT",
     path: "/api/places/{id}",
     config: placeApi.update,
+  },
+
+  // Auth API Routes
+  {
+    method: "POST",
+    path: "/api/users/authenticate",
+    config: userApi.authenticate,
   },
 ];
 

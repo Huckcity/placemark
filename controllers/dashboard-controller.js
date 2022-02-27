@@ -1,9 +1,6 @@
-"use strict";
-
 import db from "../models/db.js";
-import { checkAdmin } from "../helpers/utils.js";
 
-const User = {
+const dashboardController = {
   dashboard: {
     auth: "session",
     handler: async (req, h) => {
@@ -185,11 +182,7 @@ const User = {
     handler: async (req, h) => {
       const user = req.auth.credentials;
       const place = await db.placeStore.getById(req.params.id);
-      return h.view(
-        "edit-place",
-        { user, place },
-        { layout: "dashboardlayout" }
-      );
+      return h.view("edit-place", { user, place }, { layout: "dashboardlayout" });
     },
   },
 
@@ -200,7 +193,6 @@ const User = {
       const updatedPlace = {
         ...req.payload,
       };
-      console.log(updatedPlace);
       try {
         await db.placeStore.update(userId, req.params.id, updatedPlace);
         return h.redirect("/dashboard/places/" + req.params.id);
@@ -218,119 +210,6 @@ const User = {
       }
     },
   },
-
-  adminUsers: {
-    auth: {
-      strategy: "session",
-      // scope: ["admin"],
-    },
-    handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
-      const allusers = await db.userStore.getAll();
-      const viewData = {
-        user,
-        allusers,
-        active: {
-          AllUsers: true,
-        },
-      };
-      return h.view("all-users", viewData, { layout: "dashboardlayout" });
-    },
-  },
-
-  adminAddUser: {
-    auth: "session",
-    handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
-      const viewData = {
-        user,
-        active: {
-          AddUser: true,
-        },
-      };
-      return h.view("add-user", viewData, { layout: "dashboardlayout" });
-    },
-  },
-
-  adminAddUserPost: {
-    auth: "session",
-    handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
-      const viewData = { user };
-
-      if (user.isAdmin) {
-        try {
-          await db.userStore.create(req.payload);
-          return h.redirect("/dashboard/admin/users");
-        } catch (error) {
-          viewData.error = error.message;
-          viewData.active = { AllUsers: true };
-          return h.view("add-user", viewData, { layout: "dashboardlayout" });
-        }
-      }
-      return h.view("add-user", viewData, { layout: "dashboardlayout" });
-    },
-  },
-
-  adminEditUser: {
-    auth: "session",
-    handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
-      const userToEdit = await db.userStore.getById(req.params.id);
-      const viewData = {
-        user,
-        userToEdit,
-      };
-      return h.view("edit-user", viewData, { layout: "dashboardlayout" });
-    },
-  },
-
-  adminEditUserPost: {
-    auth: "session",
-    handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
-      let userToEdit = await db.userStore.getById(req.payload.id);
-      const viewData = {
-        user,
-        userToEdit,
-      };
-      try {
-        console.log(req.payload);
-        const updatedUser = await db.userStore.update(
-          userToEdit._id,
-          req.payload
-        );
-        viewData.userToEdit = updatedUser;
-        viewData.message = "User details saved.";
-        return h.view("edit-user", viewData, { layout: "dashboardlayout" });
-      } catch (error) {
-        viewData.error = error.message;
-        return h.view("edit-user", viewData, { layout: "dashboardlayout" });
-      }
-    },
-  },
-
-  adminDeleteUser: {
-    auth: "session",
-    handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
-      try {
-        await db.userStore.delete(req.params.id);
-        return h.redirect("/dashboard/admin/users");
-      } catch (error) {
-        const allusers = await db.userStore.getAll();
-        const viewData = {
-          user,
-          allusers,
-          error: error.message,
-          active: {
-            AllUsers: true,
-          },
-        };
-        return h.view("all-users", viewData, { layout: "dashboardlayout" });
-      }
-    },
-  },
 };
 
-export default User;
+export default dashboardController;
