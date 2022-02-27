@@ -1,11 +1,4 @@
 import db from "../models/db.js";
-import {
-  idSpec,
-  registerSpec,
-  userArray,
-  userSpec,
-  updateUserSpec,
-} from "../models/joi-schemas.js";
 
 const dashboardController = {
   dashboard: {
@@ -189,11 +182,7 @@ const dashboardController = {
     handler: async (req, h) => {
       const user = req.auth.credentials;
       const place = await db.placeStore.getById(req.params.id);
-      return h.view(
-        "edit-place",
-        { user, place },
-        { layout: "dashboardlayout" }
-      );
+      return h.view("edit-place", { user, place }, { layout: "dashboardlayout" });
     },
   },
 

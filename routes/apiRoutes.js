@@ -65,6 +65,13 @@ const apiRoutes = [
     path: "/api/places/{id}",
     config: placeApi.update,
   },
+
+  // Auth API Routes
+  {
+    method: "POST",
+    path: "/api/users/authenticate",
+    config: userApi.authenticate,
+  },
 ];
 
 export default apiRoutes;

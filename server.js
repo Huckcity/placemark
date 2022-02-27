@@ -10,7 +10,9 @@ import Inert from "@hapi/inert";
 import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 import hapiswagger from "hapi-swagger";
+import Jwt from "hapi-auth-jwt2";
 
+import * as utils from "./helpers/utils.js";
 import hbsHelpers from "./helpers/handlebars.js";
 
 import webRoutes from "./routes/webRoutes.js";
@@ -38,6 +40,7 @@ const init = async () => {
     Vision,
     Inert,
     Cookie,
+    Jwt,
     {
       plugin: hapiswagger,
       options: {
@@ -71,6 +74,14 @@ const init = async () => {
     },
     redirectTo: "/login",
   });
+
+  server.auth.strategy("jwt", "jwt", {
+    key: process.env.JWT_SECRET,
+    verifyOptions: { algorithms: ["HS256"] },
+    validate: utils.validate,
+    redirectTo: "/login",
+  });
+
   server.auth.default("session");
 
   server.route(webRoutes);

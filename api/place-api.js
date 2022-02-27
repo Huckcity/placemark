@@ -3,16 +3,13 @@ import Joi from "joi";
 import db from "../models/db.js";
 
 import { validationError } from "./logger.js";
-import {
-  idSpec,
-  placeArray,
-  placeSpec,
-  updatePlaceSpec,
-} from "../models/joi-schemas.js";
+import { idSpec, placeArray, placeSpec, updatePlaceSpec } from "../models/joi-schemas.js";
 
 const placeApi = {
   findOne: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
         const place = await db.placeStore.getById(request.params.id);
@@ -28,7 +25,9 @@ const placeApi = {
   },
 
   allPlaces: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
         const places = await db.placeStore.getAll();
@@ -44,7 +43,9 @@ const placeApi = {
   },
 
   findByUser: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
         const places = await db.placeStore.getByUserId(request.params.id);
@@ -60,7 +61,9 @@ const placeApi = {
   },
 
   findByCategory: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
         const places = await db.placeStore.getByCategory(request.params.id);
@@ -76,7 +79,9 @@ const placeApi = {
   },
 
   findByName: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
         const places = await db.placeStore.getByName(request.params.id);
@@ -92,13 +97,12 @@ const placeApi = {
   },
 
   create: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
-        const place = await db.placeStore.create(
-          request.payload.place,
-          request.payload.userId
-        );
+        const place = await db.placeStore.create(request.payload.place, request.payload.userId);
         return place;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -117,13 +121,12 @@ const placeApi = {
   },
 
   update: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
-        const place = await db.placeStore.update(
-          request.params.id,
-          request.payload
-        );
+        const place = await db.placeStore.update(request.params.id, request.payload);
         return place;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -141,13 +144,12 @@ const placeApi = {
   },
 
   delete: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
-        const place = await db.placeStore.delete(
-          request.payload.id,
-          request.payload.userId
-        );
+        const place = await db.placeStore.delete(request.payload.id, request.payload.userId);
         return place;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -163,7 +165,9 @@ const placeApi = {
   },
 
   deleteAll: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
         const places = await db.placeStore.deleteAll();

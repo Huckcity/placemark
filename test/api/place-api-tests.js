@@ -1,17 +1,23 @@
 import { assert } from "chai";
-import placeApiService from "./place-api-service.js";
+import authApiService from "./auth-api-service.js";
 import userApiService from "./user-api-service.js";
-import * as testData from "../../test/fixtures.js";
+import placeApiService from "./place-api-service.js";
+import * as testData from "../fixtures.js";
 
 suite("Place API Tests", () => {
-  let testUser = {};
+  let testUser = testData.newUser;
+  let testPlaces = testData.places;
+
+  suiteSetup(async () => {
+    await userApiService.deleteAllUsers();
+    testUser = await userApiService.createUser(testUser);
+    await authApiService.authenticate(testData.newUser);
+    await placeApiService.deleteAllPlaces();
+  });
 
   setup(async () => {
-    await placeApiService.deleteAllPlaces();
-    await userApiService.deleteAllUsers();
-    testUser = await userApiService.createUser(testData.newUser);
-    for (let place of testData.places) {
-      await placeApiService.createPlace(place, testUser._id);
+    for (let i = 0; i < testPlaces.length; i++) {
+      testPlaces[i] = await placeApiService.createPlace(testData.places[i]);
     }
   });
 
@@ -19,13 +25,13 @@ suite("Place API Tests", () => {
     await placeApiService.deleteAllPlaces();
   });
 
+  suiteTeardown(async () => {
+    authApiService.clearAuth();
+  });
+
   test("Create A Place", async () => {
-    const returnedPlace = await placeApiService.createPlace(
-      testData.newPlace,
-      testUser._id
-    );
+    const returnedPlace = await placeApiService.createPlace(testData.newPlace, testUser._id);
     assert.equal(returnedPlace.name, testData.newPlace.name);
-    assert.equal(returnedPlace.address, testData.newPlace.address);
     const allPlaces = await placeApiService.getAllPlaces();
     assert.equal(allPlaces.length, testData.places.length + 1);
   });
@@ -37,19 +43,13 @@ suite("Place API Tests", () => {
   });
 
   test("getPlaceById() should return a place", async () => {
-    const newPlace = await placeApiService.createPlace(
-      testData.newPlace,
-      testUser._id
-    );
+    const newPlace = await placeApiService.createPlace(testData.newPlace, testUser._id);
     const place = await placeApiService.getPlaceById(newPlace._id);
     assert.equal(place.name, newPlace.name);
   });
 
   test("deletePlace() should delete one place", async () => {
-    const newPlace = await placeApiService.createPlace(
-      testData.newPlace,
-      testUser._id
-    );
+    const newPlace = await placeApiService.createPlace(testData.newPlace, testUser._id);
     const place = await placeApiService.getPlaceById(newPlace._id);
     await placeApiService.deletePlace(place._id, testUser._id);
     const allPlaces = await placeApiService.getAllPlaces();

@@ -1,6 +1,6 @@
-import Boom from "@hapi/boom";
 import db from "../models/db.js";
-
+import Boom from "@hapi/boom";
+import * as utils from "../helpers/utils.js";
 import { validationError } from "./logger.js";
 import {
   idSpec,
@@ -12,7 +12,7 @@ import {
 
 const userApi = {
   allUsers: {
-    auth: false,
+    auth: "jwt",
     handler: async (request, h) => {
       try {
         const users = await db.userStore.getAll();
@@ -48,7 +48,7 @@ const userApi = {
   },
 
   findOne: {
-    auth: false,
+    auth: "jwt",
     handler: async (request, h) => {
       try {
         const user = await db.userStore.getById(request.params.id);
@@ -64,10 +64,11 @@ const userApi = {
   },
 
   remove: {
-    auth: false,
+    auth: "jwt",
     handler: async (request, h) => {
       try {
         const user = await db.userStore.delete(request.params.id);
+        console.log(user);
         return user;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -95,13 +96,10 @@ const userApi = {
   },
 
   update: {
-    auth: false,
+    auth: "jwt",
     handler: async (request, h) => {
       try {
-        const user = await db.userStore.update(
-          request.params.id,
-          request.payload
-        );
+        const user = await db.userStore.update(request.params.id, request.payload);
         return user;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -116,6 +114,23 @@ const userApi = {
       failAction: validationError,
     },
     response: { schema: userSpec, failAction: validationError },
+  },
+
+  authenticate: {
+    auth: false,
+    handler: async (request, h) => {
+      try {
+        const user = await db.userStore.authByEmailOrUsername(request.payload);
+        if (!user) {
+          return Boom.unauthorized("Invalid email or password");
+        } else {
+          const token = utils.createToken(user);
+          return h.response({ token, success: true }).code(200);
+        }
+      } catch (err) {
+        return Boom.unauthorized("Invalid email or password");
+      }
+    },
   },
 };
 

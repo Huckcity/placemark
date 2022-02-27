@@ -52,28 +52,30 @@ export const updateUserSpec = Joi.object()
 
 // Place Schema
 
-export const placeSpec = Joi.object().keys({
-  name: Joi.string().required().example("Times Square"),
-  description: Joi.string()
-    .optional()
-    .allow("")
-    .example("Long form description"),
-  image: Joi.string()
-    .optional()
-    .allow("")
-    .example("https://www.example.com/image.jpg"),
-  location: Joi.object()
-    .keys({
-      lat: Joi.number().required().example(40.75),
-      lng: Joi.number().required().example(-73.98),
-    })
-    .label("Location Spec"),
-  user: idSpec,
-  _id: idSpec,
-  __v: Joi.number(),
-  createdAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
-  updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
-});
+export const placeSpec = Joi.object()
+  .keys({
+    name: Joi.string().required().example("Times Square"),
+    description: Joi.string()
+      .optional()
+      .allow("")
+      .example("Long form description"),
+    image: Joi.string()
+      .optional()
+      .allow("")
+      .example("https://www.example.com/image.jpg"),
+    location: Joi.object()
+      .keys({
+        lat: Joi.number().required().example(40.75),
+        lng: Joi.number().required().example(-73.98),
+      })
+      .label("Location Spec"),
+    user: idSpec,
+    _id: idSpec,
+    __v: Joi.number(),
+    createdAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
+    updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
+  })
+  .label("Place Spec");
 
 export const placeArray = Joi.array().items(placeSpec).label("Place Array");
 
@@ -92,5 +94,5 @@ export const updatePlaceSpec = Joi.object().keys({
       lat: Joi.number().required().example(40.75),
       lng: Joi.number().required().example(-73.98),
     })
-    .label("Location Spec"),
+    .label("Update Location Spec"),
 });
