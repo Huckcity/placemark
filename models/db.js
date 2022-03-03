@@ -1,4 +1,4 @@
-import { connectMongoose } from "./mongo/connect.js";
+import connectMongoose from "./mongo/connect.js";
 
 import UserJsonStore from "./json/user-json-store.js";
 import PlaceJsonStore from "./json/place-json-store.js";
@@ -7,8 +7,10 @@ import userMongoStore from "./mongo/user-mongo-store.js";
 import placeMongoStore from "./mongo/place-mongo-store.js";
 import categoryMongoStore from "./mongo/category-mongo-store.js";
 
-const db = {
+export const db = {
   userStore: null,
+  placeStore: null,
+  categoryStore: null,
 
   init(env) {
     switch (env) {
@@ -19,17 +21,17 @@ const db = {
         break;
       case "development_mongo":
         console.log("Using development Mongo database");
-        connectMongoose(process.env.MONGO_LOCAL_URL);
         this.userStore = userMongoStore;
         this.placeStore = placeMongoStore;
         this.categoryStore = categoryMongoStore;
+        connectMongoose(process.env.MONGO_LOCAL_URL);
         break;
       case "production":
         console.log("Using production Mongo database");
-        connectMongoose(process.env.MONGO_LIVE_URL);
         this.userStore = userMongoStore;
         this.placeStore = placeMongoStore;
         this.categoryStore = categoryMongoStore;
+        connectMongoose(process.env.MONGO_LIVE_URL);
         break;
       default:
         throw new Error(`Unknown execution environment: ${env}`);

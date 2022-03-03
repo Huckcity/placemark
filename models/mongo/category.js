@@ -7,10 +7,9 @@ const categorySchema = new Schema({
     type: String,
     required: true,
   },
-  slug_name: {
-    type: String,
-    required: true,
-  },
+  slug_name: String,
 });
 
-export const Category = Mongoose.model("Category", categorySchema);
+const Category = Mongoose.model("Category", categorySchema);
+
+export default Category;

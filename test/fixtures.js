@@ -1,4 +1,4 @@
-export const users = [
+export const testUsers = [
   {
     username: "test1",
     password: "test",
@@ -35,7 +35,7 @@ export const newUser = {
   username: "newtest6",
   password: "test",
   passwordConfirm: "test",
-  email: "newtest@user.com",
+  email: "newtest6@user.com",
 };
 
 export const newUser2 = {
@@ -48,11 +48,9 @@ export const newUser2 = {
 export const places = [
   {
     name: "test1",
-    category: "restaurant",
   },
   {
     name: "test2",
-    category: "restaurant",
   },
   {
     name: "test3",
@@ -73,30 +71,24 @@ export const updatedPlace = {
   name: "updatedtest6",
 };
 
-export const categories = [
+export const categoryArray = [
   {
     name: "City",
-    slug_name: "city",
   },
   {
     name: "Landmark",
-    slug_name: "landmark",
   },
   {
     name: "Monument",
-    slug_name: "monument",
   },
   {
     name: "Museum",
-    slug_name: "museum",
   },
   {
     name: "Park",
-    slug_name: "park",
   },
 ];
 
 export const newCategory = {
   name: "New Category",
-  slug_name: "new-category",
 };

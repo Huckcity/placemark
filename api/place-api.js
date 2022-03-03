@@ -1,8 +1,8 @@
 import Boom from "@hapi/boom";
 import Joi from "joi";
-import db from "../models/db.js";
+import { db } from "../models/db.js";
 
-import { validationError } from "./logger.js";
+import validationError from "./logger.js";
 import { idSpec, placeArray, placeSpec, updatePlaceSpec } from "../models/joi-schemas.js";
 
 const placeApi = {
@@ -10,7 +10,7 @@ const placeApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const place = await db.placeStore.getById(request.params.id);
         return place;
@@ -28,7 +28,7 @@ const placeApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async () => {
       try {
         const places = await db.placeStore.getAll();
         return places;
@@ -46,7 +46,7 @@ const placeApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const places = await db.placeStore.getByUserId(request.params.id);
         return places;
@@ -64,9 +64,9 @@ const placeApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
-        const places = await db.placeStore.getByCategory(request.params.category);
+        const places = await db.placeStore.getByCategorySlug(request.params.category);
         return places;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -82,7 +82,7 @@ const placeApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const places = await db.placeStore.getByName(request.params.id);
         return places;
@@ -100,12 +100,12 @@ const placeApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const place = await db.placeStore.create(request.payload.place, request.payload.userId);
         return place;
       } catch (err) {
-        throw Boom.badImplementation(err);
+        throw Boom.serverUnavailable("Server Unavailable");
       }
     },
     tags: ["api"],
@@ -116,7 +116,7 @@ const placeApi = {
         place: placeSpec,
         userId: idSpec,
       }),
-      failAction: validationError,
+      failAction: "log",
     },
   },
 
@@ -124,10 +124,11 @@ const placeApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
+      const { userId, placeId, place } = request.payload;
       try {
-        const place = await db.placeStore.update(request.params.id, request.payload);
-        return place;
+        const updatedPlace = await db.placeStore.update(userId, placeId, place);
+        return updatedPlace;
       } catch (err) {
         throw Boom.badImplementation(err);
       }
@@ -137,7 +138,11 @@ const placeApi = {
     notes: "Updates place with id",
     validate: {
       params: idSpec,
-      payload: updatePlaceSpec,
+      payload: Joi.object({
+        userId: idSpec,
+        placeId: idSpec,
+        place: updatePlaceSpec,
+      }),
       failAction: validationError,
     },
     response: { schema: placeSpec, failAction: validationError },
@@ -147,7 +152,7 @@ const placeApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const place = await db.placeStore.delete(request.payload.id, request.payload.userId);
         return place;

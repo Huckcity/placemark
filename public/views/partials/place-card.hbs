@@ -14,7 +14,10 @@
           <br>
           <small class="has-text-grey-light">{{formatDate updatedAt}}</small>
           <br>
-          <small>{{category}}</small>
+          <small>
+            <a href="/dashboard/places/category/{{category.slug_name}}">{{category.name}}</a>
+            
+            </small>
           <hr>
           
           {{truncateToWords description 50}}

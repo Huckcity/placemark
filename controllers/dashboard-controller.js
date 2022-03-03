@@ -1,4 +1,5 @@
-import db from "../models/db.js";
+import { db } from "../models/db.js";
+import { addPlaceSpec } from "../models/joi-schemas.js";
 
 const dashboardController = {
   dashboard: {
@@ -54,7 +55,7 @@ const dashboardController = {
                 Settings: true,
               },
             },
-            { layout: "dashboardlayout" }
+            { layout: "dashboardlayout" },
           );
         }
         updatePassword = true;
@@ -103,7 +104,7 @@ const dashboardController = {
   place: {
     auth: "session",
     handler: async (req, h) => {
-      const user = req.auth.credentials;
+      const user = await db.userStore.getById(req.auth.credentials.id);
       const placeId = req.params.id;
       const place = await db.placeStore.getById(placeId);
       const viewData = {
@@ -132,22 +133,38 @@ const dashboardController = {
 
   addPlacePost: {
     auth: "session",
+    validate: {
+      payload: addPlaceSpec,
+      failAction: async (request, h, error) => {
+        const user = await db.userStore.getById(request.auth.credentials.id);
+        const viewData = {
+          user,
+          error,
+          active: {
+            AddPlace: true,
+          },
+        };
+        return h.view("add-place", viewData, { layout: "dashboardlayout" }).takeover();
+      },
+    },
     handler: async (req, h) => {
-      const user = req.auth.credentials;
+      const user = await db.userStore.getById(req.auth.credentials.id);
+      const categories = await db.categoryStore.getAll();
       try {
-        const place = await db.placeStore.create(req.payload, user.id);
-        return h.redirect("/dashboard/places/" + place._id);
+        const place = await db.placeStore.create(req.payload, user._id);
+        return h.redirect(`/dashboard/places/${place._id}`);
       } catch (err) {
         return h.view(
           "add-place",
           {
             user,
+            categories,
             error: err.message,
             active: {
               AddPlace: true,
             },
           },
-          { layout: "dashboardlayout" }
+          { layout: "dashboardlayout" },
         );
       }
     },
@@ -156,10 +173,10 @@ const dashboardController = {
   deletePlace: {
     auth: "session",
     handler: async (req, h) => {
-      const user = req.auth.credentials;
+      const user = await db.userStore.getById(req.auth.credentials.id);
       const { id } = req.params;
       try {
-        await db.placeStore.delete(id, user.id);
+        await db.placeStore.delete(id, user._id);
         return h.redirect("/dashboard/places");
       } catch (err) {
         const places = await db.placeStore.getByUserId(user);
@@ -173,7 +190,7 @@ const dashboardController = {
               MyPlaces: true,
             },
           },
-          { layout: "dashboardlayout" }
+          { layout: "dashboardlayout" },
         );
       }
     },
@@ -200,20 +217,21 @@ const dashboardController = {
   editPlacePost: {
     auth: "session",
     handler: async (req, h) => {
-      const userId = req.auth.credentials.id;
+      const user = await db.userStore.getById(req.auth.credentials.id);
       try {
-        await db.placeStore.update(userId, req.params.id, req.payload);
-        return h.redirect("/dashboard/places/" + req.params.id);
+        await db.placeStore.update(user._id, req.params.id, req.payload);
+        return h.redirect(`/dashboard/places/${req.params.id}`);
       } catch (error) {
         console.log(error);
+        const place = await db.placeStore.getById(req.params.id);
         return h.view(
           "place",
           {
-            user: req.auth.credentials,
-            place: updatedPlace,
+            user,
+            place,
             error: error.message,
           },
-          { layout: "dashboardlayout" }
+          { layout: "dashboardlayout" },
         );
       }
     },
@@ -222,10 +240,10 @@ const dashboardController = {
   placesByCategory: {
     auth: "session",
     handler: async (req, h) => {
+      const user = await db.userStore.getById(req.auth.credentials.id);
       try {
-        const user = await db.userStore.getById(req.auth.credentials.id);
-        const category = req.params.category;
-        const places = await db.placeStore.getByCategory(category);
+        const { category } = req.params;
+        const places = await db.placeStore.getByCategorySlug(category);
         const viewData = {
           user,
           places,
@@ -238,13 +256,13 @@ const dashboardController = {
         return h.view(
           "dashboard",
           {
-            user: req.auth.credentials,
+            user,
             error: err.message,
             active: {
               Places: true,
             },
           },
-          { layout: "dashboardlayout" }
+          { layout: "dashboardlayout" },
         );
       }
     },

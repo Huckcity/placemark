@@ -1,5 +1,5 @@
-import { Category } from "./category.js";
-import * as utils from "../../helpers/utils.js";
+import Category from "./category.js";
+import { slugify } from "../../helpers/utils.js";
 
 const categoryStore = {
   async getAll() {
@@ -28,7 +28,7 @@ const categoryStore = {
 
   async create(category) {
     const newCategory = new Category(category);
-    newCategory.slug_name = utils.slugify(category.name);
+    newCategory.slug_name = slugify(category.name);
     await newCategory.save();
     const savedCategory = await this.getById(newCategory._id);
     return savedCategory;
@@ -44,7 +44,6 @@ const categoryStore = {
     if (!category.name) {
       throw new Error("Category name is required.");
     }
-    category.slug_name = utils.slugify(category.name);
     await Category.findByIdAndUpdate(categoryId, category);
     const savedCategory = await this.getById(categoryId);
     return savedCategory;
@@ -63,8 +62,8 @@ const categoryStore = {
   },
 
   async deleteAll() {
-    await Category.deleteMany({});
-    return true;
+    const res = await Category.deleteMany({});
+    return res;
   },
 };
 

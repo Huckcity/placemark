@@ -1,29 +1,32 @@
 import { assert } from "chai";
-import apiService from "./auth-api-service.js";
-import userApiService from "./user-api-service.js";
-import * as testData from "../../test/fixtures.js";
-import * as utils from "../../helpers/utils.js";
+import apiService from "./api-service.js";
+import { newUser } from "../fixtures.js";
+import { decodeToken } from "../../helpers/utils.js";
 
 suite("Authentication API Tests", () => {
-  let users = testData.users;
-  let newUser = testData.newUser;
-
   setup(async () => {
-    await userApiService.deleteAllUsers();
+    await apiService.clearAuth();
+    await apiService.createUser(newUser);
+    await apiService.authenticate(newUser);
+    await apiService.deleteAllUsers();
+  });
+
+  teardown(async () => {
+    await apiService.deleteAllUsers();
   });
 
   test("authenticate user", async () => {
-    await userApiService.createUser(newUser);
+    await apiService.createUser(newUser);
     const response = await apiService.authenticate(newUser);
     assert(response.success);
     assert.isDefined(response.token);
   });
 
   test("Verify token", async () => {
-    await userApiService.createUser(newUser);
+    await apiService.createUser(newUser);
     const response = await apiService.authenticate(newUser);
-    const token = response.token;
-    const user = utils.decodeToken(token);
+    const { token } = response;
+    const user = decodeToken(token);
     assert.isDefined(user);
   });
 

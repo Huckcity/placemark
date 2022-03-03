@@ -50,8 +50,8 @@
       <div class="select">
         <select name="category">
           {{#each categories}}
-            <option value="{{slug_name}}"
-              {{#ifEq ../place.category name}}
+            <option value="{{_id}}"
+              {{#ifEq ../place.category.name name}}
                 selected
               {{/ifEq}}
             >{{name}}</option>

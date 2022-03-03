@@ -1,15 +1,15 @@
 import Boom from "@hapi/boom";
-import db from "../models/db.js";
-import { categorySpec, categoryArray, idSpec } from "../models/joi-schemas.js";
+import { db } from "../models/db.js";
+import { categorySpec, createCategorySpec, categoryArray } from "../models/joi-schemas.js";
 
-import { validationError } from "./logger.js";
+import validationError from "./logger.js";
 
 const categoryApi = {
   findOne: {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const category = await db.categoryStore.getById(request.params.id);
         return category;
@@ -27,7 +27,7 @@ const categoryApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async () => {
       try {
         const categories = await db.categoryStore.getAll();
         return categories;
@@ -45,7 +45,7 @@ const categoryApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const newCategory = await db.categoryStore.create(request.payload);
         return newCategory;
@@ -56,7 +56,7 @@ const categoryApi = {
     tags: ["api"],
     description: "Create a new category",
     notes: "Creates a new category",
-    validate: { payload: categorySpec },
+    validate: { payload: createCategorySpec },
     response: { schema: categorySpec, failAction: validationError },
   },
 
@@ -64,7 +64,7 @@ const categoryApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const updatedCategory = await db.categoryStore.update(request.params.id, request.payload);
         return updatedCategory;
@@ -83,7 +83,7 @@ const categoryApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const deletedCategory = await db.categoryStore.delete(request.params.id);
         return deletedCategory;
@@ -102,8 +102,8 @@ const categoryApi = {
     },
     handler: async (request, h) => {
       try {
-        const deletedCategories = await db.categoryStore.deleteAll();
-        return deletedCategories;
+        await db.categoryStore.deleteAll();
+        return h.response().code(204);
       } catch (err) {
         throw Boom.badImplementation(err);
       }

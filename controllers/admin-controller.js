@@ -1,4 +1,4 @@
-import db from "../models/db.js";
+import { db } from "../models/db.js";
 
 const adminController = {
   adminUsers: {
@@ -80,7 +80,7 @@ const adminController = {
     },
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials.id);
-      let userToEdit = await db.userStore.getById(req.payload.id);
+      const userToEdit = await db.userStore.getById(req.payload.id);
       const viewData = {
         user,
         userToEdit,
@@ -164,7 +164,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const category = await db.categoryStore.create(req.payload);
+      await db.categoryStore.create(req.payload);
       return h.redirect("/dashboard/admin/categories");
     },
   },
@@ -191,8 +191,8 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
-      const category = await db.categoryStore.update(req.params.id, req.payload);
+      await db.userStore.getById(req.auth.credentials.id);
+      await db.categoryStore.update(req.params.id, req.payload);
       return h.redirect("/dashboard/admin/categories");
     },
   },
