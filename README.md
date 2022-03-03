@@ -1,13 +1,12 @@
-# Placemark V2.0
+# Placemark V3.0
 
-Placemark v2.0 represents the "good" implementation of the Placemark application requirements. These include:
+Placemark v3.0 represents the "excellent" implementation of the Placemark application requirements. These include:
 
-1. Cookie authentication + user settings
-1. Places now hold description and lat/lng values
-1. Unit tests for users/places models as well as all API endpoints
-1. JSON (and MongoDB) database implemented, including flow control for testing against each environment
-1. (Skipped) Glitch deployment, already on Heroku
-1. Updated README with setup instructions
+1. Basic Admin Account to add/list/edit/remove users
+1. Places now have a 'category' attribute, and can be views by category
+1. API now users the Open API specification for documenting usage and validation
+1. MongoDB deployed on Cloud Atlas, and integrated with production deployment
+1. Continued tagged realease history
 
 To run locally, simply clone the repo and install as follows:
 
