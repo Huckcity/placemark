@@ -7,7 +7,7 @@ db.data ||= { places: [] };
 const PlaceJsonStore = {
   getAll: async () => {
     await db.read();
-    const places = db.data.places;
+    const { places } = db.data;
     return places;
   },
 

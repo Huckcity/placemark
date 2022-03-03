@@ -1,7 +1,7 @@
-import db from "../models/db.js";
 import Boom from "@hapi/boom";
-import * as utils from "../helpers/utils.js";
-import { validationError } from "./logger.js";
+import { db } from "../models/db.js";
+import { createToken } from "../helpers/utils.js";
+import validationError from "./logger.js";
 import {
   idSpec,
   registerSpec,
@@ -13,7 +13,7 @@ import {
 const userApi = {
   allUsers: {
     auth: "jwt",
-    handler: async (request, h) => {
+    handler: async () => {
       try {
         const users = await db.userStore.getAll();
         return users;
@@ -37,6 +37,7 @@ const userApi = {
         }
         return Boom.badImplementation("error creating user");
       } catch (err) {
+        console.log(err);
         return Boom.serverUnavailable("Database Error");
       }
     },
@@ -49,7 +50,7 @@ const userApi = {
 
   findOne: {
     auth: "jwt",
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const user = await db.userStore.getById(request.params.id);
         return user;
@@ -65,10 +66,9 @@ const userApi = {
 
   remove: {
     auth: "jwt",
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const user = await db.userStore.delete(request.params.id);
-        console.log(user);
         return user;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -97,7 +97,7 @@ const userApi = {
 
   update: {
     auth: "jwt",
-    handler: async (request, h) => {
+    handler: async (request) => {
       try {
         const user = await db.userStore.update(request.params.id, request.payload);
         return user;
@@ -123,10 +123,9 @@ const userApi = {
         const user = await db.userStore.authByEmailOrUsername(request.payload);
         if (!user) {
           return Boom.unauthorized("Invalid email or password");
-        } else {
-          const token = utils.createToken(user);
-          return h.response({ token, success: true }).code(200);
         }
+        const token = createToken(user);
+        return h.response({ token, success: true }).code(200);
       } catch (err) {
         return Boom.unauthorized("Invalid email or password");
       }

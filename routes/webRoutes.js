@@ -77,6 +77,11 @@ const routes = [
     path: "/dashboard/places/edit/{id}",
     config: dashboardController.editPlacePost,
   },
+  {
+    method: "GET",
+    path: "/dashboard/places/category/{category}",
+    config: dashboardController.placesByCategory,
+  },
 
   // User routes
   {
@@ -120,6 +125,36 @@ const routes = [
     method: "GET",
     path: "/dashboard/admin/users/delete/{id}",
     config: adminController.adminDeleteUser,
+  },
+  {
+    method: "GET",
+    path: "/dashboard/admin/categories",
+    config: adminController.adminCategories,
+  },
+  {
+    method: "GET",
+    path: "/dashboard/admin/categories/add",
+    config: adminController.adminAddCategory,
+  },
+  {
+    method: "POST",
+    path: "/dashboard/admin/categories/add",
+    config: adminController.adminAddCategoryPost,
+  },
+  {
+    method: "GET",
+    path: "/dashboard/admin/categories/edit/{id}",
+    config: adminController.adminEditCategory,
+  },
+  {
+    method: "POST",
+    path: "/dashboard/admin/categories/edit/{id}",
+    config: adminController.adminEditCategoryPost,
+  },
+  {
+    method: "GET",
+    path: "/dashboard/admin/categories/delete/{id}",
+    config: adminController.adminDeleteCategory,
   },
 
   // Wildcard static file routes

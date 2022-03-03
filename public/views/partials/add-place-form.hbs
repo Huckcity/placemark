@@ -1,9 +1,4 @@
-
-<form action="/dashboard/places/{{action}}
-{{#if place}}
-/{{place._id}}
-{{/if}}
-" method="POST">
+<form action="/dashboard/places/{{action}}{{#if place}}/{{place._id}}{{/if}}" method="POST">
 
   <div class="field">
     <label class="label">Name</label>
@@ -45,6 +40,23 @@
           {{/if}}
           >
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Category</label>
+    <div class="control">
+      <div class="select">
+        <select name="category">
+          {{#each categories}}
+            <option value="{{_id}}"
+              {{#ifEq ../place.category.name name}}
+                selected
+              {{/ifEq}}
+            >{{name}}</option>
+          {{/each}}
+        </select>
       </div>
     </div>
   </div>

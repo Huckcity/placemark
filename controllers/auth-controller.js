@@ -1,6 +1,4 @@
-import db from "../models/db.js";
-import Boom from "@hapi/boom";
-import * as utils from "../helpers/utils.js";
+import { db } from "../models/db.js";
 import { registerSpec, loginSpec } from "../models/joi-schemas.js";
 
 const authController = {

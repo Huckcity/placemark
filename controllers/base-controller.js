@@ -1,9 +1,7 @@
 const baseController = {
   index: {
     auth: false,
-    handler: async (req, h) => {
-      return h.view("index");
-    },
+    handler: async (req, h) => h.view("index"),
   },
 };
 

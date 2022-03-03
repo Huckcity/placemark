@@ -1,16 +1,18 @@
 import dotenv from "dotenv";
-dotenv.config();
-
 import jwt from "jsonwebtoken";
-import db from "../models/db.js";
+import { db } from "../models/db.js";
+
+dotenv.config();
 
 export const createToken = (user) => {
   const payload = {
-    userId: user._id,
+    id: user._id,
+    email: user.email,
     role: user.role,
   };
   const options = {
-    expiresIn: "1d",
+    algorithm: "HS256",
+    expiresIn: "1h",
   };
   return jwt.sign(payload, process.env.JWT_SECRET, options);
 };
@@ -20,7 +22,8 @@ export const decodeToken = (token) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     userInfo = {
-      userId: decoded.userId,
+      id: decoded.id,
+      email: decoded.email,
       role: decoded.role,
     };
   } catch (err) {
@@ -29,10 +32,47 @@ export const decodeToken = (token) => {
   return userInfo;
 };
 
-export const validate = async (decoded, request, h) => {
-  const user = await db.userStore.getById(decoded.userId);
+export const validate = async (decoded) => {
+  const user = await db.userStore.getById(decoded.id);
   if (!user) {
     return { isValid: false };
   }
-  return { isValid: true };
+  return { isValid: true, credentials: user };
 };
+
+export const slugify = (text) => {
+  const lower = text.toLowerCase();
+  const slug = lower.replace(/[^a-z0-9]+/g, "-");
+  return slug;
+};
+
+export function assertSubset(subset, superset) {
+  if (
+    typeof superset !== "object" ||
+    superset === null ||
+    typeof subset !== "object" ||
+    subset === null
+  ) {
+    return false;
+  }
+
+  if (superset instanceof Date || subset instanceof Date) {
+    return superset.valueOf() === subset.valueOf();
+  }
+
+  return Object.keys(subset).every((key) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!superset.propertyIsEnumerable(key)) return false;
+    const subsetItem = subset[key];
+    const supersetItem = superset[key];
+    if (
+      typeof subsetItem === "object" && subsetItem !== null
+        ? !assertSubset(supersetItem, subsetItem)
+        : supersetItem !== subsetItem
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+}

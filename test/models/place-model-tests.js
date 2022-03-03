@@ -1,10 +1,13 @@
 import { assert } from "chai";
-import db from "../../models/db.js";
+import { db } from "../../models/db.js";
 import * as testData from "../fixtures.js";
 
 suite("Place Model Tests", () => {
   let testUser = {};
-  db.init(process.env.ENVIRONMENT);
+
+  suiteSetup(async () => {
+    db.init(process.env.ENVIRONMENT);
+  });
 
   setup(async () => {
     await db.placeStore.deleteAll();
@@ -12,8 +15,10 @@ suite("Place Model Tests", () => {
 
     testUser = await db.userStore.create(testData.newUser);
     await db.placeStore.deleteAll();
-    for (let place of testData.places) {
-      await db.placeStore.create(place, testUser._id);
+
+    for (let i = 0; i < testData.places.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await db.placeStore.create(testData.places[i], testUser._id);
     }
   });
 
@@ -38,10 +43,10 @@ suite("Place Model Tests", () => {
   });
 
   test("updatePlace() should update one place", async () => {
-    const setNewPlace = await db.placeStore.create(testData.newPlace, testUser._id);
-    assert.equal(setNewPlace.name, testData.newPlace.name);
-    await db.placeStore.update(testUser._id, setNewPlace._id, testData.updatedPlace);
-    const updatedPlace = await db.placeStore.getById(setNewPlace._id);
+    const createdPlace = await db.placeStore.create(testData.newPlace, testUser._id);
+    assert.equal(createdPlace.name, testData.newPlace.name);
+    await db.placeStore.update(testUser._id, createdPlace._id, testData.updatedPlace);
+    const updatedPlace = await db.placeStore.getById(createdPlace._id);
     assert.equal(updatedPlace.name, testData.updatedPlace.name);
   });
 

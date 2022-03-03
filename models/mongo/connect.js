@@ -1,16 +1,17 @@
 import dotenv from "dotenv";
-dotenv.config();
 
 import Mongoose from "mongoose";
 import seeder from "mais-mongoose-seeder";
 import * as data from "./seed-data.js";
 
-export function connectMongoose(db_string) {
-  Mongoose.connect(db_string);
+dotenv.config();
+
+function connectMongoose(dbString) {
+  Mongoose.connect(dbString);
   const db = Mongoose.connection;
 
   async function seed() {
-    const seedData = await seeder(Mongoose).seed(data.default, {
+    await seeder(Mongoose).seed(data.default, {
       dropDatabase: false,
       dropCollections: true,
     });
@@ -24,11 +25,13 @@ export function connectMongoose(db_string) {
     console.log("Database disconnected.");
   });
 
-  db.on("open", function () {
-    console.log(`Database connected to ${this.name} on ${this.host}`);
+  db.on("open", () => {
+    console.log(`Connected to database: ${dbString}`);
     if (process.env.SEED === "true") {
       console.log("Seeding database...");
       seed();
     }
   });
 }
+
+export default connectMongoose;
