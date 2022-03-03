@@ -1,9 +1,10 @@
 import { ObjectId } from "mongodb";
 import { Place } from "./place.js";
+import Category from "./category.js";
 
 const placeMongoStore = {
   async getAll() {
-    const places = Place.find({}).populate("user").lean();
+    const places = Place.find({}).populate("user").populate("category").lean();
     return places;
   },
 
@@ -11,7 +12,7 @@ const placeMongoStore = {
     if (!id) {
       throw new Error("Place id is required.");
     }
-    const place = await Place.findById(id).lean();
+    const place = await Place.findById(id).populate("category").populate("user").lean();
     if (!place) {
       throw new Error(`Place with id ${id} not found.`);
     }
@@ -19,7 +20,7 @@ const placeMongoStore = {
   },
 
   async getByName(name) {
-    const place = await Place.findOne({ name }).lean();
+    const place = await Place.findOne({ name }).populate("user").populate("category").lean();
     if (!place) {
       return null;
     }
@@ -30,7 +31,25 @@ const placeMongoStore = {
     if (!userId) {
       throw new Error("User id is required.");
     }
-    const places = await Place.find({ user: ObjectId(userId) }).lean();
+    const places = await Place.find({ user: userId }).populate("user").populate("category").lean();
+    if (!places) {
+      return [];
+    }
+    return places;
+  },
+
+  async getByCategorySlug(categorySlug) {
+    if (!categorySlug) {
+      throw new Error("Category is required.");
+    }
+    const category = await Category.findOne({ slug_name: categorySlug });
+    if (!category) {
+      throw new Error(`Category with slug ${categorySlug} not found.`);
+    }
+    const places = await Place.find({ category: category._id })
+      .populate("user")
+      .populate("category")
+      .lean();
     if (!places) {
       return [];
     }
@@ -64,15 +83,17 @@ const placeMongoStore = {
     const existingPlace = await Place.findById(placeId);
     if (!existingPlace) {
       throw new Error(`Place with id ${placeId} not found.`);
-    } else if (existingPlace.user.toString() != userId) {
-      throw new Error(`You do not have permission to edit this place.`);
+    } else if (!existingPlace.user._id.equals(userId)) {
+      throw new Error("You do not have permission to edit this place.");
     } else {
       existingPlace.name = place.name || existingPlace.name;
       existingPlace.description = place.description || existingPlace.description;
       existingPlace.location.lat = place.latitude || existingPlace.location.lat;
       existingPlace.location.lng = place.longitude || existingPlace.location.lng;
+      existingPlace.category = place.category || existingPlace.category;
       const savedPlace = await existingPlace.save();
-      return savedPlace;
+      const returnedPlace = await this.getById(savedPlace._id);
+      return returnedPlace;
     }
   },
 
@@ -90,7 +111,7 @@ const placeMongoStore = {
     });
     if (!deletedPlace) {
       throw new Error(
-        "You do not have permission to delete that record. Your places are listed below."
+        "You do not have permission to delete that record. Your places are listed below.",
       );
     }
     return deletedPlace;

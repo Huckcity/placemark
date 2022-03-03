@@ -14,6 +14,10 @@ const placeSchema = new Schema(
       lat: Number,
       lng: Number,
     },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -21,7 +25,7 @@ const placeSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Place = Mongoose.model("Place", placeSchema);

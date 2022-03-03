@@ -1,7 +1,4 @@
-"use strict";
-
 import dotenv from "dotenv";
-dotenv.config();
 
 import path from "path";
 import Hapi from "@hapi/hapi";
@@ -10,17 +7,17 @@ import Inert from "@hapi/inert";
 import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 import hapiswagger from "hapi-swagger";
-import Jwt from "hapi-auth-jwt2";
+import jwt from "hapi-auth-jwt2";
 
-import * as utils from "./helpers/utils.js";
+import { validate } from "./helpers/utils.js";
 import hbsHelpers from "./helpers/handlebars.js";
 
 import webRoutes from "./routes/webRoutes.js";
 import apiRoutes from "./routes/apiRoutes.js";
 
-import db from "./models/db.js";
+import { db } from "./models/db.js";
 
-db.init(process.env.ENVIRONMENT);
+dotenv.config();
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const viewsPath = path.resolve(__dirname, "public", "views");
@@ -36,11 +33,12 @@ const init = async () => {
     },
   });
 
+  await server.register(Inert);
+  await server.register(Vision);
+  await server.register(Cookie);
+  await server.register(jwt);
+
   await server.register([
-    Vision,
-    Inert,
-    Cookie,
-    Jwt,
     {
       plugin: hapiswagger,
       options: {
@@ -61,9 +59,6 @@ const init = async () => {
     layout: true,
     partialsPath: path.resolve(viewsPath, "partials"),
     isCached: false,
-    context: {
-      title: "Placemark",
-    },
   });
 
   server.auth.strategy("session", "cookie", {
@@ -78,27 +73,15 @@ const init = async () => {
   server.auth.strategy("jwt", "jwt", {
     key: process.env.JWT_SECRET,
     verifyOptions: { algorithms: ["HS256"] },
-    validate: utils.validate,
+    validate,
     redirectTo: "/login",
   });
 
   server.auth.default("session");
+  db.init(process.env.ENVIRONMENT);
 
   server.route(webRoutes);
   server.route(apiRoutes);
-
-  // server.ext("onPreResponse", (request, h) => {
-  //   if (request.response.isBoom) {
-  //     return h.view(
-  //       "error-page",
-  //       {
-  //         friendlyerror: "I'm sorry Dave, I'm afraid I can't do that.",
-  //       },
-  //       { layout: "dashboardlayout" }
-  //     );
-  //   }
-  //   return h.continue;
-  // });
 
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);

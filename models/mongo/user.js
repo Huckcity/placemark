@@ -8,12 +8,10 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
       required: true,
-      unique: true,
     },
     password: {
       type: String,
@@ -28,19 +26,17 @@ const userSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 userSchema.pre("save", async function (next) {
-  const user = this;
-  const hash = await bcrypt.hash(user.password, 10);
-  user.password = hash;
+  const hash = await bcrypt.hash(this.password, 10);
+  this.password = hash;
   next();
 });
 
 userSchema.methods.checkPassword = async function (password) {
-  const user = this;
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, this.password);
   return isMatch;
 };
 

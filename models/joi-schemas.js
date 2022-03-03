@@ -54,15 +54,12 @@ export const updateUserSpec = Joi.object()
 
 export const placeSpec = Joi.object()
   .keys({
-    name: Joi.string().required().example("Times Square"),
-    description: Joi.string()
-      .optional()
-      .allow("")
-      .example("Long form description"),
-    image: Joi.string()
-      .optional()
-      .allow("")
-      .example("https://www.example.com/image.jpg"),
+    name: Joi.string()
+      .required()
+      .example("Times Square")
+      .messages({ "any.required": "Name is required" }),
+    description: Joi.string().optional().allow("").example("Long form description"),
+    image: Joi.string().optional().allow("").example("https://www.example.com/image.jpg"),
     location: Joi.object()
       .keys({
         lat: Joi.number().required().example(40.75),
@@ -74,25 +71,61 @@ export const placeSpec = Joi.object()
     __v: Joi.number(),
     createdAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
     updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
+    category: idSpec,
   })
   .label("Place Spec");
 
+export const addPlaceSpec = Joi.object()
+  .keys({
+    name: Joi.string()
+      .required()
+      .example("Times Square")
+      .messages({ "any.required": "Name is required" }),
+    description: Joi.string().optional().allow("").example("Long form description"),
+    image: Joi.string().optional().allow("").example("https://www.example.com/image.jpg"),
+    latitude: Joi.number().optional().example(40.75),
+    longitude: Joi.number().optional().example(-73.98),
+    category: idSpec,
+  })
+  .label("Add Place Spec");
+
 export const placeArray = Joi.array().items(placeSpec).label("Place Array");
 
-export const updatePlaceSpec = Joi.object().keys({
-  name: Joi.string().required().example("Times Square"),
-  description: Joi.string()
-    .optional()
-    .allow("")
-    .example("Long form description"),
-  image: Joi.string()
-    .optional()
-    .allow("")
-    .example("https://www.example.com/image.jpg"),
-  location: Joi.object()
-    .keys({
+export const updatePlaceSpec = Joi.object()
+  .keys({
+    _id: idSpec,
+    user: userSpec,
+    name: Joi.string().required().example("Times Square"),
+    description: Joi.string().optional().allow("").example("Long form description"),
+    image: Joi.string().optional().allow("").example("https://www.example.com/image.jpg"),
+    location: Joi.object().keys({
       lat: Joi.number().required().example(40.75),
       lng: Joi.number().required().example(-73.98),
-    })
-    .label("Update Location Spec"),
-});
+    }),
+    createdAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
+    updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
+    __v: Joi.number(),
+  })
+  .label("Update Location Spec");
+
+// Category Schemas
+
+export const createCategorySpec = Joi.object()
+  .keys({
+    name: Joi.string()
+      .required()
+      .example("Restaurant")
+      .messages({ "any.required": "Name is required" }),
+  })
+  .label("Create Category Spec");
+
+export const categorySpec = Joi.object()
+  .keys({
+    _id: idSpec,
+    name: Joi.string().required().example("Some Category"),
+    slug_name: Joi.string().required().example("some-category"),
+    __v: Joi.number(),
+  })
+  .label("Category Spec");
+
+export const categoryArray = Joi.array().items(categorySpec).label("Category Array");

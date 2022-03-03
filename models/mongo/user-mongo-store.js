@@ -2,7 +2,8 @@ import { User } from "./user.js";
 
 const userMongoStore = {
   async getAll() {
-    return User.find({}).lean();
+    const users = User.find({}).lean();
+    return users;
   },
 
   async getByUsername(username) {
@@ -44,7 +45,6 @@ const userMongoStore = {
     }
 
     const login = user.email ? user.email : user.username;
-
     const existingUser = await User.findOne({
       $or: [{ email: login }, { username: login }],
     });
@@ -61,8 +61,8 @@ const userMongoStore = {
   async create(user) {
     // TODO: Check for uniqueness of username/email
     const newUser = new User(user);
-    await newUser.save();
-    const savedUser = await this.getById(newUser._id);
+    const userObj = await newUser.save();
+    const savedUser = await this.getById(userObj._id);
     return savedUser;
   },
 

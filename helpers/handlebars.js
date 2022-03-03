@@ -1,5 +1,5 @@
 const helpers = (hbs) => {
-  hbs.registerHelper("formatDate", function (date) {
+  hbs.registerHelper("formatDate", (date) => {
     // Helper to format date to "Last edited at HH:MM on DD MMM"
     if (!date) {
       return "";
@@ -15,13 +15,13 @@ const helpers = (hbs) => {
     return `Last edited on ${prettyDate}`;
   });
 
-  hbs.registerHelper("truncateToWords", function (str, len) {
+  hbs.registerHelper("truncateToWords", (str, len) => {
     // Helper to truncate string to len words
     if (!str) {
       return "";
     }
     const truncated = str.split(" ").slice(0, len).join(" ");
-    return truncated + "...";
+    return `${truncated}...`;
   });
 
   hbs.registerHelper("ifEq", function (str1, str2, options) {

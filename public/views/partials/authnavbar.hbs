@@ -14,13 +14,24 @@
     href="/dashboard/places/new">Add a Place</a></li>
   </ul>
 
+  <p class="menu-label">
+    Account
+  </p>
+  <ul class="menu-list">
+    <li><a 
+    class="{{#if active.Settings}}is-active{{/if}}"
+    href="/dashboard/settings">Settings</a></li>
+    <li><a href="/logout">Logout</a></li>
+  </ul>
+
+
   {{#ifEq user.role "admin" }}
   <p class="menu-label">
     Administration
   </p>
   <ul class="menu-list">
     <li>
-      <a>Manage Users</a>
+      <a>Users</a>
       <ul>
         <li><a 
         class="{{#if active.AllUsers}}is-active{{/if}}"
@@ -30,18 +41,18 @@
         href="/dashboard/admin/users/add">Add a User</a></li>
       </ul>
     </li>
+    <li>
+      <a>Categories</a>
+      <ul>
+        <li><a 
+        class="{{#if active.AllCategories}}is-active{{/if}}"
+        href="/dashboard/admin/categories">All Categories</a></li>
+        <li><a 
+        class="{{#if active.AddCategory}}is-active{{/if}}"
+        href="/dashboard/admin/categories/add">Add a Category</a></li>
+    </li>
   </ul>
   {{/ifEq}}
 
-  <p class="menu-label">
-    Account
-  </p>
-  <ul class="menu-list">
-    <li><a 
-    class="{{#if active.Settings}}is-active{{/if}}"
-    href="/dashboard/settings">Settings</a></li>
-    <li><a>Transfers</a></li>
-    <li><a href="/logout">Logout</a></li>
-  </ul>
 </aside>
-{{helper}}
+
