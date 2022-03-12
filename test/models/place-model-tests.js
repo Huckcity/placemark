@@ -10,9 +10,7 @@ suite("Place Model Tests", () => {
   });
 
   setup(async () => {
-    await db.placeStore.deleteAll();
     await db.userStore.deleteAll();
-
     testUser = await db.userStore.create(testData.newUser);
     await db.placeStore.deleteAll();
 
@@ -20,6 +18,10 @@ suite("Place Model Tests", () => {
       // eslint-disable-next-line no-await-in-loop
       await db.placeStore.create(testData.places[i], testUser._id);
     }
+  });
+
+  teardown(async () => {
+    await db.placeStore.deleteAll();
   });
 
   test("Create A Place", async () => {

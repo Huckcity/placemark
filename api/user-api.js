@@ -8,6 +8,8 @@ import {
   userArray,
   userSpec,
   updateUserSpec,
+  JWTAuth,
+  loginSpec,
 } from "../models/joi-schemas.js";
 
 const userApi = {
@@ -37,7 +39,6 @@ const userApi = {
         }
         return Boom.badImplementation("error creating user");
       } catch (err) {
-        console.log(err);
         return Boom.serverUnavailable("Database Error");
       }
     },
@@ -129,6 +130,17 @@ const userApi = {
       } catch (err) {
         return Boom.unauthorized("Invalid email or password");
       }
+    },
+    tags: ["api"],
+    description: "Authenticate a user",
+    notes: "Id user has valid email/password, create and return a JWT",
+    validate: {
+      payload: loginSpec,
+      failAction: validationError,
+    },
+    response: {
+      schema: JWTAuth,
+      failAction: validationError,
     },
   },
 };

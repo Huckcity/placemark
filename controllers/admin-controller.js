@@ -1,4 +1,5 @@
 import { db } from "../models/db.js";
+import { adminRegisterSpec } from "../models/joi-schemas.js";
 
 const adminController = {
   adminUsers: {
@@ -7,7 +8,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const allusers = await db.userStore.getAll();
       const viewData = {
         user,
@@ -26,7 +27,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const viewData = {
         user,
         active: {
@@ -43,17 +44,31 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const viewData = { user };
 
-      try {
-        await db.userStore.create(req.payload);
+      const newUser = await db.userStore.create(req.payload);
+      if (newUser) {
         return h.redirect("/dashboard/admin/users");
-      } catch (error) {
-        viewData.error = error.message;
-        viewData.active = { AllUsers: true };
-        return h.view("add-user", viewData, { layout: "dashboardlayout" });
       }
+
+      viewData.error = "Error creating user";
+      viewData.active = { AddUser: true };
+      return h.view("add-user", viewData, { layout: "dashboardlayout" });
+    },
+    validate: {
+      payload: adminRegisterSpec,
+      failAction: async (req, h, error) => {
+        const user = req.auth.credentials;
+        const viewData = {
+          user,
+          error: error.message,
+          active: {
+            AddUser: true,
+          },
+        };
+        return h.view("add-user", viewData, { layout: "dashboardlayout" }).takeover();
+      },
     },
   },
 
@@ -63,7 +78,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const userToEdit = await db.userStore.getById(req.params.id);
       const viewData = {
         user,
@@ -79,21 +94,31 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const userToEdit = await db.userStore.getById(req.payload.id);
       const viewData = {
         user,
         userToEdit,
       };
-      try {
-        const updatedUser = await db.userStore.update(userToEdit._id, req.payload);
+      const { password, passwordConfirm } = req.payload;
+      if (password) {
+        if (password !== passwordConfirm) {
+          viewData.error = "Passwords do not match";
+          viewData.active = { AllUsers: true };
+          return h.view("edit-user", viewData, { layout: "dashboardlayout" });
+        }
+      } else {
+        delete req.payload.password;
+      }
+      const updatedUser = await db.userStore.update(userToEdit._id, req.payload);
+      console.log(updatedUser);
+      if (updatedUser) {
         viewData.userToEdit = updatedUser;
         viewData.message = "User details saved.";
-        return h.view("edit-user", viewData, { layout: "dashboardlayout" });
-      } catch (error) {
-        viewData.error = error.message;
-        return h.view("edit-user", viewData, { layout: "dashboardlayout" });
+      } else {
+        viewData.error = "User details not saved.";
       }
+      return h.view("edit-user", viewData, { layout: "dashboardlayout" });
     },
   },
 
@@ -103,7 +128,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       try {
         await db.userStore.delete(req.params.id);
         return h.redirect("/dashboard/admin/users");
@@ -128,7 +153,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const categories = await db.categoryStore.getAll();
       const viewData = {
         user,
@@ -147,7 +172,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const viewData = {
         user,
         active: {
@@ -164,8 +189,20 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      await db.categoryStore.create(req.payload);
-      return h.redirect("/dashboard/admin/categories");
+      try {
+        await db.categoryStore.create(req.payload);
+        return h.redirect("/dashboard/admin/categories");
+      } catch (error) {
+        const user = req.auth.credentials;
+        const viewData = {
+          user,
+          error: error.message,
+          active: {
+            AddCategory: true,
+          },
+        };
+        return h.view("add-category", viewData, { layout: "dashboardlayout" });
+      }
     },
   },
 
@@ -175,7 +212,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const category = await db.categoryStore.getById(req.params.id);
       const viewData = {
         user,
@@ -203,7 +240,7 @@ const adminController = {
       scope: ["admin"],
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       try {
         await db.categoryStore.delete(req.params.id);
         return h.redirect("/dashboard/admin/categories");
