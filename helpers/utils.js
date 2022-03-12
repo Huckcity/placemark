@@ -48,10 +48,10 @@ export const slugify = (text) => {
 
 export function assertSubset(subset, superset) {
   if (
-    typeof superset !== "object" ||
-    superset === null ||
-    typeof subset !== "object" ||
-    subset === null
+    typeof superset !== "object"
+    || superset === null
+    || typeof subset !== "object"
+    || subset === null
   ) {
     return false;
   }

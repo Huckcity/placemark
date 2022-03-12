@@ -11,26 +11,27 @@ const authController = {
     auth: false,
     validate: {
       payload: loginSpec,
-      failAction: (request, h, error) =>
-        h
-          .view("login", {
-            error: error.message,
-          })
-          .takeover()
-          .code(400),
+      failAction: (request, h, error) => h
+        .view("login", {
+          error: error.message,
+        })
+        .takeover()
+        .code(400),
     },
     handler: async (req, h) => {
       try {
         const user = await db.userStore.authByEmailOrUsername(req.payload);
 
         req.cookieAuth.set({
-          id: user._id,
+          _id: user._id,
+          username: user.username,
+          email: user.email,
           scope: user.role,
+          role: user.role,
         });
 
         return h.redirect("/dashboard");
       } catch (err) {
-        console.log(err);
         return h.view("login", {
           error: "Incorrect login details.",
         });
@@ -54,17 +55,26 @@ const authController = {
     auth: false,
     validate: {
       payload: registerSpec,
-      failAction: (request, h, error) =>
-        h
-          .view("index", {
-            error: error.message,
-          })
-          .takeover()
-          .code(400),
+      failAction: (request, h, error) => h
+        .view("index", {
+          error: error.message,
+        })
+        .takeover()
+        .code(400),
     },
     handler: async (req, h) => {
       const user = req.payload;
-      await db.userStore.create(user);
+      if (user.password !== user.passwordConfirm) {
+        return h.view("index", {
+          error: "Passwords do not match.",
+        });
+      }
+      const newUser = await db.userStore.create(user);
+      if (!newUser) {
+        return h.view("index", {
+          error: "User already exists.",
+        });
+      }
       return h.redirect("/login");
     },
   },

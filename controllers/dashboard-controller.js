@@ -1,12 +1,12 @@
 import { db } from "../models/db.js";
-import { addPlaceSpec } from "../models/joi-schemas.js";
+import { addPlaceSpec, updateUserSpec } from "../models/joi-schemas.js";
 
 const dashboardController = {
   dashboard: {
     auth: "session",
     handler: async (req, h) => {
       try {
-        const user = await db.userStore.getById(req.auth.credentials.id);
+        const user = req.auth.credentials;
         const places = await db.placeStore.getAll();
         const viewData = {
           user,
@@ -26,7 +26,7 @@ const dashboardController = {
   settings: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = await db.userStore.getById(req.auth.credentials._id);
       const viewData = {
         user,
         active: {
@@ -40,55 +40,52 @@ const dashboardController = {
   settingsUpdate: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const userData = req.payload;
-      let updatePassword = false;
-
-      if (userData.password) {
-        if (userData.password !== userData.passwordConfirm) {
-          return h.view(
-            "settings",
-            {
-              user,
-              error: "Passwords do not match",
-              active: {
-                Settings: true,
-              },
-            },
-            { layout: "dashboardlayout" },
-          );
-        }
-        updatePassword = true;
-      }
-
-      const userUpdate = {
-        username: user.username,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email,
-        password: updatePassword ? userData.password : null,
-      };
       const viewData = {
         user,
         active: {
           Settings: true,
         },
       };
+
+      if (userData.password) {
+        if (userData.password !== userData.passwordConfirm) {
+          viewData.error = "Passwords do not match";
+          return h.view("settings", viewData, { layout: "dashboardlayout" });
+        }
+      } else {
+        delete userData.password;
+      }
+
       try {
-        viewData.user = await db.userStore.update(user._id, userUpdate);
+        viewData.user = await db.userStore.update(user._id, userData);
         viewData.message = "User updated successfully";
       } catch (err) {
         viewData.error = "Failed to update user";
-        console.log(err);
       }
       return h.view("settings", viewData, { layout: "dashboardlayout" });
+    },
+    validate: {
+      payload: updateUserSpec,
+      failAction: async (req, h, error) => {
+        const user = req.auth.credentials;
+        const viewData = {
+          user,
+          error: error.message,
+          active: {
+            Settings: true,
+          },
+        };
+        return h.view("settings", viewData, { layout: "dashboardLayout" }).takeover();
+      },
     },
   },
 
   myPlaces: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const places = await db.placeStore.getByUserId(user._id);
       const viewData = {
         user,
@@ -104,7 +101,7 @@ const dashboardController = {
   place: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const placeId = req.params.id;
       const place = await db.placeStore.getById(placeId);
       const viewData = {
@@ -118,7 +115,7 @@ const dashboardController = {
   addPlace: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const categories = await db.categoryStore.getAll();
       const viewData = {
         user,
@@ -135,11 +132,13 @@ const dashboardController = {
     auth: "session",
     validate: {
       payload: addPlaceSpec,
-      failAction: async (request, h, error) => {
-        const user = await db.userStore.getById(request.auth.credentials.id);
+      failAction: async (req, h, error) => {
+        const user = req.auth.credentials;
+        const categories = await db.categoryStore.getAll();
         const viewData = {
           user,
-          error,
+          categories,
+          error: error.message,
           active: {
             AddPlace: true,
           },
@@ -148,7 +147,7 @@ const dashboardController = {
       },
     },
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const categories = await db.categoryStore.getAll();
       try {
         const place = await db.placeStore.create(req.payload, user._id);
@@ -173,33 +172,30 @@ const dashboardController = {
   deletePlace: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const { id } = req.params;
-      try {
-        await db.placeStore.delete(id, user._id);
-        return h.redirect("/dashboard/places");
-      } catch (err) {
-        const places = await db.placeStore.getByUserId(user);
-        return h.view(
-          "my-places",
-          {
-            user,
-            places,
-            error: err.message,
-            active: {
-              MyPlaces: true,
-            },
-          },
-          { layout: "dashboardlayout" },
-        );
+      const deletedPlace = await db.placeStore.delete(id, user._id);
+      const places = await db.placeStore.getByUserId(user);
+      const viewData = {
+        user,
+        places,
+        active: {
+          MyPlaces: true,
+        },
+      };
+      if (deletedPlace) {
+        viewData.message = "Place deleted successfully";
+      } else {
+        viewData.error = "You cannot delete that place.";
       }
+      return h.view("my-places", viewData, { layout: "dashboardlayout" });
     },
   },
 
   editPlace: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       const place = await db.placeStore.getById(req.params.id);
       const categories = await db.categoryStore.getAll();
       const viewData = {
@@ -217,22 +213,22 @@ const dashboardController = {
   editPlacePost: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
+      const place = await db.placeStore.getById(req.params.id);
+      const viewData = {
+        user,
+        place,
+      };
+      if (!place.user._id.equals(user._id)) {
+        viewData.error = "You cannot edit this place.";
+        return h.view("edit-place", viewData, { layout: "dashboardlayout" });
+      }
       try {
         await db.placeStore.update(user._id, req.params.id, req.payload);
         return h.redirect(`/dashboard/places/${req.params.id}`);
       } catch (error) {
         console.log(error);
-        const place = await db.placeStore.getById(req.params.id);
-        return h.view(
-          "place",
-          {
-            user,
-            place,
-            error: error.message,
-          },
-          { layout: "dashboardlayout" },
-        );
+        return h.view("place", viewData, { layout: "dashboardlayout" });
       }
     },
   },
@@ -240,7 +236,7 @@ const dashboardController = {
   placesByCategory: {
     auth: "session",
     handler: async (req, h) => {
-      const user = await db.userStore.getById(req.auth.credentials.id);
+      const user = req.auth.credentials;
       try {
         const { category } = req.params;
         const places = await db.placeStore.getByCategorySlug(category);

@@ -1,13 +1,13 @@
 import { assert } from "chai";
 import apiService from "./api-service.js";
-import { newUser } from "../fixtures.js";
+import { newUser, newUserLogin } from "../fixtures.js";
 import { decodeToken } from "../../helpers/utils.js";
 
 suite("Authentication API Tests", () => {
   setup(async () => {
     await apiService.clearAuth();
     await apiService.createUser(newUser);
-    await apiService.authenticate(newUser);
+    await apiService.authenticate(newUserLogin);
     await apiService.deleteAllUsers();
   });
 
@@ -17,14 +17,14 @@ suite("Authentication API Tests", () => {
 
   test("authenticate user", async () => {
     await apiService.createUser(newUser);
-    const response = await apiService.authenticate(newUser);
+    const response = await apiService.authenticate(newUserLogin);
     assert(response.success);
     assert.isDefined(response.token);
   });
 
   test("Verify token", async () => {
     await apiService.createUser(newUser);
-    const response = await apiService.authenticate(newUser);
+    const response = await apiService.authenticate(newUserLogin);
     const { token } = response;
     const user = decodeToken(token);
     assert.isDefined(user);
@@ -32,7 +32,7 @@ suite("Authentication API Tests", () => {
 
   test("authenticate user with invalid email", async () => {
     try {
-      await apiService.authenticate("invalid", newUser.password);
+      await apiService.authenticate({ username: "invalid", password: newUser.password });
     } catch (err) {
       assert.equal(err.response.status, 401);
     }
@@ -40,7 +40,7 @@ suite("Authentication API Tests", () => {
 
   test("authenticate user with invalid password", async () => {
     try {
-      await apiService.authenticate(newUser.email, "invalid");
+      await apiService.authenticate({ username: newUser.email, password: "invalid" });
     } catch (err) {
       assert.equal(err.response.status, 401);
     }

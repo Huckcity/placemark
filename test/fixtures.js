@@ -45,6 +45,11 @@ export const newUser2 = {
   email: "newtest7@user.com",
 };
 
+export const newUserLogin = {
+  username: "newtest6",
+  password: "test",
+};
+
 export const places = [
   {
     name: "test1",

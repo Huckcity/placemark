@@ -48,15 +48,18 @@ const categoryApi = {
     handler: async (request) => {
       try {
         const newCategory = await db.categoryStore.create(request.payload);
-        return newCategory;
+        if (newCategory) {
+          return newCategory;
+        }
+        return Boom.serverUnavailable("Unable to create category");
       } catch (err) {
-        throw Boom.badImplementation(err);
+        throw Boom.serverUnavailable("Failed to create category");
       }
     },
     tags: ["api"],
     description: "Create a new category",
     notes: "Creates a new category",
-    validate: { payload: createCategorySpec },
+    validate: { payload: createCategorySpec, failAction: validationError },
     response: { schema: categorySpec, failAction: validationError },
   },
 
@@ -75,7 +78,7 @@ const categoryApi = {
     tags: ["api"],
     description: "Update a category",
     notes: "Updates a category",
-    validate: { payload: categorySpec },
+    validate: { payload: createCategorySpec, failAction: validationError },
     response: { schema: categorySpec, failAction: validationError },
   },
 

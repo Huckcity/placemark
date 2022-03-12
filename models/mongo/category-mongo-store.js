@@ -8,21 +8,12 @@ const categoryStore = {
   },
 
   async getById(id) {
-    if (!id) {
-      throw new Error("Category id is required.");
-    }
     const category = await Category.findById(id).lean();
-    if (!category) {
-      throw new Error(`Category with id ${id} not found.`);
-    }
     return category;
   },
 
   async getByName(name) {
     const category = await Category.findOne({ name }).lean();
-    if (!category) {
-      return null;
-    }
     return category;
   },
 
@@ -35,30 +26,14 @@ const categoryStore = {
   },
 
   async update(categoryId, category) {
-    if (!categoryId) {
-      throw new Error("Category id is required.");
-    }
-    if (!category) {
-      throw new Error("Category is required.");
-    }
-    if (!category.name) {
-      throw new Error("Category name is required.");
-    }
     await Category.findByIdAndUpdate(categoryId, category);
     const savedCategory = await this.getById(categoryId);
     return savedCategory;
   },
 
   async delete(categoryId) {
-    if (!categoryId) {
-      throw new Error("Category id is required.");
-    }
-    try {
-      await Category.findByIdAndDelete(categoryId);
-      return true;
-    } catch (err) {
-      throw new Error(err);
-    }
+    await Category.findByIdAndDelete(categoryId);
+    return true;
   },
 
   async deleteAll() {

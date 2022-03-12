@@ -1,16 +1,16 @@
 import { assert } from "chai";
 import apiService from "./api-service.js";
-import { newUser, newCategory, categoryArray } from "../fixtures.js";
+import { newUser, newCategory, categoryArray, newUserLogin } from "../fixtures.js";
 
 suite("Category API Tests", () => {
   setup(async () => {
     apiService.clearAuth();
     await apiService.createUser(newUser);
-    await apiService.authenticate(newUser);
+    await apiService.authenticate(newUserLogin);
     await apiService.deleteAllCategories();
     await apiService.deleteAllUsers();
     await apiService.createUser(newUser);
-    await apiService.authenticate(newUser);
+    await apiService.authenticate(newUserLogin);
     for (let i = 0; i < categoryArray.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       await apiService.createCategory(categoryArray[i]);
@@ -51,5 +51,24 @@ suite("Category API Tests", () => {
   test("deleteAllCategories() should delete all categories", async () => {
     const categories = await apiService.getAllCategories();
     assert.equal(categories.length, 5);
+  });
+
+  test("updateCategory() should update one category", async () => {
+    const returnedCategory = await apiService.createCategory(newCategory);
+    assert.equal(returnedCategory.name, newCategory.name);
+    await apiService.updateCategory(returnedCategory._id, { name: "Updated" });
+    const updatedCategory = await apiService.getCategoryById(returnedCategory._id);
+    assert.equal(updatedCategory.name, "Updated");
+  });
+
+  test("create a category with bad data should fail", async () => {
+    const badCategory = {
+      name: "",
+    };
+    try {
+      await apiService.createCategory(badCategory);
+    } catch (err) {
+      assert.equal(err.message, "Request failed with status code 400");
+    }
   });
 });

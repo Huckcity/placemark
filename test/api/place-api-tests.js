@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import apiService from "./api-service.js";
-import { newUser, places, newPlace, newCategory } from "../fixtures.js";
+import { newUser, places, newPlace, newCategory, newUserLogin } from "../fixtures.js";
 
 suite("Place API Tests", () => {
   let testUser = newUser;
@@ -9,12 +9,12 @@ suite("Place API Tests", () => {
   setup(async () => {
     apiService.clearAuth();
     testUser = await apiService.createUser(newUser);
-    await apiService.authenticate(newUser);
+    await apiService.authenticate(newUserLogin);
     await apiService.deleteAllPlaces();
     await apiService.deleteAllCategories();
     await apiService.deleteAllUsers();
     testUser = await apiService.createUser(newUser);
-    await apiService.authenticate(newUser);
+    await apiService.authenticate(newUserLogin);
     for (let i = 0; i < testPlaces.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       testPlaces[i] = await apiService.createPlace(places[i]);
