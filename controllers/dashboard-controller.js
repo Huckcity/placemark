@@ -40,7 +40,7 @@ const dashboardController = {
   settingsUpdate: {
     auth: "session",
     handler: async (req, h) => {
-      const user = req.auth.credentials;
+      const user = await db.userStore.getById(req.auth.credentials._id);
       const userData = req.payload;
       const viewData = {
         user,
@@ -151,7 +151,7 @@ const dashboardController = {
       const categories = await db.categoryStore.getAll();
       try {
         const place = await db.placeStore.create(req.payload, user._id);
-        return h.redirect(`/dashboard/places/${place._id}`);
+        return h.redirect(`/places/${place._id}`);
       } catch (err) {
         return h.view(
           "add-place",
@@ -225,7 +225,7 @@ const dashboardController = {
       }
       try {
         await db.placeStore.update(user._id, req.params.id, req.payload);
-        return h.redirect(`/dashboard/places/${req.params.id}`);
+        return h.redirect(`/places/${req.params.id}`);
       } catch (error) {
         console.log(error);
         return h.view("place", viewData, { layout: "dashboardlayout" });
@@ -261,6 +261,24 @@ const dashboardController = {
           { layout: "dashboardlayout" },
         );
       }
+    },
+  },
+
+  user: {
+    auth: "session",
+    handler: async (req, h) => {
+      const user = req.auth.credentials;
+      const viewUser = await db.userStore.getById(req.params.id);
+      const places = await db.placeStore.getByUserId(req.params.id);
+      const viewData = {
+        user,
+        viewUser,
+        places,
+        active: {
+          User: true,
+        },
+      };
+      return h.view("user", viewData, { layout: "dashboardlayout" });
     },
   },
 };

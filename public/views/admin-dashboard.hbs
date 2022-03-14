@@ -1,0 +1,97 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h1 class="title is-3">
+					Admin Dashboard
+			</h1>
+			<hr>
+
+			<div class="columns">
+				<div class="column">
+					<div class="card">
+						<header class="card-header">
+							<p class="card-header-title">
+									Users
+							</p>
+						</header>
+						<div class="card-content">
+							<div class="content">
+								<p>
+										<strong>{{users.length}}</strong> users registered
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column">
+					<div class="card">
+						<header class="card-header">
+							<p class="card-header-title">
+									Places
+							</p>
+						</header>
+						<div class="card-content">
+							<div class="content">
+								<p>
+										<strong>{{places.length}}</strong> places published
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column">
+					<div class="card">
+						<header class="card-header">
+							<p class="card-header-title">
+									Categories
+							</p>
+						</header>
+						<div class="card-content">
+							<div class="content">
+								<p>
+										<strong>{{categories.length}}</strong> categories
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="columns">
+        <div class="column">
+          <div class="card">
+            <p class="card-header-title">
+              Statistics
+            </p>
+            <div class="card-content">
+              <div class="content">
+                <p>
+                  Avg. Places per Category: <strong>{{average categories.length places.length}}</strong>
+                </p>
+                <p>
+                  Avg. Places per User: <strong>{{average places.length users.length}}</strong>
+                </p>
+                <p>
+                  Last registered user: <strong>
+                    {{#with (lastItemByCreateDate users)}}
+                      <a href="/users/{{_id}}">{{username}}</a>
+                    {{/with}}
+                  </strong>
+                </p>
+                <p>
+                  Last published place: <strong>
+										{{#with (lastItemByCreateDate places)}}
+											<a href="/places/{{_id}}">{{name}}</a>
+										{{/with}}
+									</strong>
+                </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

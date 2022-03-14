@@ -2,6 +2,29 @@ import { db } from "../models/db.js";
 import { adminRegisterSpec } from "../models/joi-schemas.js";
 
 const adminController = {
+
+  index: {
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
+    handler: async (req, h) => {
+      const users = await db.userStore.getAll();
+      const places = await db.placeStore.getAll();
+      const categories = await db.categoryStore.getAll();
+      const viewData = {
+        user: req.auth.credentials,
+        users,
+        places,
+        categories,
+        active: {
+          AdminDashboard: true,
+        },
+      };
+      return h.view("admin-dashboard", viewData, { layout: "dashboardLayout" });
+    },
+  },
+
   adminUsers: {
     auth: {
       strategy: "session",
@@ -49,7 +72,7 @@ const adminController = {
 
       const newUser = await db.userStore.create(req.payload);
       if (newUser) {
-        return h.redirect("/dashboard/admin/users");
+        return h.redirect("/admin/users");
       }
 
       viewData.error = "Error creating user";
@@ -131,7 +154,7 @@ const adminController = {
       const user = req.auth.credentials;
       try {
         await db.userStore.delete(req.params.id);
-        return h.redirect("/dashboard/admin/users");
+        return h.redirect("/admin/users");
       } catch (error) {
         const allusers = await db.userStore.getAll();
         const viewData = {
@@ -191,7 +214,7 @@ const adminController = {
     handler: async (req, h) => {
       try {
         await db.categoryStore.create(req.payload);
-        return h.redirect("/dashboard/admin/categories");
+        return h.redirect("/admin/categories");
       } catch (error) {
         const user = req.auth.credentials;
         const viewData = {
@@ -230,7 +253,7 @@ const adminController = {
     handler: async (req, h) => {
       await db.userStore.getById(req.auth.credentials.id);
       await db.categoryStore.update(req.params.id, req.payload);
-      return h.redirect("/dashboard/admin/categories");
+      return h.redirect("/admin/categories");
     },
   },
 
@@ -243,7 +266,7 @@ const adminController = {
       const user = req.auth.credentials;
       try {
         await db.categoryStore.delete(req.params.id);
-        return h.redirect("/dashboard/admin/categories");
+        return h.redirect("/admin/categories");
       } catch (error) {
         const categories = await db.categoryStore.getAll();
         const viewData = {
