@@ -1,0 +1,77 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h1 class="title is-3">
+					{{viewUser.username}}'s Profile
+			</h1>
+			<hr>
+
+      <p>
+        <strong>Name:</strong> {{viewUser.firstName}} {{viewUser.lastName}}
+      </p>
+
+      {{#ifEq user.role "admin" }}
+        <p>
+          <strong>Email:</strong> {{viewUser.email}}
+        </p>
+        <p>
+          <strong>Role:</strong> {{viewUser.role}}
+        </p>
+      {{/ifEq}}
+
+      <p>
+        <strong>Joined on</strong> {{formatDate viewUser.createdAt}}
+      </p>
+
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+		<div class="col-sm-12">
+
+      <div class="columns">
+        <div class="column">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">
+                  Places
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                <p>
+                    <strong>{{places.length}}</strong> places published
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">
+                  Categories
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                <p>
+                    <strong>{{viewUser.categories.length}}</strong> categories
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">
+                  Reviews
+              </p>
+            </header>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

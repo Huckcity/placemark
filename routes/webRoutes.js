@@ -44,116 +44,126 @@ const routes = [
   },
   {
     method: "GET",
-    path: "/dashboard/places",
+    path: "/places",
     config: dashboardController.myPlaces,
   },
   {
     method: "GET",
-    path: "/dashboard/places/{id}",
+    path: "/places/{id}",
     config: dashboardController.place,
   },
   {
     method: "GET",
-    path: "/dashboard/places/new",
+    path: "/places/new",
     config: dashboardController.addPlace,
   },
   {
     method: "POST",
-    path: "/dashboard/places/new",
+    path: "/places/new",
     config: dashboardController.addPlacePost,
   },
   {
     method: "GET",
-    path: "/dashboard/places/delete/{id}",
+    path: "/places/delete/{id}",
     config: dashboardController.deletePlace,
   },
   {
     method: "GET",
-    path: "/dashboard/places/edit/{id}",
+    path: "/places/edit/{id}",
     config: dashboardController.editPlace,
   },
   {
     method: "POST",
-    path: "/dashboard/places/edit/{id}",
+    path: "/places/edit/{id}",
     config: dashboardController.editPlacePost,
   },
   {
     method: "GET",
-    path: "/dashboard/places/category/{category}",
+    path: "/places/category/{category}",
     config: dashboardController.placesByCategory,
   },
 
   // User routes
   {
     method: "GET",
-    path: "/dashboard/settings",
+    path: "/settings",
     config: dashboardController.settings,
   },
   {
     method: "POST",
-    path: "/dashboard/settings/update",
+    path: "/settings/update",
     config: dashboardController.settingsUpdate,
+  },
+  {
+    method: "GET",
+    path: "/users/{id}",
+    config: dashboardController.user,
   },
 
   // Admin routes
   {
     method: "GET",
-    path: "/dashboard/admin/users",
+    path: "/admin",
+    config: adminController.index,
+  },
+  {
+    method: "GET",
+    path: "/admin/users",
     config: adminController.adminUsers,
   },
   {
     method: "GET",
-    path: "/dashboard/admin/users/add",
+    path: "/admin/users/add",
     config: adminController.adminAddUser,
   },
   {
     method: "POST",
-    path: "/dashboard/admin/users/add",
+    path: "/admin/users/add",
     config: adminController.adminAddUserPost,
   },
   {
     method: "GET",
-    path: "/dashboard/admin/users/edit/{id}",
+    path: "/admin/users/edit/{id}",
     config: adminController.adminEditUser,
   },
   {
     method: "POST",
-    path: "/dashboard/admin/users/edit/{id}",
+    path: "/admin/users/edit/{id}",
     config: adminController.adminEditUserPost,
   },
   {
     method: "GET",
-    path: "/dashboard/admin/users/delete/{id}",
+    path: "/admin/users/delete/{id}",
     config: adminController.adminDeleteUser,
   },
   {
     method: "GET",
-    path: "/dashboard/admin/categories",
+    path: "/admin/categories",
     config: adminController.adminCategories,
   },
   {
     method: "GET",
-    path: "/dashboard/admin/categories/add",
+    path: "/admin/categories/add",
     config: adminController.adminAddCategory,
   },
   {
     method: "POST",
-    path: "/dashboard/admin/categories/add",
+    path: "/admin/categories/add",
     config: adminController.adminAddCategoryPost,
   },
   {
     method: "GET",
-    path: "/dashboard/admin/categories/edit/{id}",
+    path: "/admin/categories/edit/{id}",
     config: adminController.adminEditCategory,
   },
   {
     method: "POST",
-    path: "/dashboard/admin/categories/edit/{id}",
+    path: "/admin/categories/edit/{id}",
     config: adminController.adminEditCategoryPost,
   },
   {
     method: "GET",
-    path: "/dashboard/admin/categories/delete/{id}",
+    path: "/admin/categories/delete/{id}",
     config: adminController.adminDeleteCategory,
   },
 
