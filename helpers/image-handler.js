@@ -8,8 +8,8 @@ const uploadObject = async (userid, image) => {
     endpoint: 'https://fra1.digitaloceanspaces.com',
     region: 'fra1',
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      accessKeyId: process.env.DO_ACCESS_KEY_ID,
+      secretAccessKey: process.env.DO_SECRET_ACCESS_KEY,
     },
   });
   
