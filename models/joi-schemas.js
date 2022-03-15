@@ -29,6 +29,7 @@ export const updateUserSpec = Joi.object()
     passwordConfirm: Joi.string().optional().allow("").example("password"),
     firstName: Joi.string().optional().allow("").example("John"),
     lastName: Joi.string().optional().allow("").example("Doe"),
+    profileImage: Joi.any().meta({ swaggerType: "file" })
   })
   .label("Update User Spec");
 
@@ -47,6 +48,7 @@ export const adminRegisterSpec = registerSpec.keys({
   role: Joi.string().required(),
   firstName: Joi.string().optional().allow("").example("John"),
   lastName: Joi.string().optional().allow("").example("Doe"),
+  profileImage: Joi.any().meta({ swaggerType: "file" })
 });
 
 export const loginSpec = Joi.object()

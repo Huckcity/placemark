@@ -65,7 +65,6 @@ suite("Place API Tests", () => {
     try {
       await apiService.createPlace({});
     } catch (err) {
-      console.log(err.response.data.statusCode);
       assert.equal(err.response.data.statusCode, 503);
     }
   });

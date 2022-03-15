@@ -1,5 +1,6 @@
 import { db } from "../models/db.js";
 import { addPlaceSpec, updateUserSpec } from "../models/joi-schemas.js";
+import uploadObject from "../helpers/image-handler.js";
 
 const dashboardController = {
   dashboard: {
@@ -39,6 +40,14 @@ const dashboardController = {
 
   settingsUpdate: {
     auth: "session",
+    payload: {
+      output: 'file',
+      parse: true,
+      allow: 'multipart/form-data',
+      multipart: true,
+      maxBytes: 1024 * 1024 * 100,
+      timeout: false,
+    },
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials._id);
       const userData = req.payload;
@@ -56,6 +65,12 @@ const dashboardController = {
         }
       } else {
         delete userData.password;
+      }
+
+      if (req.payload.profileImage.filename && uploadObject(user._id, req.payload.profileImage)) {
+        req.payload.profileImage = `https://placemark-storage.fra1.digitaloceanspaces.com/${user._id}/${req.payload.profileImage.filename}`;
+      } else {
+        delete req.payload.profileImage;
       }
 
       try {
@@ -275,7 +290,7 @@ const dashboardController = {
         viewUser,
         places,
         active: {
-          User: true,
+          Profile: true,
         },
       };
       return h.view("user", viewData, { layout: "dashboardlayout" });

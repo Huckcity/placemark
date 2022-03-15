@@ -2,4 +2,11 @@
 
 $tabs-link-active-color: rgb(72, 199, 142);
 
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 @import "../node_modules/bulma/bulma.sass";
