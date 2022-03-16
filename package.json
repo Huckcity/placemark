@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/huckcity/placemark#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.32.0",
     "@hapi/basic": "^6.0.0",
     "@hapi/boom": "^9.1.4",
     "@hapi/cookie": "^11.0.2",
@@ -40,8 +41,7 @@
     "mais-mongoose-seeder": "^1.0.7",
     "mongodb": "^4.4.0",
     "mongoose": "^6.2.2",
-    "uuid": "^8.3.2",
-    "@aws-sdk/client-s3": "^3.32.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "bulma": "^0.9.3",

@@ -1,9 +1,10 @@
 import Boom from "@hapi/boom";
 import Joi from "joi";
 import { db } from "../models/db.js";
-
 import validationError from "./logger.js";
 import { idSpec, placeArray, placeSpec, updatePlaceSpec } from "../models/joi-schemas.js";
+import uploadObject from "../helpers/image-handler.js";
+import fs from "fs";
 
 const placeApi = {
   findOne: {
@@ -103,8 +104,35 @@ const placeApi = {
     handler: async (request) => {
       try {
         const place = await db.placeStore.create(request.payload.place, request.payload.userId);
+
+        if (request.payload.place.placeImage) {
+          const imageFromBase64 = Buffer.from(
+            request.payload.place.placeImage.replace(/^data:image\/\w+;base64,/, ""),
+            "base64",
+          );
+          fs.writeFileSync(
+            `./public/tmp/${place._id}.jpg`,
+            imageFromBase64,
+            { encoding: "base64" },
+            (err) => {
+              console.log(err);
+            },
+          );
+
+          const imageObj = {
+            path: `./public/tmp/${place._id}.jpg`,
+            filename: `${place._id}.jpg`,
+          };
+
+          if (uploadObject(place._id, imageObj)) {
+            const imageUrl = `https://placemark-storage.fra1.digitaloceanspaces.com/${place._id}/${place._id}.jpg`;
+            await db.placeStore.update(place._id, { ...place, placeImage: imageUrl });
+          }
+        }
+
         return place;
       } catch (err) {
+        console.log(err.message);
         throw Boom.serverUnavailable("Server Unavailable");
       }
     },
@@ -125,9 +153,9 @@ const placeApi = {
       strategy: "jwt",
     },
     handler: async (request) => {
-      const { userId, placeId, place } = request.payload;
+      const { placeId, place } = request.payload;
       try {
-        const updatedPlace = await db.placeStore.update(userId, placeId, place);
+        const updatedPlace = await db.placeStore.update(placeId, place);
         return updatedPlace;
       } catch (err) {
         throw Boom.badImplementation(err);

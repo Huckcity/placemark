@@ -9,4 +9,16 @@ $tabs-link-active-color: rgb(72, 199, 142);
   object-fit: cover;
 }
 
+.place-thumb {
+  width: 150px;
+  min-height: 150px;
+  max-height: 150px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.media {
+  min-height: 150px;
+}
+
 @import "../node_modules/bulma/bulma.sass";

@@ -9,7 +9,11 @@ const placeSchema = new Schema(
       required: true,
     },
     description: String,
-    image: String,
+    placeImage: {
+      type: String,
+      // default: "../public/images/default-place-image.jpeg",
+      default: "/public/images/default-place-image.jpeg",
+    },
     location: {
       lat: Number,
       lng: Number,

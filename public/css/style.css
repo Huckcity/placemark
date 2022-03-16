@@ -4,6 +4,16 @@
   border-radius: 50%;
   object-fit: cover; }
 
+.place-thumb {
+  width: 150px;
+  min-height: 150px;
+  max-height: 150px;
+  border-radius: 4px;
+  object-fit: cover; }
+
+.media {
+  min-height: 150px; }
+
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
