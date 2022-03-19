@@ -155,8 +155,13 @@ const placeApi = {
     handler: async (request) => {
       const { placeId, place } = request.payload;
       try {
-        const updatedPlace = await db.placeStore.update(placeId, place);
-        return updatedPlace;
+        const placeToUpdate = await db.placeStore.getById(placeId);
+        if (placeToUpdate.user._id.equals(request.payload.userId)) {
+          const updatedPlace = await db.placeStore.update(placeId, place);
+          return updatedPlace;
+        } else {
+          throw Boom.unauthorized("User not authorized to update place");
+        }
       } catch (err) {
         throw Boom.badImplementation(err);
       }

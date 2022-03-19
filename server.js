@@ -46,6 +46,14 @@ const init = async () => {
           title: "API Documentation",
           version: "1.0.0",
         },
+        securityDefinitions: {
+          jwt: {
+            type: "apiKey",
+            name: "Authorization",
+            in: "header",
+          },
+        },
+        security: [{ jwt: [] }],
       },
     },
   ]);

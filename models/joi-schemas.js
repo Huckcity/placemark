@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const imageSpec = Joi.any().meta({ swaggerType: "file" });
+export const imageSpec = Joi.any().meta({ swaggerType: "file" }).example("Base64 encoded image");
 
 // User Schemas
 
@@ -100,7 +100,7 @@ export const placeArray = Joi.array().items(placeSpec).label("Place Array");
 export const updatePlaceSpec = Joi.object()
   .keys({
     _id: idSpec,
-    user: userSpec,
+    user: idSpec,
     name: Joi.string().required().example("Times Square"),
     description: Joi.string().optional().allow("").example("Long form description"),
     placeImage: imageSpec.optional(),

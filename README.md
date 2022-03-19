@@ -3,9 +3,9 @@
 Placemark v4.0 represents the "outstanding" implementation of the Placemark application requirements. These include:
 
 1. Admin dashboard with analytics
-1. User uploadable profile images
+1. User uploadable profile/POI image
 1. JWT API authentication
-1. Heroku deployment with Digital Ocean image storage
+1. Heroku deployment with images stored in Digital Ocean Space via AWS API
 1. Master/dev/feature branches used for development process streamlining
 
 ---

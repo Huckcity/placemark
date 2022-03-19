@@ -1,6 +1,14 @@
 import { assert } from "chai";
 import apiService from "./api-service.js";
-import { newUser, places, newPlace, newPlace2, newCategory, newUserLogin } from "../fixtures.js";
+import {
+  newUser,
+  places,
+  newPlace,
+  newPlace2,
+  updatedPlace,
+  newCategory,
+  newUserLogin,
+} from "../fixtures.js";
 import fs from "fs";
 
 suite("Place API Tests", () => {
@@ -20,7 +28,6 @@ suite("Place API Tests", () => {
     for (let i = 0; i < places.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       testPlaces[i] = await apiService.createPlace(places[i]);
-      console.log(testPlaces[i]);
     }
   });
 
@@ -101,7 +108,6 @@ suite("Place API Tests", () => {
       createdPlace._id,
       updatedPlace,
     );
-    console.log(updatedPlaceReturned);
     assert.equal(updatedPlaceReturned.location.latitude, updatedPlace.location.latitude);
     assert.equal(updatedPlaceReturned.location.longitude, updatedPlace.location.longitude);
   });
@@ -112,6 +118,15 @@ suite("Place API Tests", () => {
       await apiService.updatePlace(testUser._id, createdPlace._id, {});
     } catch (err) {
       assert.equal(err.response.data.statusCode, 400);
+    }
+  });
+
+  test("Update a place, bad user", async () => {
+    const createdPlace = await apiService.createPlace(newPlace, testUser._id);
+    try {
+      await apiService.updatePlace("bad user", createdPlace._id, updatedPlace);
+    } catch (err) {
+      assert.equal(err.response.data.statusCode, 500);
     }
   });
 

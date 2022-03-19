@@ -273,8 +273,6 @@ const dashboardController = {
       delete req.payload.latitude;
       delete req.payload.longitude;
 
-      console.log(req.payload);
-
       try {
         await db.placeStore.update(req.params.id, req.payload);
         return h.redirect(`/places/${req.params.id}`);
