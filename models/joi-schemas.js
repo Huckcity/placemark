@@ -1,5 +1,7 @@
 import Joi from "joi";
 
+export const imageSpec = Joi.any().meta({ swaggerType: "file" }).example("Base64 encoded image");
+
 // User Schemas
 
 export const idSpec = Joi.alternatives()
@@ -18,17 +20,17 @@ export const userSpec = Joi.object()
     __v: Joi.number(),
     createdAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
     updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
+    profileImage: imageSpec.optional(),
   })
   .label("User");
 
 export const updateUserSpec = Joi.object()
   .keys({
-    // username: Joi.string().required().example("johndoe"),
-    email: Joi.string().email().required().example("johndoe@email.com"),
     password: Joi.string().optional().allow("").example("password"),
     passwordConfirm: Joi.string().optional().allow("").example("password"),
     firstName: Joi.string().optional().allow("").example("John"),
     lastName: Joi.string().optional().allow("").example("Doe"),
+    profileImage: imageSpec.optional(),
   })
   .label("Update User Spec");
 
@@ -47,6 +49,7 @@ export const adminRegisterSpec = registerSpec.keys({
   role: Joi.string().required(),
   firstName: Joi.string().optional().allow("").example("John"),
   lastName: Joi.string().optional().allow("").example("Doe"),
+  profileImage: imageSpec.optional(),
 });
 
 export const loginSpec = Joi.object()
@@ -60,11 +63,9 @@ export const loginSpec = Joi.object()
 
 export const placeSpec = Joi.object()
   .keys({
-    name: Joi.string()
-      .required()
-      .example("Times Square"),
+    name: Joi.string().required().example("Times Square"),
     description: Joi.string().optional().allow("").example("Long form description"),
-    image: Joi.string().optional().allow("").example("https://www.example.com/image.jpg"),
+    placeImage: imageSpec.optional(),
     location: Joi.object()
       .keys({
         lat: Joi.number().required().example(40.75),
@@ -78,7 +79,6 @@ export const placeSpec = Joi.object()
     updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
     category: idSpec,
   })
-  .messages({ "any.required": "Name is required" })
   .label("Place Spec");
 
 export const addPlaceSpec = Joi.object()
@@ -88,10 +88,10 @@ export const addPlaceSpec = Joi.object()
       .example("Times Square")
       .messages({ "any.required": "Name is required" }),
     description: Joi.string().optional().allow("").example("Long form description"),
-    image: Joi.string().optional().allow("").example("https://www.example.com/image.jpg"),
     latitude: Joi.number().optional().example(40.75),
     longitude: Joi.number().optional().example(-73.98),
     category: idSpec,
+    placeImage: imageSpec.optional(),
   })
   .label("Add Place Spec");
 
@@ -100,10 +100,10 @@ export const placeArray = Joi.array().items(placeSpec).label("Place Array");
 export const updatePlaceSpec = Joi.object()
   .keys({
     _id: idSpec,
-    user: userSpec,
+    user: idSpec,
     name: Joi.string().required().example("Times Square"),
     description: Joi.string().optional().allow("").example("Long form description"),
-    image: Joi.string().optional().allow("").example("https://www.example.com/image.jpg"),
+    placeImage: imageSpec.optional(),
     location: Joi.object().keys({
       lat: Joi.number().required().example(40.75),
       lng: Joi.number().required().example(-73.98),
@@ -139,6 +139,8 @@ export const categoryArray = Joi.array().items(categorySpec).label("Category Arr
 export const JWTAuth = Joi.object()
   .keys({
     success: Joi.boolean().required().example("true"),
-    token: Joi.string().required().example("eyJhbGciOiJND.g5YmJisIjoiaGYwNTNjAOhE.gCWGmY5-YigQw0DCBo"),
+    token: Joi.string()
+      .required()
+      .example("eyJhbGciOiJND.g5YmJisIjoiaGYwNTNjAOhE.gCWGmY5-YigQw0DCBo"),
   })
   .label("JWT Auth");

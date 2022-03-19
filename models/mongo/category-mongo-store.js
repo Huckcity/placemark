@@ -1,5 +1,4 @@
 import Category from "./category.js";
-import { slugify } from "../../helpers/utils.js";
 
 const categoryStore = {
   async getAll() {
@@ -19,7 +18,7 @@ const categoryStore = {
 
   async create(category) {
     const newCategory = new Category(category);
-    newCategory.slug_name = slugify(category.name);
+    newCategory.slug_name = category.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     await newCategory.save();
     const savedCategory = await this.getById(newCategory._id);
     return savedCategory;

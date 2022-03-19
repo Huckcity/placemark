@@ -18,6 +18,13 @@
     Account
   </p>
   <ul class="menu-list">
+    <li>
+      <a 
+      class="{{#if active.Profile}}is-active{{/if}}"
+      href="/users/{{user._id}}">
+        Profile
+      </a>
+    </li>
     <li><a 
     class="{{#if active.Settings}}is-active{{/if}}"
     href="/settings">Settings</a></li>

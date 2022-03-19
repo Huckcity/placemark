@@ -47,7 +47,7 @@ suite("Place Model Tests", () => {
   test("updatePlace() should update one place", async () => {
     const createdPlace = await db.placeStore.create(testData.newPlace, testUser._id);
     assert.equal(createdPlace.name, testData.newPlace.name);
-    await db.placeStore.update(testUser._id, createdPlace._id, testData.updatedPlace);
+    await db.placeStore.update(createdPlace._id, testData.updatedPlace);
     const updatedPlace = await db.placeStore.getById(createdPlace._id);
     assert.equal(updatedPlace.name, testData.updatedPlace.name);
   });

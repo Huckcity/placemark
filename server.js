@@ -8,7 +8,7 @@ import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 import hapiswagger from "hapi-swagger";
 import jwt from "hapi-auth-jwt2";
-
+import authController from "./controllers/auth-controller.js";
 import { validate } from "./helpers/utils.js";
 import hbsHelpers from "./helpers/handlebars.js";
 
@@ -46,6 +46,14 @@ const init = async () => {
           title: "API Documentation",
           version: "1.0.0",
         },
+        securityDefinitions: {
+          jwt: {
+            type: "apiKey",
+            name: "Authorization",
+            in: "header",
+          },
+        },
+        security: [{ jwt: [] }],
       },
     },
   ]);
@@ -67,6 +75,7 @@ const init = async () => {
       password: "password-should-be-32-characters",
       isSecure: false,
     },
+    validateFunc: authController.validate,
     redirectTo: "/login",
   });
 

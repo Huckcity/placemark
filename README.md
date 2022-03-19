@@ -1,12 +1,14 @@
-# Placemark V3.0
+# Placemark V4.0
 
-Placemark v3.0 represents the "excellent" implementation of the Placemark application requirements. These include:
+Placemark v4.0 represents the "outstanding" implementation of the Placemark application requirements. These include:
 
-1. Basic Admin Account to add/list/edit/remove users
-1. Places now have a 'category' attribute, and can be views by category
-1. API now users the Open API specification for documenting usage and validation
-1. MongoDB deployed on Cloud Atlas, and integrated with production deployment
-1. Continued tagged realease history
+1. Admin dashboard with analytics
+1. User uploadable profile/POI image
+1. JWT API authentication
+1. Heroku deployment with images stored in Digital Ocean Space via AWS API
+1. Master/dev/feature branches used for development process streamlining
+
+---
 
 To run locally, simply clone the repo and install as follows:
 
@@ -21,11 +23,14 @@ You will then need to set up the environment variables to set port number and da
 **_.env_**
 
 ```
-ENVIRONMENT= development_json || development_mongo || production
-PORT= e.g. 3000
-MONGO_LOCAL_URL= e.g. mongodb://localhost:27017/placemark
-MONGO_LIVE_URL= <you can ignore this unless deploying>
+ENVIRONMENT = development_json || development_mongo || production
+PORT = e.g. 3000
+MONGO_LOCAL_URL = e.g. mongodb://localhost:27017/placemark
+MONGO_LIVE_URL = <you can ignore this unless deploying>
 SEED= true || false
+JWT_SECRET = <somesecretseed>
+DO_ACCESS_KEY_ID = <Digital Ocean Space Key>
+DO_SECRET_ACCESS_KEY = <Digital Ocean Space Access Secret>
 ```
 
 **`development_json`** will use LowDB, **`development_mongo`** will use your local install of MongoDB which must be running. **`production`** will force the app to use the **`MONGO_LIVE_URL`** value, so this can be ignored locally.
@@ -33,3 +38,15 @@ SEED= true || false
 Setting the **`SEED`** var to true will seed the database with the data in the _./models/mongo/seed-data.js_ file.
 
 If left true, this will occur on each restart, so it is recommended to set this to false after initial run, unless a data reset is needed. Running the test suite will use a separate set of data, so you will need to reseed after testing.
+
+---
+
+## Test Users
+
+For testing purposes, the seeded data contains several users as follows:
+
+| Username | Password | Role  |
+| -------- | :------: | :---- |
+| adamg    |   test   | Admin |
+| janedoe  |   test   | User  |
+| johndoe  |   test   | User  |

@@ -78,6 +78,15 @@ const authController = {
       return h.redirect("/login");
     },
   },
+
+  async validate(request, session) {
+    const user = await db.userStore.getById(session._id);
+    if (!user) {
+      return { valid: false };
+    }
+    user.scope = user.role;
+    return { valid: true, credentials: user };
+  },
 };
 
 export default authController;

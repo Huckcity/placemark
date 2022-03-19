@@ -72,6 +72,10 @@ export const newPlace = {
   name: "newtest6",
 };
 
+export const newPlace2 = {
+  name: "newtest7",
+};
+
 export const updatedPlace = {
   name: "updatedtest6",
 };

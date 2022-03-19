@@ -3,7 +3,7 @@
     <div class="col-sm-12">
       <h1 class="title is-3">Account Settings</h1>
       <hr>
-      <form id="settingsForm" class="form-horizontal" method="post" action="/settings/update">
+      <form id="settingsForm" class="form-horizontal" method="post" action="/settings/update" enctype="multipart/form-data">
         <div class="field">
           <label for="email" class="label">Email:</label>
           <div class="col-sm-10">
@@ -32,6 +32,13 @@
           <label for="lastname" class="label">Last name:</label>
           <div class="col-sm-10">
             <input type="text" class="input" id="lastname" name="lastName" placeholder="Last name" value="{{user.lastName}}">
+          </div>
+        </div>
+        <div class="field">
+          <label for="profileImage" class="label">Profile Image</label>
+          <div class="col-sm-10">
+            <img src="{{user.profileImage}}" alt="Profile image" class="profile-image">
+            <input type="file" class="input" name="profileImage">
           </div>
         </div>
         <div class="field">

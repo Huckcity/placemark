@@ -72,6 +72,11 @@ const apiService = {
     return response.data;
   },
 
+  async getPlacesByUserId(id) {
+    const response = await axios.get(`${serverUrl}/api/places/user/${id}`);
+    return response.data;
+  },
+
   async createPlace(place, userId) {
     const response = await axios.post(`${serverUrl}/api/places/add`, {
       place,
@@ -118,6 +123,11 @@ const apiService = {
 
   async createUser(user) {
     const response = await axios.post(`${serverUrl}/api/users/add`, user);
+    return response.data;
+  },
+
+  async updateUser(id, user) {
+    const response = await axios.put(`${serverUrl}/api/users/${id}`, user);
     return response.data;
   },
 
