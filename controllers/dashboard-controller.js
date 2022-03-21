@@ -92,7 +92,7 @@ const dashboardController = {
             Settings: true,
           },
         };
-        return h.view("settings", viewData, { layout: "dashboardLayout" }).takeover();
+        return h.view("settings", viewData, { layout: "dashboardlayout" }).takeover();
       },
     },
   },
