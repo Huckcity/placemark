@@ -11,12 +11,13 @@ const authController = {
     auth: false,
     validate: {
       payload: loginSpec,
-      failAction: (request, h, error) => h
-        .view("login", {
-          error: error.message,
-        })
-        .takeover()
-        .code(400),
+      failAction: (request, h, error) =>
+        h
+          .view("login", {
+            error: error.message,
+          })
+          .takeover()
+          .code(400),
     },
     handler: async (req, h) => {
       try {
@@ -32,6 +33,7 @@ const authController = {
 
         return h.redirect("/dashboard");
       } catch (err) {
+        console.log(err);
         return h.view("login", {
           error: "Incorrect login details.",
         });
@@ -55,12 +57,13 @@ const authController = {
     auth: false,
     validate: {
       payload: registerSpec,
-      failAction: (request, h, error) => h
-        .view("index", {
-          error: error.message,
-        })
-        .takeover()
-        .code(400),
+      failAction: (request, h, error) =>
+        h
+          .view("index", {
+            error: error.message,
+          })
+          .takeover()
+          .code(400),
     },
     handler: async (req, h) => {
       const user = req.payload;
