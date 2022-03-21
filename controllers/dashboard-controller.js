@@ -1,5 +1,6 @@
 import { db } from "../models/db.js";
 import { addPlaceSpec, updateUserSpec } from "../models/joi-schemas.js";
+import uploadObject from "../helpers/image-handler.js";
 
 const dashboardController = {
   dashboard: {
@@ -39,8 +40,16 @@ const dashboardController = {
 
   settingsUpdate: {
     auth: "session",
+    payload: {
+      output: "file",
+      parse: true,
+      allow: "multipart/form-data",
+      multipart: true,
+      maxBytes: 1024 * 1024 * 100,
+      timeout: false,
+    },
     handler: async (req, h) => {
-      const user = req.auth.credentials;
+      const user = await db.userStore.getById(req.auth.credentials._id);
       const userData = req.payload;
       const viewData = {
         user,
@@ -56,6 +65,12 @@ const dashboardController = {
         }
       } else {
         delete userData.password;
+      }
+
+      if (req.payload.profileImage.filename && uploadObject(user._id, req.payload.profileImage)) {
+        req.payload.profileImage = `https://placemark-storage.fra1.digitaloceanspaces.com/${user._id}/${req.payload.profileImage.filename}`;
+      } else {
+        delete req.payload.profileImage;
       }
 
       try {
@@ -130,6 +145,14 @@ const dashboardController = {
 
   addPlacePost: {
     auth: "session",
+    payload: {
+      output: "file",
+      parse: true,
+      allow: "multipart/form-data",
+      multipart: true,
+      maxBytes: 1024 * 1024 * 100,
+      timeout: false,
+    },
     validate: {
       payload: addPlaceSpec,
       failAction: async (req, h, error) => {
@@ -150,8 +173,13 @@ const dashboardController = {
       const user = req.auth.credentials;
       const categories = await db.categoryStore.getAll();
       try {
+        if (req.payload.placeImage.filename && uploadObject(user._id, req.payload.placeImage)) {
+          req.payload.placeImage = `https://placemark-storage.fra1.digitaloceanspaces.com/${user._id}/${req.payload.placeImage.filename}`;
+        } else {
+          delete req.payload.placeImage;
+        }
         const place = await db.placeStore.create(req.payload, user._id);
-        return h.redirect(`/dashboard/places/${place._id}`);
+        return h.redirect(`/places/${place._id}`);
       } catch (err) {
         return h.view(
           "add-place",
@@ -212,6 +240,14 @@ const dashboardController = {
 
   editPlacePost: {
     auth: "session",
+    payload: {
+      output: "file",
+      parse: true,
+      allow: "multipart/form-data",
+      multipart: true,
+      maxBytes: 1024 * 1024 * 100,
+      timeout: false,
+    },
     handler: async (req, h) => {
       const user = req.auth.credentials;
       const place = await db.placeStore.getById(req.params.id);
@@ -223,9 +259,23 @@ const dashboardController = {
         viewData.error = "You cannot edit this place.";
         return h.view("edit-place", viewData, { layout: "dashboardlayout" });
       }
+
+      if (req.payload.placeImage.filename && uploadObject(place._id, req.payload.placeImage)) {
+        req.payload.placeImage = `https://placemark-storage.fra1.digitaloceanspaces.com/${place._id}/${req.payload.placeImage.filename}`;
+      } else {
+        delete req.payload.placeImage;
+      }
+
+      req.payload.location = {
+        lat: req.payload.latitude,
+        lng: req.payload.longitude,
+      };
+      delete req.payload.latitude;
+      delete req.payload.longitude;
+
       try {
-        await db.placeStore.update(user._id, req.params.id, req.payload);
-        return h.redirect(`/dashboard/places/${req.params.id}`);
+        await db.placeStore.update(req.params.id, req.payload);
+        return h.redirect(`/places/${req.params.id}`);
       } catch (error) {
         console.log(error);
         return h.view("place", viewData, { layout: "dashboardlayout" });
@@ -261,6 +311,24 @@ const dashboardController = {
           { layout: "dashboardlayout" },
         );
       }
+    },
+  },
+
+  user: {
+    auth: "session",
+    handler: async (req, h) => {
+      const user = req.auth.credentials;
+      const viewUser = await db.userStore.getById(req.params.id);
+      const places = await db.placeStore.getByUserId(req.params.id);
+      const viewData = {
+        user,
+        viewUser,
+        places,
+        active: {
+          Profile: true,
+        },
+      };
+      return h.view("user", viewData, { layout: "dashboardlayout" });
     },
   },
 };

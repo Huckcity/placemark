@@ -8,19 +8,26 @@
     href="/dashboard">Dashboard</a></li>
     <li><a 
     class="{{#if active.MyPlaces}}is-active{{/if}}"
-    href="/dashboard/places">My Places</a></li>
+    href="/places">My Places</a></li>
     <li><a 
     class="{{#if active.AddPlace}}is-active{{/if}}"
-    href="/dashboard/places/new">Add a Place</a></li>
+    href="/places/new">Add a Place</a></li>
   </ul>
 
   <p class="menu-label">
     Account
   </p>
   <ul class="menu-list">
+    <li>
+      <a 
+      class="{{#if active.Profile}}is-active{{/if}}"
+      href="/users/{{user._id}}">
+        Profile
+      </a>
+    </li>
     <li><a 
     class="{{#if active.Settings}}is-active{{/if}}"
-    href="/dashboard/settings">Settings</a></li>
+    href="/settings">Settings</a></li>
     <li><a href="/logout">Logout</a></li>
   </ul>
 
@@ -30,15 +37,21 @@
     Administration
   </p>
   <ul class="menu-list">
+    <ul>
+      <li>
+      <a href="/admin"
+        class="{{#if active.AdminDashboard}}is-active{{/if}}">Dashboard</a>
+      </li>
+    </ul>
     <li>
       <a>Users</a>
       <ul>
         <li><a 
         class="{{#if active.AllUsers}}is-active{{/if}}"
-        href="/dashboard/admin/users">All Users</a></li>
+        href="/admin/users">All Users</a></li>
         <li><a 
         class="{{#if active.AddUser}}is-active{{/if}}"
-        href="/dashboard/admin/users/add">Add a User</a></li>
+        href="/admin/users/add">Add a User</a></li>
       </ul>
     </li>
     <li>
@@ -46,10 +59,10 @@
       <ul>
         <li><a 
         class="{{#if active.AllCategories}}is-active{{/if}}"
-        href="/dashboard/admin/categories">All Categories</a></li>
+        href="/admin/categories">All Categories</a></li>
         <li><a 
         class="{{#if active.AddCategory}}is-active{{/if}}"
-        href="/dashboard/admin/categories/add">Add a Category</a></li>
+        href="/admin/categories/add">Add a Category</a></li>
     </li>
   </ul>
   {{/ifEq}}

@@ -1,3 +1,9 @@
+function switchActiveTab(e) {
+  const activeTab = document.getElementsByClassName("is-active");
+  activeTab[0].classList.remove("is-active");
+  e.classList.add("is-active");
+}
+
 function showLogin(e) {
   const login = document.getElementById("login");
   const register = document.getElementById("register");
@@ -14,11 +20,6 @@ function showRegister(e) {
   switchActiveTab(e);
 }
 
-function switchActiveTab(e) {
-  const activeTab = document.getElementsByClassName("is-active");
-  activeTab[0].classList.remove("is-active");
-  e.classList.add("is-active");
-}
 
 function clearNotification() {
   const notification = document.getElementById("notification");
@@ -26,9 +27,9 @@ function clearNotification() {
 }
 
 function verifyDelete() {
+  // eslint-disable-next-line no-restricted-globals
   if (confirm("Are you sure you want to delete?")) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }

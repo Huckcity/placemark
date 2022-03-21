@@ -1,24 +1,22 @@
 <div class="box">
   <article class="media">
     <div class="media-left">
-      <figure class="image is-64x64">
-        <img src="https://picsum.photos/128" alt="Image">
+      <figure class="image is-128x128">
+        <img class="place-thumb" src="{{placeImage}}">
       </figure>
     </div>
     <div class="media-content">
       <div class="content">
         <p>
-          <strong>
-            <a href="/dashboard/places/{{_id}}">{{name}}</a></strong> <small class="has-text-grey">@{{user.username}}</small> 
-          <br>
-          <small class="has-text-grey-light">{{formatDate updatedAt}}</small>
+          <strong class="is-size-4">
+            <a href="/places/{{_id}}">{{name}}</a>
+          </strong> <small class="has-text-grey-light"> by {{user.username}} @ {{formatDate updatedAt}}</small>
           <br>
           <small>
-            <a href="/dashboard/places/category/{{category.slug_name}}">{{category.name}}</a>
-            
-            </small>
-          <hr>
-          
+            Category: <a href="/places/category/{{category.slug_name}}">{{category.name}}</a>
+          </small>
+        </p>
+        <p>
           {{truncateToWords description 50}}
         </p>
       </div>
@@ -29,12 +27,12 @@
               <i class="fas fa-reply" aria-hidden="true"></i>
             </span>
           </a>
-          <a class="level-item" aria-label="edit" href="/dashboard/places/edit/{{_id}}">
+          <a class="level-item" aria-label="edit" href="/places/edit/{{_id}}">
             <span class="icon is-small">
               <i class="fas fa-pencil" aria-hidden="true"></i>
             </span>
           </a>
-          <a class="level-item" aria-label="like" href="/dashboard/places/delete/{{_id}}" onclick="return verifyDelete()">
+          <a class="level-item" aria-label="like" href="/places/delete/{{_id}}" onclick="return verifyDelete()">
             <span class="icon is-small">
               <i class="fas fa-trash" aria-hidden="true"></i>
             </span>

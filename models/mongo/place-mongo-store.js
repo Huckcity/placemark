@@ -54,15 +54,13 @@ const placeMongoStore = {
     return savedPlace;
   },
 
-  async update(userId, placeId, place) {
-    const existingPlace = await Place.findById(placeId);
-    existingPlace.name = place.name || existingPlace.name;
-    existingPlace.description = place.description || existingPlace.description;
-    existingPlace.location.lat = place.latitude || existingPlace.location.lat;
-    existingPlace.location.lng = place.longitude || existingPlace.location.lng;
-    existingPlace.category = place.category || existingPlace.category;
-    const savedPlace = await existingPlace.save();
-    const returnedPlace = await this.getById(savedPlace._id);
+  async update(placeId, place) {
+    const returnedPlace = await Place.findByIdAndUpdate(placeId, place, {
+      new: true,
+    })
+      .populate("user")
+      .populate("category")
+      .lean();
     return returnedPlace;
   },
 

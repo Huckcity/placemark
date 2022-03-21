@@ -71,6 +71,11 @@ const apiRoutes = [
     path: "/api/places/category/{category}",
     config: placeApi.findByCategory,
   },
+  {
+    method: "GET",
+    path: "/api/places/user/{id}",
+    config: placeApi.findByUser,
+  },
 
   // Category API Routes
 

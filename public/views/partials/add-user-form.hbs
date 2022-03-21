@@ -1,8 +1,9 @@
-<form action="/dashboard/admin/users/{{action}}
+<form action="/admin/users/{{action}}
 {{#if userToEdit}}
 /{{userToEdit._id}}
 {{/if}}
-" method="POST">
+" method="POST"
+ enctype="multipart/form-data">
 
   <div class="field">
     <label class="label">Username</label>
@@ -76,6 +77,13 @@
           <option value="admin" {{#ifEq userToEdit.role "admin"}}selected{{/ifEq}}>Admin</option>
         </select>
       </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="profileImage" class="label">Profile Image</label>
+    <div class="control">
+      <input type="file" name="profileImage">
     </div>
   </div>
 

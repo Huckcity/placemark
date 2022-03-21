@@ -80,4 +80,17 @@ suite("User API Tests", () => {
       assert.equal(err.response.status, 400);
     }
   });
+
+  test("Update a user with a profileImage", async () => {
+    const userWithId = await apiService.createUser(newUser);
+    await apiService.authenticate(newUserLogin);
+    const returnedUser = await apiService.updateUser(userWithId._id, {
+      profileImage:
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    });
+    assert.equal(
+      returnedUser.profileImage,
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    );
+  });
 });

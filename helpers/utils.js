@@ -40,12 +40,6 @@ export const validate = async (decoded) => {
   return { isValid: true, credentials: user };
 };
 
-export const slugify = (text) => {
-  const lower = text.toLowerCase();
-  const slug = lower.replace(/[^a-z0-9]+/g, "-");
-  return slug;
-};
-
 export function assertSubset(subset, superset) {
   if (
     typeof superset !== "object"

@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/huckcity/placemark#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.32.0",
     "@hapi/basic": "^6.0.0",
     "@hapi/boom": "^9.1.4",
     "@hapi/cookie": "^11.0.2",
