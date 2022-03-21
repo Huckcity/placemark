@@ -26,6 +26,7 @@ export const userSpec = Joi.object()
 
 export const updateUserSpec = Joi.object()
   .keys({
+    email: Joi.string().email().optional().allow("").example("test@test.com"),
     password: Joi.string().optional().allow("").example("password"),
     passwordConfirm: Joi.string().optional().allow("").example("password"),
     firstName: Joi.string().optional().allow("").example("John"),
