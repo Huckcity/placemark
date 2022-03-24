@@ -5,12 +5,14 @@ const categoryFirebaseStore = (db) => {
 
   const getAll = async () => {
     const allCategories = await getDocs(categories);
-    return allCategories.docs.map((doc) => doc.data());
+    // return with _id field
+    return allCategories.docs.map((doc) => ({ ...doc.data(), _id: doc.id }));
   };
 
   const getById = async (id) => {
-    const category = await categories.doc(id).get();
-    return category.data();
+    const category = await getDocs(categories, id);
+    // return with _id field
+    return category.docs.map((doc) => ({ ...doc.data(), _id: doc.id }));
   };
 
   const getByName = async (name) => {

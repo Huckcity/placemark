@@ -1,16 +1,21 @@
-import { collection, where, addDoc, getDocs } from "firebase/firestore";
+import { collection, where, addDoc, doc, getDoc, getDocs, query, setDoc } from "firebase/firestore";
+import Place from "./place.js";
+import { placeConverter } from "./converters.js";
 
 const placeFirebaseStore = (db) => {
   const places = collection(db, "places");
 
   const getAll = async () => {
     const allPlaces = await getDocs(places);
-    return allPlaces.docs.map((doc) => doc.data());
+    return allPlaces.docs.map((doc) => ({ ...doc.data(), _id: doc.id }));
   };
 
   const getById = async (id) => {
-    const place = await places.doc(id).get();
-    return place.data();
+    const place = await getDoc(doc(db, "places", id));
+    if (place.exists()) {
+      return { ...place.data(), _id: place.id };
+    }
+    return null;
   };
 
   const getByName = async (name) => {
@@ -19,8 +24,17 @@ const placeFirebaseStore = (db) => {
   };
 
   const getByUserId = async (userId) => {
-    const allPlaces = await getDocs(places, where("userId", "==", userId));
-    return allPlaces.docs.map((doc) => doc.data());
+    console.log("getByUserId", userId);
+    try {
+      const q = query(collection(db, "places"), where("userId", "==", userId));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getByCategorySlug = async (categorySlug) => {
@@ -29,8 +43,9 @@ const placeFirebaseStore = (db) => {
     return allPlaces.docs.map((doc) => doc.data());
   };
 
-  const create = async (place) => {
-    const placeDoc = await addDoc(places, place);
+  const create = async (place, userId) => {
+    const newPlace = new Place(place, userId);
+    const placeDoc = await addDoc(places, placeConverter.toFirestore(newPlace));
     return placeDoc;
   };
 

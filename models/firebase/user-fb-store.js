@@ -1,4 +1,4 @@
-import { collection, where, doc, addDoc, getDocs } from "firebase/firestore";
+import { collection, where, doc, addDoc, getDoc, getDocs, query } from "firebase/firestore";
 
 const userFirebaseStore = (db) => {
   const users = collection(db, "users");
@@ -14,8 +14,12 @@ const userFirebaseStore = (db) => {
   };
 
   const getById = async (id) => {
-    const user = await getDocs(users, id);
-    return user.docs.map((doc) => doc.data());
+    const docRef = doc(db, "users", id);
+    const user = await getDoc(docRef);
+    if (user.exists()) {
+      return { ...user.data(), _id: user.id };
+    }
+    return null;
   };
 
   const getByEmail = async (email) => {
@@ -25,8 +29,21 @@ const userFirebaseStore = (db) => {
 
   const authByEmailOrUsername = async (user) => {
     const login = user.email ? user.email : user.username;
-    const res = await getDocs(users, where("email", "==", login));
-    return res.docs.map((doc) => doc.data());
+    const q1 = query(users, where("email", "==", login));
+    let snapshot = await getDocs(q1);
+    if (snapshot.docs.length === 0) {
+      const q2 = query(users, where("username", "==", login));
+      snapshot = await getDocs(q2);
+      if (snapshot.docs.length === 0) {
+        throw new Error("User not found");
+      }
+    }
+    // return with _id field
+
+    return {
+      ...snapshot.docs[0].data(),
+      _id: snapshot.docs[0].id,
+    };
   };
 
   const create = async (user) => {

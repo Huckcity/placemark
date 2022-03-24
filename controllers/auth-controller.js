@@ -23,6 +23,16 @@ const authController = {
       try {
         const user = await db.userStore.authByEmailOrUsername(req.payload);
 
+        console.log(user);
+        if (user.password !== req.payload.password) {
+          return h
+            .view("login", {
+              error: "Invalid username or password",
+            })
+            .takeover()
+            .code(400);
+        }
+
         req.cookieAuth.set({
           _id: user._id,
           username: user.username,
