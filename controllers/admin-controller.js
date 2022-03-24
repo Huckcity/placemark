@@ -3,7 +3,6 @@ import { adminRegisterSpec } from "../models/joi-schemas.js";
 import uploadObject from "../helpers/image-handler.js";
 
 const adminController = {
-
   index: {
     auth: {
       strategy: "session",
@@ -61,20 +60,20 @@ const adminController = {
       return h.view("add-user", viewData, { layout: "dashboardlayout" });
     },
   },
-  
+
   adminAddUserPost: {
     auth: {
       strategy: "session",
       scope: ["admin"],
     },
     payload: {
-      output: 'file',
+      output: "file",
       parse: true,
-      allow: 'multipart/form-data',
+      allow: "multipart/form-data",
       multipart: true,
       maxBytes: 1024 * 1024 * 100,
       timeout: false,
-   },
+    },
     handler: async (req, h) => {
       const user = req.auth.credentials;
       const viewData = { user };
@@ -84,8 +83,10 @@ const adminController = {
       };
       const newUser = await db.userStore.create(userObjectWithoutImage);
       if (newUser) {
-
-        if (req.payload.profileImage.filename && uploadObject(newUser._id, req.payload.profileImage)) {
+        if (
+          req.payload.profileImage.filename &&
+          uploadObject(newUser._id, req.payload.profileImage)
+        ) {
           await db.userStore.update(newUser._id, {
             profileImage: `https://placemark-storage.fra1.digitaloceanspaces.com/${newUser._id}/${req.payload.profileImage.filename}`,
           });
@@ -136,9 +137,9 @@ const adminController = {
       scope: ["admin"],
     },
     payload: {
-      output: 'file',
+      output: "file",
       parse: true,
-      allow: 'multipart/form-data',
+      allow: "multipart/form-data",
       multipart: true,
       maxBytes: 1024 * 1024 * 100,
       timeout: false,
@@ -151,7 +152,7 @@ const adminController = {
         userToEdit,
       };
       const { password, passwordConfirm } = req.payload;
-      
+
       if (password) {
         if (password !== passwordConfirm) {
           viewData.error = "Passwords do not match";
@@ -162,7 +163,10 @@ const adminController = {
         delete req.payload.password;
       }
 
-      if (req.payload.profileImage.filename && uploadObject(userToEdit._id, req.payload.profileImage)) {
+      if (
+        req.payload.profileImage.filename &&
+        uploadObject(userToEdit._id, req.payload.profileImage)
+      ) {
         req.payload.profileImage = `https://placemark-storage.fra1.digitaloceanspaces.com/${userToEdit._id}/${req.payload.profileImage.filename}`;
       } else {
         delete req.payload.profileImage;
@@ -201,6 +205,19 @@ const adminController = {
         };
         return h.view("all-users", viewData, { layout: "dashboardlayout" });
       }
+    },
+  },
+
+  adminToggleUserActive: {
+    auth: {
+      strategy: "session",
+      scope: ["admin"],
+    },
+    handler: async (req, h) => {
+      const userToToggle = await db.userStore.getById(req.params.id);
+      userToToggle.active = !userToToggle.active;
+      await db.userStore.update(userToToggle._id, userToToggle);
+      return h.redirect("/admin/users");
     },
   },
 

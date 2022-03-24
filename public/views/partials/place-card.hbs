@@ -24,7 +24,20 @@
         <div class="level-left">
           <a class="level-item" aria-label="reply">
             <span class="icon is-small">
-              <i class="fas fa-reply" aria-hidden="true"></i>
+              {{#if isLiked}}
+                <i class="fas fa-heart has-text-danger"></i>
+              {{else}}
+                <i class="far fa-heart has-text-grey-light"></i>
+              {{/if}}
+            </span>
+          </a>
+          <a class="level-item" aria-label="reply">
+            <span class="icon is-small">
+              {{#if public}}
+                <i class="fas fa-eye"></i>
+              {{else}}
+                <i class="fas fa-eye-slash"></i>
+              {{/if}}
             </span>
           </a>
           <a class="level-item" aria-label="edit" href="/places/edit/{{_id}}">

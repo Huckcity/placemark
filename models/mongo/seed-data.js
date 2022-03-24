@@ -123,5 +123,16 @@ export default {
       description:
         "The L'Arc de Triomphe is a former Roman Catholic church in Paris, France. It is located on the site of the former Roman Catholic church of Our Lady of the Apocalypse, which was dedicated to the Virgin Mary in the early sixteenth century. The church was built in the style of the Gothic Revival architecture, and was completed in the mid-sixteenth century. The church is the oldest church in the city of Paris, and is the most visited tourist attraction in the world.",
     },
+    Cavan: {
+      user: "->users.admin",
+      name: "Cavan",
+      location: {
+        lat: 53.3498,
+        lng: -6.2603,
+      },
+      category: "->categories.park",
+      description:
+        "Cavan is the county town of County Cavan in Ireland. The town lies in Ulster, near the border with County Fermanagh in Northern Ireland. The town is on the main N3 road that links Dublin with Enniskillen, Ballyshannon and Donegal Town.",
+    },
   },
 };

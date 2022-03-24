@@ -20,7 +20,6 @@ function showRegister(e) {
   switchActiveTab(e);
 }
 
-
 function clearNotification() {
   const notification = document.getElementById("notification");
   notification.style.display = "none";
@@ -29,6 +28,14 @@ function clearNotification() {
 function verifyDelete() {
   // eslint-disable-next-line no-restricted-globals
   if (confirm("Are you sure you want to delete?")) {
+    return true;
+  }
+  return false;
+}
+
+function verifyToggleUserActive() {
+  // eslint-disable-next-line no-restricted-globals
+  if (confirm("Are you sure you want to toggle this users access?")) {
     return true;
   }
   return false;

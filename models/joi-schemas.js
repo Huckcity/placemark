@@ -21,6 +21,7 @@ export const userSpec = Joi.object()
     createdAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
     updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
     profileImage: imageSpec.optional(),
+    active: Joi.boolean().optional().example(true),
   })
   .label("User");
 
@@ -67,6 +68,7 @@ export const placeSpec = Joi.object()
     name: Joi.string().required().example("Times Square"),
     description: Joi.string().optional().allow("").example("Long form description"),
     placeImage: imageSpec.optional(),
+    public: Joi.any().optional().example(false),
     location: Joi.object()
       .keys({
         lat: Joi.number().required().example(40.75),
@@ -93,6 +95,7 @@ export const addPlaceSpec = Joi.object()
     longitude: Joi.number().optional().example(-73.98),
     category: idSpec,
     placeImage: imageSpec.optional(),
+    public: Joi.string().optional().example(false),
   })
   .label("Add Place Spec");
 
@@ -105,6 +108,7 @@ export const updatePlaceSpec = Joi.object()
     name: Joi.string().required().example("Times Square"),
     description: Joi.string().optional().allow("").example("Long form description"),
     placeImage: imageSpec.optional(),
+    public: Joi.any().optional().example(false),
     location: Joi.object().keys({
       lat: Joi.number().required().example(40.75),
       lng: Joi.number().required().example(-73.98),

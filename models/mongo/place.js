@@ -11,7 +11,6 @@ const placeSchema = new Schema(
     description: String,
     placeImage: {
       type: String,
-      // default: "../public/images/default-place-image.jpeg",
       default: "/public/images/default-place-image.jpeg",
     },
     location: {
@@ -25,6 +24,10 @@ const placeSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    public: {
+      type: Boolean,
+      default: false,
     },
   },
   {

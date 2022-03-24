@@ -8,6 +8,11 @@ const placeMongoStore = {
     return places;
   },
 
+  async getAllPublic() {
+    const places = Place.find({ public: true }).populate("user").populate("category").lean();
+    return places;
+  },
+
   async getById(id) {
     const place = await Place.findById(id).populate("category").populate("user").lean();
     if (!place) {

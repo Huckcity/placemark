@@ -138,6 +138,11 @@ const routes = [
   },
   {
     method: "GET",
+    path: "/admin/users/suspend/{id}",
+    config: adminController.adminToggleUserActive,
+  },
+  {
+    method: "GET",
     path: "/admin/categories",
     config: adminController.adminCategories,
   },
