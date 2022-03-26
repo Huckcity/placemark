@@ -11,16 +11,35 @@ const authController = {
     auth: false,
     validate: {
       payload: loginSpec,
-      failAction: (request, h, error) => h
-        .view("login", {
-          error: error.message,
-        })
-        .takeover()
-        .code(400),
+      failAction: (request, h, error) =>
+        h
+          .view("login", {
+            error: error.message,
+          })
+          .takeover()
+          .code(400),
     },
     handler: async (req, h) => {
       try {
         const user = await db.userStore.authByEmailOrUsername(req.payload);
+
+        if (!(await user.checkPassword(req.payload.password))) {
+          return h
+            .view("login", {
+              error: "Invalid username or password",
+            })
+            .takeover()
+            .code(400);
+        }
+
+        if (!user.active) {
+          return h
+            .view("login", {
+              error: "Your account has been deactivated",
+            })
+            .takeover()
+            .code(400);
+        }
 
         req.cookieAuth.set({
           _id: user._id,
@@ -55,12 +74,13 @@ const authController = {
     auth: false,
     validate: {
       payload: registerSpec,
-      failAction: (request, h, error) => h
-        .view("index", {
-          error: error.message,
-        })
-        .takeover()
-        .code(400),
+      failAction: (request, h, error) =>
+        h
+          .view("index", {
+            error: error.message,
+          })
+          .takeover()
+          .code(400),
     },
     handler: async (req, h) => {
       const user = req.payload;

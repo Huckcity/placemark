@@ -34,6 +34,11 @@ const apiRoutes = [
     path: "/api/users/{id}",
     config: userApi.update,
   },
+  {
+    method: "POST",
+    path: "/api/places/{id}/favourite",
+    config: userApi.toggleFavourite,
+  },
 
   // Place API Routes
   {

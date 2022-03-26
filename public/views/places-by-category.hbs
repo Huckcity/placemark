@@ -1,7 +1,7 @@
 {{#if places}}
   
   {{#each places}}
-    {{> place-card}}
+    {{> place-card currentUser=../user}}
   {{/each}}
 
 {{else}}

@@ -1,4 +1,8 @@
 <div class="table-container">
+  <h3 class="title is-3">
+    All Users
+  </h3>
+  <hr>
   <table class="table is-striped is-fullwidth is-hoverable">
     <thead>
     <tr>
@@ -12,15 +16,24 @@
     {{#each allusers}}
     <tr>
       <td>
-        <a href="/users/{{this._id}}">{{this.username}}</a>
+        <a href="/users/{{this._id}}" {{#unless this.active}}style="text-decoration: line-through;"{{/unless}}>
+          {{this.username}}
+        </a>
       </td>
       <td>{{email}}</td>
       <td>{{role}}</td>
       <td>
-        <a href="/admin/users/edit/{{_id}}" class="btn btn-primary">
+        <a href="/admin/users/edit/{{_id}}">
           <i class="fas fa-pencil" aria-hidden="true"></i>
         </a>
-        <a href="/admin/users/delete/{{_id}}" class="btn btn-danger" onclick="return verifyDelete()">
+        <a href="/admin/users/suspend/{{_id}}" onclick="return verifyToggleUserActive()">
+          {{#if active}}
+            <i class="fas fa-ban" aria-hidden="true"></i>
+          {{else}}
+            <i class="fas fa-check" aria-hidden="true"></i>
+          {{/if}}
+        </a>
+        <a href="/admin/users/delete/{{_id}}" onclick="return verifyDelete()">
           <i class="fas fa-trash" aria-hidden="true"></i>
         </a>
       </td>

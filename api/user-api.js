@@ -1,4 +1,5 @@
 import Boom from "@hapi/boom";
+import Joi from "joi";
 import { db } from "../models/db.js";
 import { createToken } from "../helpers/utils.js";
 import validationError from "./logger.js";
@@ -140,6 +141,31 @@ const userApi = {
     },
     response: {
       schema: JWTAuth,
+      failAction: validationError,
+    },
+  },
+
+  toggleFavourite: {
+    auth: false,
+    handler: async (request) => {
+      try {
+        const place = await db.userStore.addRemoveFavouritePlace(
+          request.payload.userId,
+          request.payload.placeId,
+        );
+        return place;
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Toggle favourite",
+    notes: "Toggles favourite",
+    validate: {
+      payload: Joi.object({
+        placeId: idSpec,
+        userId: idSpec,
+      }),
       failAction: validationError,
     },
   },

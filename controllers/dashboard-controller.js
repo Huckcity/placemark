@@ -8,7 +8,7 @@ const dashboardController = {
     handler: async (req, h) => {
       try {
         const user = req.auth.credentials;
-        const places = await db.placeStore.getAll();
+        const places = await db.placeStore.getAllPublic();
         const viewData = {
           user,
           places,
@@ -178,6 +178,7 @@ const dashboardController = {
         } else {
           delete req.payload.placeImage;
         }
+        req.payload.public = req.payload.public === "on" ? true : false;
         const place = await db.placeStore.create(req.payload, user._id);
         return h.redirect(`/places/${place._id}`);
       } catch (err) {
@@ -251,6 +252,7 @@ const dashboardController = {
     handler: async (req, h) => {
       const user = req.auth.credentials;
       const place = await db.placeStore.getById(req.params.id);
+      req.payload.public = req.payload.public === "on" ? true : false;
       const viewData = {
         user,
         place,
@@ -320,10 +322,13 @@ const dashboardController = {
       const user = req.auth.credentials;
       const viewUser = await db.userStore.getById(req.params.id);
       const places = await db.placeStore.getByUserId(req.params.id);
+      const favPlaces = await db.placeStore.getFavourites(viewUser.favouritePlaces);
+
       const viewData = {
         user,
         viewUser,
         places,
+        favPlaces,
         active: {
           Profile: true,
         },

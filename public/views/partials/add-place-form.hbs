@@ -45,6 +45,21 @@
   </div>
 
   <div class="field">
+    <div class="control">
+      <label class="checkbox">
+        <strong>Make Place Public?</strong>
+        <input type="checkbox" name="public"
+        {{#if place}}
+          {{#if place.public}}
+            checked
+          {{/if}}
+        {{/if}}
+        >
+      </label>
+    </div> 
+  </div>
+
+  <div class="field">
     <label class="label">Category</label>
     <div class="control">
       <div class="select">

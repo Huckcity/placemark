@@ -53,27 +53,34 @@ export const newUserLogin = {
 export const places = [
   {
     name: "test1",
+    public: true,
   },
   {
     name: "test2",
+    public: true,
   },
   {
     name: "test3",
+    public: true,
   },
   {
     name: "test4",
+    public: true,
   },
   {
     name: "test5",
+    public: true,
   },
 ];
 
 export const newPlace = {
   name: "newtest6",
+  public: true,
 };
 
 export const newPlace2 = {
   name: "newtest7",
+  public: true,
 };
 
 export const updatedPlace = {

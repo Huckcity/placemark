@@ -30,7 +30,6 @@ const userMongoStore = {
   },
 
   async create(user) {
-    // TODO: Check for uniqueness of username/email
     try {
       const newUser = new User(user);
       const userObj = await newUser.save();
@@ -55,6 +54,17 @@ const userMongoStore = {
 
   async deleteAll() {
     return User.deleteMany({});
+  },
+
+  async addRemoveFavouritePlace(userId, placeId) {
+    const user = await User.findById(userId);
+    if (user.favouritePlaces.includes(placeId)) {
+      user.favouritePlaces.pull(placeId);
+    } else {
+      user.favouritePlaces.push(placeId);
+    }
+    const updatedUser = await user.save();
+    return updatedUser;
   },
 };
 

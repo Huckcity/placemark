@@ -1,14 +1,16 @@
-<div class="content" style="width:100%; height:100%;">
+<div class="content">
   <div class="columns is-vcentered">
     <div class="column">
-      <figure class="image is-128x128">
-        <img class="is-rounded" src="{{place.placeImage}}">
-      </figure>
+      <div>
+        <img src="{{place.placeImage}}">
+      </div>
     </div>
 
-    <div class="column is-four-fifths">
+    <div class="column is-three-fifths">
       <h1>{{place.name}}</h1>
-      <p>{{place.category.name}}</p>
+      <p>
+        <a href="/places/category/{{place.category.slug_name}}">{{place.category.name}}</a>
+      </p>
       <p>{{place.description}}</p>
     </div>
   </div>
