@@ -22,3 +22,8 @@ $tabs-link-active-color: rgb(72, 199, 142);
 }
 
 @import "../node_modules/bulma/bulma.sass";
+
+.is-favourite {
+  color: #f14668 !important;
+  font-weight: 900;
+}

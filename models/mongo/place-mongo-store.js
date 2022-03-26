@@ -37,9 +37,20 @@ const placeMongoStore = {
     return places;
   },
 
+  async getFavourites(arrayOfIds) {
+    const places = await Place.find({ _id: { $in: arrayOfIds } })
+      .populate("user")
+      .populate("category")
+      .lean();
+    if (!places) {
+      return [];
+    }
+    return places;
+  },
+
   async getByCategorySlug(categorySlug) {
     const category = await Category.findOne({ slug_name: categorySlug });
-    const places = await Place.find({ category: category._id })
+    const places = await Place.find({ public: true, category: category._id })
       .populate("user")
       .populate("category")
       .lean();

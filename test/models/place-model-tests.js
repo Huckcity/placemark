@@ -11,17 +11,13 @@ suite("Place Model Tests", () => {
 
   setup(async () => {
     await db.userStore.deleteAll();
-    testUser = await db.userStore.create(testData.newUser);
     await db.placeStore.deleteAll();
+    testUser = await db.userStore.create(testData.newUser);
 
     for (let i = 0; i < testData.places.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      await db.placeStore.create(testData.places[i], testUser._id);
+      testData.places[i] = await db.placeStore.create(testData.places[i], testUser._id);
     }
-  });
-
-  teardown(async () => {
-    await db.placeStore.deleteAll();
   });
 
   test("Create A Place", async () => {

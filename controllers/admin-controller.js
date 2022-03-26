@@ -190,19 +190,26 @@ const adminController = {
     },
     handler: async (req, h) => {
       const user = req.auth.credentials;
+      const allusers = await db.userStore.getAll();
+      const viewData = {
+        user,
+        allusers,
+        active: {
+          AllUsers: true,
+        },
+      };
+
+      if (user._id.toString() === req.params.id) {
+        viewData.error = "You cannot delete yourself.";
+        return h.view("all-users", viewData, { layout: "dashboardlayout" }).takeover();
+      }
       try {
         await db.userStore.delete(req.params.id);
-        return h.redirect("/admin/users");
+        viewData.allusers = allusers.filter((user) => user._id.toString() !== req.params.id);
+        viewData.message = "User deleted.";
+        return h.view("all-users", viewData, { layout: "dashboardlayout" });
       } catch (error) {
-        const allusers = await db.userStore.getAll();
-        const viewData = {
-          user,
-          allusers,
-          error: error.message,
-          active: {
-            AllUsers: true,
-          },
-        };
+        viewData.error = "Error deleting user";
         return h.view("all-users", viewData, { layout: "dashboardlayout" });
       }
     },

@@ -22,6 +22,10 @@ export const userSpec = Joi.object()
     updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
     profileImage: imageSpec.optional(),
     active: Joi.boolean().optional().example(true),
+    favouritePlaces: Joi.array()
+      .optional()
+      .items(Joi.string())
+      .example(["5a8b8f8f8f8f8f8f8f8f8f8"]),
   })
   .label("User");
 

@@ -140,6 +140,14 @@ const apiService = {
     const response = await axios.delete(`${serverUrl}/api/users/deleteall`);
     return response.data;
   },
+
+  async toggleFavouritePlace(userId, placeId) {
+    const response = await axios.post(`${serverUrl}/api/places/${placeId}/favourite`, {
+      userId,
+      placeId,
+    });
+    return response.data;
+  },
 };
 
 export default apiService;

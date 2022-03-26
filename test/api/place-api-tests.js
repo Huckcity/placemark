@@ -147,4 +147,18 @@ suite("Place API Tests", () => {
     );
     assert.equal(createdPlace.placeImage, base64Image);
   });
+
+  test("Add a place to users favourite places", async () => {
+    const createdPlace = await apiService.createPlace(newPlace, testUser._id);
+    const updatedUser = await apiService.toggleFavouritePlace(testUser._id, createdPlace._id);
+    assert.equal(updatedUser.favouritePlaces.length, 1);
+  });
+
+  test("Remove a place from users favourite places", async () => {
+    const createdPlace = await apiService.createPlace(newPlace, testUser._id);
+    const updatedUser = await apiService.toggleFavouritePlace(testUser._id, createdPlace._id);
+    assert.equal(updatedUser.favouritePlaces.length, 1);
+    const updatedUser2 = await apiService.toggleFavouritePlace(testUser._id, createdPlace._id);
+    assert.equal(updatedUser2.favouritePlaces.length, 0);
+  });
 });

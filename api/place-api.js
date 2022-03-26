@@ -31,7 +31,7 @@ const placeApi = {
     },
     handler: async () => {
       try {
-        const places = await db.placeStore.getAll();
+        const places = await db.placeStore.getAllPublic();
         return places;
       } catch (err) {
         throw Boom.badImplementation(err);

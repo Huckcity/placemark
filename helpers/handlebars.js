@@ -32,6 +32,14 @@ const helpers = (hbs) => {
     return options.inverse(this);
   });
 
+  hbs.registerHelper("equalIds", function (id1, id2, options) {
+    // Helper to check if two mongoose object id's are equal
+    if (id1.equals(id2)) {
+      return true;
+    }
+    return false;
+  });
+
   hbs.registerHelper("lastItemByCreateDate", (arr) => {
     // Helper to get last item in array by create date
     if (!arr) {
@@ -44,9 +52,18 @@ const helpers = (hbs) => {
   hbs.registerHelper("average", (item, divisor) => {
     // Helper to get calc average of two numbers
     if (!item || !divisor) {
-      return "";
+      return false;
     }
     return (item / divisor).toFixed(2);
+  });
+
+  hbs.registerHelper("isLiked", (userFavs, placeId) => {
+    // Helper to check if user has liked a place
+    const placeIdString = placeId.toString();
+    if (!userFavs || !placeId) {
+      return false;
+    }
+    return userFavs.includes(placeIdString);
   });
 };
 

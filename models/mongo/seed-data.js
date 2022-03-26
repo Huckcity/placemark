@@ -134,5 +134,41 @@ export default {
       description:
         "Cavan is the county town of County Cavan in Ireland. The town lies in Ulster, near the border with County Fermanagh in Northern Ireland. The town is on the main N3 road that links Dublin with Enniskillen, Ballyshannon and Donegal Town.",
     },
+    "The National Gallery": {
+      user: "->users.admin",
+      name: "The National Gallery",
+      location: {
+        lat: 51.5,
+        lng: -0.12,
+      },
+      category: "->categories.museum",
+      description:
+        "The National Gallery of Modern Art is a museum in London, England, dedicated to the art and history of modern art. It is the largest art museum in the United Kingdom and one of the world's most visited tourist attractions. The gallery is located in the West End of the city of London, opposite the Tower of London, and is part of the National Gallery of Art.",
+      public: true,
+    },
+    "The Metropolitan Museum of Art": {
+      user: "->users.basic1",
+      name: "The Metropolitan Museum of Art",
+      location: {
+        lat: 40.7828,
+        lng: -73.9654,
+      },
+      category: "->categories.museum",
+      description:
+        "The Metropolitan Museum of Art is a museum in New York City, New York, dedicated to the art and history of modern art. It is the largest art museum in the United States and one of the world's most visited tourist attractions. The museum is located in the West Side of Manhattan, and is part of the Metropolitan Museum of Art.",
+      public: true,
+    },
+    "Sydney Opera House": {
+      user: "->users.basic2",
+      name: "Sydney Opera House",
+      location: {
+        lat: -33.865143,
+        lng: 151.2099,
+      },
+      category: "->categories.landmark",
+      description:
+        "The Sydney Opera House is a multi-venue performing arts centre in Sydney, New South Wales, Australia. It is the largest performing arts centre in Australia and the second largest in the world. The Sydney Opera House is the largest performing arts centre in Australia and the second largest in the world. The Sydney Opera House is the largest performing arts centre in Australia and the second largest in the world.",
+      public: true,
+    },
   },
 };

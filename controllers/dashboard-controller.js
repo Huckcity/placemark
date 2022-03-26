@@ -322,10 +322,13 @@ const dashboardController = {
       const user = req.auth.credentials;
       const viewUser = await db.userStore.getById(req.params.id);
       const places = await db.placeStore.getByUserId(req.params.id);
+      const favPlaces = await db.placeStore.getFavourites(viewUser.favouritePlaces);
+
       const viewData = {
         user,
         viewUser,
         places,
+        favPlaces,
         active: {
           Profile: true,
         },
