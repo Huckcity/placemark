@@ -21,7 +21,7 @@ const adminController = {
           AdminDashboard: true,
         },
       };
-      return h.view("admin-dashboard", viewData, { layout: "dashboardLayout" });
+      return h.view("admin-dashboard", viewData, { layout: "dashboardlayout" });
     },
   },
 
