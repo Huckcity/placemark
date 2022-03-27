@@ -24,20 +24,25 @@
   </iframe>
 
   <h2>Reviews</h2>
-  {{#each place.reviews}}
+  {{#each reviews}}
     <div class="box">
       <article class="media">
         <div class="media-left">
-          <figure class="image is-64x64">
-            <img src="{{user.avatar}}">
+          <figure class="is-64x64">
+            <img class="tiny-profile-image" src="{{user.profileImage}}">
           </figure>
         </div>
         <div class="media-content">
           <div class="content">
             <p>
-              <strong>{{user.name}}</strong>
+              <strong><a href="/users/{{user._id}}">@{{user.username}}</a></strong>
               <br>
-              {{review}}
+              <small>{{formatDate createdAt}}</small>
+                <div class="stars">
+                  {{{stars rating}}}
+                </div>
+              <hr>
+              {{comment}}
             </p>
           </div>
         </div>
@@ -45,54 +50,34 @@
     </div>
   {{/each}}
 
-  <ul>
-    <li>In fermentum leo eu lectus mollis, quis dictum mi aliquet.</li>
-    <li>Morbi eu nulla lobortis, lobortis est in, fringilla felis.</li>
-    <li>Aliquam nec felis in sapien venenatis viverra fermentum nec lectus.</li>
-    <li>Ut non enim metus.</li>
-  </ul>
-  
-  <p>Maecenas eleifend sollicitudin dui, faucibus sollicitudin augue cursus non. Ut finibus eleifend arcu ut vehicula. Mauris eu est maximus est porta condimentum in eu justo. Nulla id iaculis sapien.</p>
-  <table>
-    <thead>
-      <tr>
-        <th>One</th>
-        <th>Two</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Three</td>
-        <td>Four</td>
-      </tr>
-      <tr>
-        <td>Five</td>
-        <td>Six</td>
-      </tr>
-      <tr>
-        <td>Seven</td>
-        <td>Eight</td>
-      </tr>
-      <tr>
-        <td>Nine</td>
-        <td>Ten</td>
-      </tr>
-      <tr>
-        <td>Eleven</td>
-        <td>Twelve</td>
-      </tr>
-    </tbody>
-  </table>
-  <p>Phasellus porttitor enim id metus volutpat ultricies. Ut nisi nunc, blandit sed dapibus at, vestibulum in felis. Etiam iaculis lorem ac nibh bibendum rhoncus. Nam interdum efficitur ligula sit amet ullamcorper. Etiam tristique, leo vitae porta faucibus, mi lacus laoreet metus, at cursus leo est vel tellus. Sed ac posuere est. Nunc ultricies nunc neque, vitae ultricies ex sodales quis. Aliquam eu nibh in libero accumsan pulvinar. Nullam nec nisl placerat, pretium metus vel, euismod ipsum. Proin tempor cursus nisl vel condimentum. Nam pharetra varius metus non pellentesque.</p>
-  <h5>Fifth level</h5>
-  <p>Aliquam sagittis rhoncus vulputate. Cras non luctus sem, sed tincidunt ligula. Vestibulum at nunc elit. Praesent aliquet ligula mi, in luctus elit volutpat porta. Phasellus molestie diam vel nisi sodales, a eleifend augue laoreet. Sed nec eleifend justo. Nam et sollicitudin odio.</p>
-  <figure>
-    <img src="https://bulma.io/images/placeholders/256x256.png">
-    <img src="https://bulma.io/images/placeholders/256x256.png">
-    <figcaption>
-      Figure 1: Some beautiful placeholders
-    </figcaption>
-  </figure>
-  <h6>Sixth level</h6>
-  <p>Cras in nibh lacinia, venenatis nisi et, auctor urna. Donec pulvinar lacus sed diam dignissim, ut eleifend eros accumsan. Phasellus non tortor eros. Ut sed rutrum lacus. Etiam purus nunc, scelerisque quis enim vitae, malesuada ultrices turpis. Nunc vitae maximus purus, nec consectetur dui. Suspendisse euismod, elit vel rutrum commodo, ipsum tortor maximus dui, sed varius sapien odio vitae est. Etiam at cursus metus.</p>
+  <h2>Add a review</h2>
+  <form action="/places/{{place._id}}/reviews" method="POST">
+    <div class="field">
+      <label class="label">Review</label>
+      <div class="control">
+        <textarea class="textarea" name="comment"></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Rating</label>
+      <div class="control">
+        <div class="select">
+          <select name="rating">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button class="button is-primary">Submit</button>
+      </div>
+    </div>
+  </form>
 </div>

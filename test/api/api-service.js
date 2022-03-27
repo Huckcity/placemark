@@ -148,6 +148,52 @@ const apiService = {
     });
     return response.data;
   },
+
+  // Reviews API
+
+  async getAllReviews() {
+    const response = await axios.get(`${serverUrl}/api/reviews`);
+    return response.data;
+  },
+
+  async getReviewById(id) {
+    const response = await axios.get(`${serverUrl}/api/reviews/${id}`);
+    return response.data;
+  },
+
+  async getReviewsByPlaceId(placeId) {
+    const response = await axios.get(`${serverUrl}/api/reviews/place/${placeId}`);
+    return response.data;
+  },
+
+  async getReviewsByUserId(userId) {
+    const response = await axios.get(`${serverUrl}/api/reviews/user/${userId}`);
+    return response.data;
+  },
+
+  async createReview(user, place, review) {
+    const response = await axios.post(`${serverUrl}/api/reviews/add`, {
+      user,
+      place,
+      review,
+    });
+    return response.data;
+  },
+
+  async deleteReview(id, userId) {
+    const response = await axios.delete(`${serverUrl}/api/reviews/${id}`, {
+      data: {
+        id,
+        userId,
+      },
+    });
+    return response.data;
+  },
+
+  async deleteAllReviews() {
+    const response = await axios.delete(`${serverUrl}/api/reviews/deleteall`);
+    return response.data;
+  },
 };
 
 export default apiService;

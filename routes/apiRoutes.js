@@ -1,6 +1,7 @@
 import userApi from "../api/user-api.js";
 import placeApi from "../api/place-api.js";
 import categoryApi from "../api/category-api.js";
+import reviewApi from "../api/review-api.js";
 
 const apiRoutes = [
   // User API Routes
@@ -113,6 +114,38 @@ const apiRoutes = [
     method: "PUT",
     path: "/api/categories/{id}",
     config: categoryApi.update,
+  },
+
+  // Review API Routes
+  {
+    method: "GET",
+    path: "/api/reviews",
+    config: reviewApi.allReviews,
+  },
+  {
+    method: "POST",
+    path: "/api/reviews/add",
+    config: reviewApi.create,
+  },
+  {
+    method: "GET",
+    path: "/api/reviews/{id}",
+    config: reviewApi.findOne,
+  },
+  {
+    method: "DELETE",
+    path: "/api/reviews/{id}",
+    config: reviewApi.delete,
+  },
+  {
+    method: "DELETE",
+    path: "/api/reviews/deleteall",
+    config: reviewApi.deleteAll,
+  },
+  {
+    method: "GET",
+    path: "/api/reviews/place/{id}",
+    config: reviewApi.findByPlaceId,
   },
 
   // Auth API Routes
