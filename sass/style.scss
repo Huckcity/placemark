@@ -9,16 +9,30 @@ $tabs-link-active-color: rgb(72, 199, 142);
   object-fit: cover;
 }
 
+.tiny-profile-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .place-thumb {
-  width: 150px;
-  min-height: 150px;
-  max-height: 150px;
+  width: 128px;
+  min-height: 128px;
+  max-height: 128px;
   border-radius: 4px;
   object-fit: cover;
 }
 
 .media {
   min-height: 150px;
+}
+
+.stars {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 1.5rem;
+  color: #ffb400;
 }
 
 @import "../node_modules/bulma/bulma.sass";

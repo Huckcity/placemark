@@ -108,3 +108,13 @@ export const categoryArray = [
 export const newCategory = {
   name: "New Category",
 };
+
+export const newReview = {
+  rating: 5,
+  comment: "This place is great",
+};
+
+export const newReview2 = {
+  rating: 3,
+  comment: "This place is ok",
+};

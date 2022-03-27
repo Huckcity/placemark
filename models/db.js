@@ -6,11 +6,13 @@ import PlaceJsonStore from "./json/place-json-store.js";
 import userMongoStore from "./mongo/user-mongo-store.js";
 import placeMongoStore from "./mongo/place-mongo-store.js";
 import categoryMongoStore from "./mongo/category-mongo-store.js";
+import reviewMongoStore from "./mongo/review-mongo-store.js";
 
 export const db = {
   userStore: null,
   placeStore: null,
   categoryStore: null,
+  reviewStore: null,
 
   init(env) {
     switch (env) {
@@ -24,6 +26,7 @@ export const db = {
         this.userStore = userMongoStore;
         this.placeStore = placeMongoStore;
         this.categoryStore = categoryMongoStore;
+        this.reviewStore = reviewMongoStore;
         connectMongoose(process.env.MONGO_LOCAL_URL);
         break;
       case "production":
@@ -31,6 +34,7 @@ export const db = {
         this.userStore = userMongoStore;
         this.placeStore = placeMongoStore;
         this.categoryStore = categoryMongoStore;
+        this.reviewStore = reviewMongoStore;
         connectMongoose(process.env.MONGO_LIVE_URL);
         break;
       default:

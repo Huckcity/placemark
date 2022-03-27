@@ -82,6 +82,11 @@ const routes = [
     path: "/places/category/{category}",
     config: dashboardController.placesByCategory,
   },
+  {
+    method: "POST",
+    path: "/places/{id}/reviews",
+    config: dashboardController.addReview,
+  },
 
   // User routes
   {

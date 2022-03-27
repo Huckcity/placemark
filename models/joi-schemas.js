@@ -153,3 +153,32 @@ export const JWTAuth = Joi.object()
       .example("eyJhbGciOiJND.g5YmJisIjoiaGYwNTNjAOhE.gCWGmY5-YigQw0DCBo"),
   })
   .label("JWT Auth");
+
+export const createReviewSpec = Joi.object()
+  .keys({
+    review: Joi.object().keys({
+      rating: Joi.number().required().example(5).messages({ "any.required": "Rating is required" }),
+      comment: Joi.string()
+        .required()
+        .example("This place is great")
+        .messages({ "any.required": "Comment is required" }),
+    }),
+    place: idSpec,
+    user: idSpec,
+  })
+  .label("Create Review Spec");
+
+export const reviewSpec = Joi.object()
+  .keys({
+    _id: idSpec,
+    user: idSpec,
+    place: idSpec,
+    rating: Joi.number().required().example(5),
+    comment: Joi.string().required().example("This place is great"),
+    createdAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
+    updatedAt: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
+    __v: Joi.number(),
+  })
+  .label("Review Spec");
+
+export const reviewArray = Joi.array().items(reviewSpec).label("Review Array");

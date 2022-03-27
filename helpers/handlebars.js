@@ -65,6 +65,23 @@ const helpers = (hbs) => {
     }
     return userFavs.includes(placeIdString);
   });
+
+  hbs.registerHelper("stars", (rating) => {
+    // Helper to get stars from rating
+    if (!rating) {
+      return "";
+    }
+    const ratingRoundedDown = Math.floor(rating);
+    const stars = [];
+    for (let i = 0; i < ratingRoundedDown; i++) {
+      stars.push("<i class='fas fa-star'></i>");
+    }
+    if (rating % 1 !== 0) {
+      stars.push("<i class='fas fa-star-half-alt'></i>");
+    }
+
+    return stars.join("");
+  });
 };
 
 export default helpers;

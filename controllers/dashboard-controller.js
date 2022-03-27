@@ -9,6 +9,11 @@ const dashboardController = {
       try {
         const user = req.auth.credentials;
         const places = await db.placeStore.getAllPublic();
+        for (const place of places) {
+          const reviews = await db.reviewStore.getByPlaceId(place._id);
+          place.averageRating =
+            reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length;
+        }
         const viewData = {
           user,
           places,
@@ -119,9 +124,11 @@ const dashboardController = {
       const user = req.auth.credentials;
       const placeId = req.params.id;
       const place = await db.placeStore.getById(placeId);
+      const reviews = await db.reviewStore.getByPlaceId(placeId);
       const viewData = {
         user,
         place,
+        reviews,
       };
       return h.view("place", viewData, { layout: "dashboardlayout" });
     },
@@ -334,6 +341,26 @@ const dashboardController = {
         },
       };
       return h.view("user", viewData, { layout: "dashboardlayout" });
+    },
+  },
+
+  addReview: {
+    auth: "session",
+    handler: async (req, h) => {
+      const user = req.auth.credentials;
+      const { id } = req.params;
+      const reviewObj = {
+        user: user._id,
+        place: id,
+        rating: req.payload.rating,
+        comment: req.payload.comment,
+      };
+      try {
+        const newReview = await db.reviewStore.create(user._id, id, reviewObj);
+        return h.redirect(`/places/${id}`);
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 };
