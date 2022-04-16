@@ -8,6 +8,7 @@ import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 import hapiswagger from "hapi-swagger";
 import jwt from "hapi-auth-jwt2";
+import { SSM } from "aws-sdk";
 import authController from "./controllers/auth-controller.js";
 import { validate } from "./helpers/utils.js";
 import hbsHelpers from "./helpers/handlebars.js";
@@ -18,6 +19,41 @@ import apiRoutes from "./routes/apiRoutes.js";
 import { db } from "./models/db.js";
 
 dotenv.config();
+
+const ssmClient = new SSM({
+  region: "us-east-1",
+  apiVersion: "2014-11-06",
+});
+
+// Check if AWS SSM Parameter Store is true, and if so,
+// set the process.env variables to the corresponding parameter store values
+const checkSSMParameters = async () => {
+  const params = {
+    Names: [
+      "AWS",
+      "ENVIRONMENT",
+      "SEED",
+      "MONGO_LIVE_URL",
+      "DO_SECRET_ACCESS_KEY",
+      "DO_ACCESS_KEY_ID",
+      "JWT_SECRET",
+      "PORT",
+    ],
+    WithDecryption: false,
+  };
+
+  const data = await ssmClient.getParameters(params).promise();
+
+  if (data.Parameters.AWS && data.Parameters.AWS.Value === "true") {
+    data.Parameters.forEach((param) => {
+      process.env[param.Name] = param.Value;
+    });
+  }
+};
+
+checkSSMParameters().then(() => {
+  console.log("SSM Parameters loaded");
+});
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const viewsPath = path.resolve(__dirname, "public", "views");

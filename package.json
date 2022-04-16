@@ -29,6 +29,7 @@
     "@hapi/hapi": "^20.2.1",
     "@hapi/inert": "^6.0.5",
     "@hapi/vision": "^6.1.0",
+    "aws-sdk": "^2.1116.0",
     "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.0",
