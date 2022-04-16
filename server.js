@@ -30,7 +30,7 @@ const ssmClient = new SSM({
 const checkSSMParameters = async () => {
   const params = {
     Names: [
-      "AWS",
+      "IS_AWS",
       "ENVIRONMENT",
       "SEED",
       "MONGO_LIVE_URL",
@@ -44,16 +44,20 @@ const checkSSMParameters = async () => {
 
   const data = await ssmClient.getParameters(params).promise();
 
-  if (data.Parameters.AWS && data.Parameters.AWS.Value === "true") {
+  if (data.Parameters.IS_AWS && data.Parameters.IS_AWS.Value === "true") {
     data.Parameters.forEach((param) => {
       process.env[param.Name] = param.Value;
     });
   }
 };
 
-checkSSMParameters().then(() => {
-  console.log("SSM Parameters loaded");
-});
+checkSSMParameters()
+  .then(() => {
+    console.log("SSM Parameters loaded");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const viewsPath = path.resolve(__dirname, "public", "views");
