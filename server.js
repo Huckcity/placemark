@@ -18,8 +18,6 @@ import apiRoutes from "./routes/apiRoutes.js";
 
 import { db } from "./models/db.js";
 
-dotenv.config();
-
 const ssmClient = new SSMClient({
   region: "us-east-1",
 });
@@ -41,23 +39,26 @@ const checkSSMParameters = async () => {
     WithDecryption: false,
   };
 
-  console.log("something something dark side");
+  console.log("Checking SSM Parameters");
+  const command = new GetParametersCommand(params);
 
   try {
-    const command = new GetParametersCommand(params);
     const data = await ssmClient.send(command);
-
-    if (data.Parameters.IS_AWS && data.Parameters.IS_AWS.Value === "true") {
+    const is_aws = data.Parameters.find((p) => p.Name === "IS_AWS").Value;
+    if (is_aws && is_aws === "true") {
       data.Parameters.forEach((param) => {
         process.env[param.Name] = param.Value;
       });
+    } else {
+      console.log("Not running on AWS");
+      dotenv.config();
     }
   } catch (err) {
     console.log(err);
   }
 };
 
-checkSSMParameters()
+await checkSSMParameters()
   .then(() => {
     console.log("SSM Parameters loaded");
   })
