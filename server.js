@@ -8,7 +8,7 @@ import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 import hapiswagger from "hapi-swagger";
 import jwt from "hapi-auth-jwt2";
-import * as AWS from "@aws-sdk/client-ssm";
+import { GetParametersCommand, SSMClient } from "@aws-sdk/client-ssm";
 import authController from "./controllers/auth-controller.js";
 import { validate } from "./helpers/utils.js";
 import hbsHelpers from "./helpers/handlebars.js";
@@ -20,7 +20,7 @@ import { db } from "./models/db.js";
 
 dotenv.config();
 
-const ssmClient = new AWS.SSM({
+const ssmClient = new SSMClient({
   region: "us-east-1",
 });
 
@@ -44,8 +44,8 @@ const checkSSMParameters = async () => {
   console.log("something something dark side");
 
   try {
-    const data = await ssmClient.getParameters(params);
-    console.log(data);
+    const command = new GetParametersCommand(params);
+    const data = await ssmClient.send(command);
 
     if (data.Parameters.IS_AWS && data.Parameters.IS_AWS.Value === "true") {
       data.Parameters.forEach((param) => {
