@@ -46,6 +46,8 @@ const checkSSMParameters = async () => {
 
   const data = await ssmClient.getParameters(params);
 
+  console.log(data);
+
   if (data.Parameters.IS_AWS && data.Parameters.IS_AWS.Value === "true") {
     data.Parameters.forEach((param) => {
       process.env[param.Name] = param.Value;
