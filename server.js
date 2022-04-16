@@ -22,7 +22,6 @@ dotenv.config();
 
 const ssmClient = new AWS.SSM({
   region: "us-east-1",
-  apiVersion: "2014-11-06",
 });
 
 // Check if AWS SSM Parameter Store is true, and if so,
@@ -44,14 +43,17 @@ const checkSSMParameters = async () => {
 
   console.log("something something dark side");
 
-  const data = await ssmClient.getParameters(params);
+  try {
+    const data = await ssmClient.getParameters(params);
+    console.log(data);
 
-  console.log(data);
-
-  if (data.Parameters.IS_AWS && data.Parameters.IS_AWS.Value === "true") {
-    data.Parameters.forEach((param) => {
-      process.env[param.Name] = param.Value;
-    });
+    if (data.Parameters.IS_AWS && data.Parameters.IS_AWS.Value === "true") {
+      data.Parameters.forEach((param) => {
+        process.env[param.Name] = param.Value;
+      });
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 
