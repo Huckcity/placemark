@@ -42,6 +42,8 @@ const checkSSMParameters = async () => {
     WithDecryption: false,
   };
 
+  console.log("something something dark side");
+
   const data = await ssmClient.getParameters(params);
 
   if (data.Parameters.IS_AWS && data.Parameters.IS_AWS.Value === "true") {
