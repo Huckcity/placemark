@@ -43,7 +43,7 @@ export const db = {
         this.placeStore = placeMongoStore;
         this.categoryStore = categoryMongoStore;
         this.reviewStore = reviewMongoStore;
-        connectMongoose(process.env.AWS_MONGO_URL);
+        connectMongoose(process.env.PRIVATE_INSTANCE_MONGO_URL);
       default:
         throw new Error(`Unknown execution environment: ${env}`);
     }

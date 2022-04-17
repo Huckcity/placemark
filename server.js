@@ -35,6 +35,7 @@ const checkSSMParameters = async () => {
       "DO_ACCESS_KEY_ID",
       "JWT_SECRET",
       "PORT",
+      "PRIVATE_INSTANCE_MONGO_URL",
     ],
     WithDecryption: false,
   };
