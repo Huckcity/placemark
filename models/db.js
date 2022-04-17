@@ -44,6 +44,7 @@ export const db = {
         this.categoryStore = categoryMongoStore;
         this.reviewStore = reviewMongoStore;
         connectMongoose(process.env.PRIVATE_INSTANCE_MONGO_URL);
+        break;
       default:
         throw new Error(`Unknown execution environment: ${env}`);
     }
