@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-
+import fetch from "node-fetch";
 import path from "path";
 import Hapi from "@hapi/hapi";
 import Vision from "@hapi/vision";
@@ -62,6 +62,16 @@ const checkSSMParameters = async () => {
 await checkSSMParameters()
   .then(() => {
     console.log("SSM Parameters loaded");
+    const res = fetch("http://169.254.169.254/latest/meta-data/instance-id", {
+      method: "GET",
+    })
+      .then((res) => res.text())
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   })
   .catch((err) => {
     console.log(err);
