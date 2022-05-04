@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import os from "os";
 import fetch from "node-fetch";
 import path from "path";
 import Hapi from "@hapi/hapi";
@@ -67,7 +68,7 @@ await checkSSMParameters()
     })
       .then((res) => res.text())
       .then((res) => {
-        console.log(res);
+        process.env.INSTANCE_ID = res;
       })
       .catch((err) => {
         console.log(err);
@@ -149,6 +150,14 @@ const init = async () => {
 
   server.route(webRoutes);
   server.route(apiRoutes);
+  server.route({
+    method: "GET",
+    path: "/testlb",
+    handler: function (request, h) {
+      return "Server: " + os.hostname();
+    },
+    config: { auth: false },
+  });
 
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);
