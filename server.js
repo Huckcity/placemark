@@ -6,6 +6,7 @@ import Hapi from "@hapi/hapi";
 import Vision from "@hapi/vision";
 import Inert from "@hapi/inert";
 import Cookie from "@hapi/cookie";
+import Bell from "@hapi/bell";
 import Handlebars from "handlebars";
 import hapiswagger from "hapi-swagger";
 import jwt from "hapi-auth-jwt2";
@@ -23,7 +24,7 @@ const ssmClient = new SSMClient({
   region: "us-east-1",
 });
 
-// Check if AWS SSM Parameter Store is true, and if so,
+// Check if IS_AWS SSM Parameter Store is true, and if so,
 // set the process.env variables to the corresponding parameter store values
 const checkSSMParameters = async () => {
   const params = {
@@ -37,6 +38,8 @@ const checkSSMParameters = async () => {
       "JWT_SECRET",
       "PORT",
       "PRIVATE_INSTANCE_MONGO_URL",
+      "GITHUB_CLIENT_ID",
+      "GITHUB_CLIENT_SECRET",
     ],
     WithDecryption: false,
   };
@@ -95,6 +98,7 @@ const init = async () => {
   await server.register(Inert);
   await server.register(Vision);
   await server.register(Cookie);
+  await server.register(Bell);
   await server.register(jwt);
 
   await server.register([
@@ -144,6 +148,36 @@ const init = async () => {
     validate,
     redirectTo: "/login",
   });
+
+  const bellAuthOptions = {
+    provider: "github",
+    password: "github-encryption-string-should-be-32-characters",
+    clientId: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    isSecure: false,
+  };
+
+  server.auth.strategy("github", "bell", bellAuthOptions);
+
+  server.route([
+    {
+      method: "GET",
+      path: "/githublogin",
+      options: {
+        auth: "github",
+        handler: function (request, h) {
+          if (request.auth.isAuthenticated) {
+            request.cookieAuth.set({
+              github_id: request.auth.credentials.profile.id,
+              github_username: request.auth.credentials.profile.username,
+              github_access_token: request.auth.credentials.token,
+            });
+            return h.redirect("/dashboard");
+          }
+        },
+      },
+    },
+  ]);
 
   server.auth.default("session");
   db.init(process.env.ENVIRONMENT);
