@@ -3,7 +3,7 @@ import { registerSpec, loginSpec } from "../models/joi-schemas.js";
 
 const authController = {
   githubLogin: {
-    auth: false,
+    auth: "github",
     handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
         try {

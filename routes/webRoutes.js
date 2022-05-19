@@ -35,6 +35,11 @@ const routes = [
     path: "/login",
     config: authController.loginPost,
   },
+  {
+    method: "GET",
+    path: "/githublogin",
+    config: authController.githubLogin,
+  },
 
   // Dashboard routes
   {

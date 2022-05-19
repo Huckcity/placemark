@@ -160,17 +160,6 @@ const init = async () => {
 
   server.auth.strategy("github", "bell", bellAuthOptions);
 
-  server.route([
-    {
-      method: "GET",
-      path: "/githublogin",
-      options: {
-        auth: "github",
-        handler: authController.githubLogin,
-      },
-    },
-  ]);
-
   server.auth.default("session");
   db.init(process.env.ENVIRONMENT);
 
