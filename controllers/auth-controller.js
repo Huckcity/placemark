@@ -26,6 +26,7 @@ const authController = {
         });
         return h.redirect("/dashboard");
       }
+      return h.redirect("/login");
     },
   },
 
