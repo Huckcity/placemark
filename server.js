@@ -32,7 +32,7 @@ const checkSSMParameters = async () => {
       "IS_AWS",
       "ENVIRONMENT",
       "SEED",
-      "MONGO_LIVE_URL",
+      // "MONGO_LIVE_URL",
       "DO_SECRET_ACCESS_KEY",
       "DO_ACCESS_KEY_ID",
       "JWT_SECRET",
@@ -155,6 +155,7 @@ const init = async () => {
     clientId: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     isSecure: false,
+    scope: ["user:email"],
   };
 
   server.auth.strategy("github", "bell", bellAuthOptions);
@@ -167,7 +168,22 @@ const init = async () => {
         auth: "github",
         handler: function (request, h) {
           if (request.auth.isAuthenticated) {
+            try {
+              const existingUser = db.userStore.findOne({
+                email: request.auth.credentials.profile.email,
+              });
+            } catch (err) {
+              console.log(err);
+            }
+            if (!existingUser) {
+              return h.redirect("/register");
+            }
             request.cookieAuth.set({
+              _id: existingUser._id,
+              email: existingUser.email,
+              username: existingUser.username,
+              scope: existingUser.role,
+              role: existingUser.role,
               github_id: request.auth.credentials.profile.id,
               github_username: request.auth.credentials.profile.username,
               github_access_token: request.auth.credentials.token,
