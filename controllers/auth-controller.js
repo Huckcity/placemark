@@ -13,7 +13,7 @@ const authController = {
           const viewData = {
             error: "No account exists with that email address.",
           };
-          return h.view("login", viewData, { layout: "dashboardlayout" }).takeover();
+          return h.view("login", viewData).takeover();
         }
         request.cookieAuth.set({
           _id: existingUser._id,
