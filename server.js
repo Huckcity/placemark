@@ -166,31 +166,7 @@ const init = async () => {
       path: "/githublogin",
       options: {
         auth: "github",
-        handler: function (request, h) {
-          if (request.auth.isAuthenticated) {
-            try {
-              const existingUser = db.userStore.findOne({
-                email: request.auth.credentials.profile.email,
-              });
-            } catch (err) {
-              console.log(err);
-            }
-            if (!existingUser) {
-              return h.redirect("/register");
-            }
-            request.cookieAuth.set({
-              _id: existingUser._id,
-              email: existingUser.email,
-              username: existingUser.username,
-              scope: existingUser.role,
-              role: existingUser.role,
-              github_id: request.auth.credentials.profile.id,
-              github_username: request.auth.credentials.profile.username,
-              github_access_token: request.auth.credentials.token,
-            });
-            return h.redirect("/dashboard");
-          }
-        },
+        handler: authController.githubLogin,
       },
     },
   ]);
