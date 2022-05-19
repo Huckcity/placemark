@@ -8,6 +8,7 @@ const authController = {
       console.log(request.auth.credentials);
       if (request.auth.isAuthenticated) {
         const existingUser = db.userStore.getByEmail(request.auth.credentials.profile.email);
+        console.log(existingUser);
         if (!existingUser) {
           return h.redirect("/register");
         }
