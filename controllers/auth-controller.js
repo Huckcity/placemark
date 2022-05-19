@@ -10,7 +10,8 @@ const authController = {
         const existingUser = await db.userStore.getByEmail(request.auth.credentials.profile.email);
         console.log(existingUser);
         if (!existingUser) {
-          return h.redirect("/register");
+          viewData.error = "No account exists with that email address.";
+          return h.view("login", viewData, { layout: "dashboardlayout" }).takeover();
         }
         request.cookieAuth.set({
           _id: existingUser._id,
