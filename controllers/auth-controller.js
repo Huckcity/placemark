@@ -7,11 +7,7 @@ const authController = {
     handler: async (request, h) => {
       console.log(request.auth.credentials);
       if (request.auth.isAuthenticated) {
-        try {
-          const existingUser = db.userStore.getByEmail(request.auth.credentials.profile.email);
-        } catch (err) {
-          console.log(err);
-        }
+        const existingUser = db.userStore.getByEmail(request.auth.credentials.profile.email);
         if (!existingUser) {
           return h.redirect("/register");
         }
