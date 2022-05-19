@@ -5,6 +5,7 @@ const authController = {
   githubLogin: {
     auth: "github",
     handler: async (request, h) => {
+      console.log(request.auth.credentials);
       if (request.auth.isAuthenticated) {
         try {
           const existingUser = db.userStore.getByEmail(request.auth.credentials.profile.email);
