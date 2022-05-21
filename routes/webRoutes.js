@@ -7,6 +7,16 @@ const routes = [
   // Home/Auth routes
   {
     method: "GET",
+    path: "/testing/{user}",
+    config: {
+      auth: false,
+      handler: function (req, h) {
+        return "Welcome " + req.params.user;
+      },
+    },
+  },
+  {
+    method: "GET",
     path: "/",
     config: baseController.index,
   },

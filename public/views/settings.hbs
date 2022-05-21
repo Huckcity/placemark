@@ -7,19 +7,20 @@
         <div class="field">
           <label for="email" class="label">Email:</label>
           <div class="col-sm-10">
-            <input type="email" class="input" id="email" name="email" placeholder="Email" value="{{user.email}}" required>
+            <input type="email" class="input" id="email" name="email" placeholder="Email" value="{{user.email}}" disabled required>
           </div>
         </div>
         <div class="field">
           <label for="password" class="label">Change password:</label>
           <div class="col-sm-10">
-            <input type="password" class="input" id="password" name="password">
+            <input type="password" class="input" id="password" name="password" maxlength="6">
+            <p><small>Max length 6 characters</small></p>
           </div>
         </div>
         <div class="field">
           <label for="password-confirm" class="label">Repeat password:</label>
           <div class="col-sm-10">
-            <input type="password" class="input" id="password-confirm" name="passwordConfirm">
+            <input type="password" class="input" id="password-confirm" name="passwordConfirm" maxlength="6">
           </div>
         </div>
         <div class="field">

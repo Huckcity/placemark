@@ -20,6 +20,8 @@ import apiRoutes from "./routes/apiRoutes.js";
 
 import { db } from "./models/db.js";
 
+dotenv.config();
+
 const ssmClient = new SSMClient({
   region: "us-east-1",
 });
@@ -56,30 +58,32 @@ const checkSSMParameters = async () => {
       });
     } else {
       console.log("Not running on AWS");
-      dotenv.config();
+      // dotenv.config();
     }
   } catch (err) {
     console.log(err);
   }
 };
 
-await checkSSMParameters()
-  .then(() => {
-    console.log("SSM Parameters loaded");
-    const res = fetch("http://169.254.169.254/latest/meta-data/instance-id", {
-      method: "GET",
-    })
-      .then((res) => res.text())
-      .then((res) => {
-        process.env.INSTANCE_ID = res;
+if (process.env.IS_AWS === "true") {
+  await checkSSMParameters()
+    .then(() => {
+      console.log("SSM Parameters loaded");
+      const res = fetch("http://169.254.169.254/latest/meta-data/instance-id", {
+        method: "GET",
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+        .then((res) => res.text())
+        .then((res) => {
+          process.env.INSTANCE_ID = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const viewsPath = path.resolve(__dirname, "public", "views");
