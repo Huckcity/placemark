@@ -65,7 +65,7 @@ const checkSSMParameters = async () => {
   }
 };
 
-if (process.env.IS_AWS === "true") {
+if (process.env.IS_AWS != "false") {
   await checkSSMParameters()
     .then(() => {
       console.log("SSM Parameters loaded");
