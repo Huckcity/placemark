@@ -33,7 +33,7 @@ const dashboardController = {
     auth: "session",
     handler: async (req, h) => {
       const user = await db.userStore.getById(req.auth.credentials._id);
-      user.dob = user.dob.toISOString().split("T")[0];
+      if (user.dob) user.dob = user.dob.toISOString().split("T")[0];
       const viewData = {
         user,
         active: {
