@@ -29,6 +29,7 @@ const userSchema = new Schema(
       type: String,
       default: "/public/images/default-profile-image.png",
     },
+    dob: Date,
     active: {
       type: Boolean,
       default: true,

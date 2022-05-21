@@ -37,6 +37,7 @@ export const updateUserSpec = Joi.object()
     firstName: Joi.string().optional().allow("").example("John"),
     lastName: Joi.string().optional().allow("").example("Doe"),
     profileImage: imageSpec.optional(),
+    dob: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
   })
   .label("Update User Spec");
 
