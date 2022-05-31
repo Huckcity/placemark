@@ -123,7 +123,7 @@ const userApi = {
     handler: async (request, h) => {
       try {
         const user = await db.userStore.authByEmailOrUsername(request.payload);
-        if (!user) {
+        if (!user || !(await user.checkPassword(request.payload.password))) {
           return Boom.unauthorized("Invalid email or password");
         }
         const token = createToken(user);

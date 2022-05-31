@@ -24,9 +24,7 @@ const categoryApi = {
   },
 
   allCategories: {
-    auth: {
-      strategy: "jwt",
-    },
+    auth: false,
     handler: async () => {
       try {
         const categories = await db.categoryStore.getAll();

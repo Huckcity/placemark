@@ -96,6 +96,7 @@ const init = async () => {
       files: {
         relativeTo: __dirname,
       },
+      cors: true,
     },
   });
 
