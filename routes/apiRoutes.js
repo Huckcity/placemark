@@ -58,6 +58,11 @@ const apiRoutes = [
     config: placeApi.findOne,
   },
   {
+    method: "GET",
+    path: "/api/places/public/{id}",
+    config: placeApi.findOnePublic,
+  },
+  {
     method: "DELETE",
     path: "/api/places/{id}",
     config: placeApi.delete,
@@ -144,7 +149,7 @@ const apiRoutes = [
   },
   {
     method: "GET",
-    path: "/api/reviews/place/{id}",
+    path: "/api/reviews/place/{placeId}",
     config: reviewApi.findByPlaceId,
   },
 

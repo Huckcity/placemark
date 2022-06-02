@@ -37,6 +37,7 @@ export const updateUserSpec = Joi.object()
     firstName: Joi.string().optional().allow("").example("John"),
     lastName: Joi.string().optional().allow("").example("Doe"),
     profileImage: imageSpec.optional(),
+    dob: Joi.date().optional().example("2018-01-01T00:00:00.000Z"),
   })
   .label("Update User Spec");
 
@@ -71,7 +72,7 @@ export const placeSpec = Joi.object()
   .keys({
     name: Joi.string().required().example("Times Square"),
     description: Joi.string().optional().allow("").example("Long form description"),
-    placeImage: imageSpec.optional(),
+    placeImages: Joi.array().items(imageSpec).optional().example(["Base64 encoded image"]),
     public: Joi.any().optional().example(false),
     location: Joi.object()
       .keys({

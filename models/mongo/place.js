@@ -9,9 +9,9 @@ const placeSchema = new Schema(
       required: true,
     },
     description: String,
-    placeImage: {
-      type: String,
-      default: "/public/images/default-place-image.jpeg",
+    placeImages: {
+      type: Array,
+      default: ["/public/images/default-place-image.jpeg"],
     },
     location: {
       lat: Number,

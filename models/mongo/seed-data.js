@@ -138,8 +138,8 @@ export default {
       user: "->users.admin",
       name: "The National Gallery",
       location: {
-        lat: 51.5,
-        lng: -0.12,
+        lat: 51.50961010488236,
+        lng: -0.1282346269843204,
       },
       category: "->categories.museum",
       description:
@@ -169,6 +169,133 @@ export default {
       description:
         "The Sydney Opera House is a multi-venue performing arts centre in Sydney, New South Wales, Australia. It is the largest performing arts centre in Australia and the second largest in the world. The Sydney Opera House is the largest performing arts centre in Australia and the second largest in the world. The Sydney Opera House is the largest performing arts centre in Australia and the second largest in the world.",
       public: true,
+    },
+    "St. Paul's Cathedral": {
+      user: "->users.basic1",
+      name: "St. Paul's Cathedral",
+      location: {
+        lat: 51.514005523132816,
+        lng: -0.09837205905778874,
+      },
+      category: "->categories.landmark",
+      description:
+        "The St. Paul's Cathedral is a Roman Catholic church in London, England. It is the oldest church in the city of London, and is the second-oldest church in the United Kingdom. The church is located on the site of the former Roman Catholic church of Our Lady of the Apocalypse, which was dedicated to the Virgin Mary in the early sixteenth century.",
+    },
+    "The British Museum": {
+      user: "->users.admin",
+      name: "The British Museum",
+      location: {
+        lat: 51.51958011471395,
+        lng: -0.12692442409459054,
+      },
+      category: "->categories.museum",
+      description:
+        "The British Museum is a museum in London, England, dedicated to the art and history of modern art. It is the largest art museum in the United Kingdom and one of the world's most visited tourist attractions. The museum is located in the West End of the city of London, opposite the Tower of London, and is part of the National Gallery of Art.",
+      public: true,
+    },
+    "The National Gallery of Victoria": {
+      user: "->users.admin",
+      name: "The National Gallery of Victoria",
+      location: {
+        lat: -37.814,
+        lng: 144.96332,
+      },
+      category: "->categories.museum",
+      description:
+        "The National Gallery of Victoria is a museum in Melbourne, Victoria, Australia. It is the largest art museum in Australia and the second largest in the world. The museum is located in the Victoria Square, and is part of the National Gallery of Victoria.",
+    },
+    "The Victoria and Albert Museum": {
+      user: "->users.admin",
+      name: "The Victoria and Albert Museum",
+      location: {
+        lat: -37.814,
+        lng: 144.96332,
+      },
+      category: "->categories.museum",
+      description:
+        "The Victoria and Albert Museum is a museum in Melbourne, Victoria, Australia. It is the largest art museum in Australia and the second largest in the world. The museum is located in the Victoria Square, and is part of the National Gallery of Victoria.",
+    },
+    "St. Patrick's Cathedral": {
+      user: "->users.basic2",
+      name: "St. Patrick's Cathedral",
+      location: {
+        lat: 51.516813216270464,
+        lng: -0.1329232323948637,
+      },
+      category: "->categories.landmark",
+      description:
+        "The St. Patrick's Cathedral is a Roman Catholic church in London, England. It is the oldest church in the city of London, and is the second-oldest church in the United Kingdom. The church is located on the site of the former Roman Catholic church of Our Lady of the Apocalypse, which was dedicated to the Virgin Mary in the early sixteenth century.",
+    },
+    "Phoenix Park": {
+      user: "->users.basic1",
+      name: "Phoenix Park",
+      location: {
+        lat: 53.36150302188553,
+        lng: -6.329310414735852,
+      },
+      category: "->categories.park",
+      description:
+        "The Phoenix Park is a large urban park in Dublin, Ireland, lying 2–4 kilometres west of the city centre, north of the River Liffey. Its 11 kilometres perimeter wall encloses 707 hectares of recreational space.",
+    },
+    "Newgrange Tomb": {
+      user: "->users.basic2",
+      name: "Newgrange Tomb",
+      location: {
+        lat: 53.3498,
+        lng: -6.2603,
+      },
+      category: "->categories.landmark",
+      description:
+        "The Newgrange Tomb is a tomb in the city of Dublin, Ireland. It is located in the Newgrange Cemetery, which is the burial place of the famous Irish monk, St. John the Baptist.",
+    },
+    "The National Gallery of Ireland": {
+      user: "->users.admin",
+      name: "The National Gallery of Ireland",
+      location: {
+        lat: 53.3498,
+        lng: -6.2603,
+      },
+      category: "->categories.museum",
+      description:
+        "The National Gallery of Ireland is a museum in Dublin, Ireland, dedicated to the art and history of modern art. It is the largest art museum in the United Kingdom and one of the world's most visited tourist attractions. The museum is located in the West End of the city of Dublin, opposite the Tower of London, and is part of the National Gallery of Art.",
+    },
+    "L'Ecrivain": {
+      user: "->users.basic1",
+      name: "L'Ecrivain",
+      location: {
+        lat: 53.33619618722894,
+        lng: -6.249074111109757,
+      },
+      category: "->categories.restaurant",
+      description:
+        "L'Ecrivain is a restaurant in Paris, France. It is located in the Louvre's Museum of Fine Arts, and is one of the most famous restaurants in the world.",
+    },
+  },
+  reviews: {
+    _model: "Review",
+    1: {
+      user: "->users.basic1",
+      comment: "This is a great place to visit!",
+      rating: 5,
+      place: "->places.The National Gallery of Victoria",
+    },
+    2: {
+      user: "->users.basic2",
+      comment: "Didn't like the food.",
+      rating: 2,
+      place: "->places.L'Ecrivain",
+    },
+    3: {
+      user: "->users.basic1",
+      comment: "Family friendly.",
+      rating: 4,
+      place: "->places.The National Gallery of Ireland",
+    },
+    4: {
+      user: "->users.admin",
+      comment: "As an admin I can't rate this place.",
+      rating: 0,
+      place: "->places.Newgrange Tomb",
     },
   },
 };

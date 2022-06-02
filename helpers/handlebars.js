@@ -82,6 +82,10 @@ const helpers = (hbs) => {
 
     return stars.join("");
   });
+
+  hbs.registerHelper("last", function (array) {
+    return array[array.length - 1];
+  });
 };
 
 export default helpers;

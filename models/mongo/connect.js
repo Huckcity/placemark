@@ -7,7 +7,7 @@ import * as data from "./seed-data.js";
 dotenv.config();
 
 function connectMongoose(dbString) {
-  Mongoose.connect(dbString);
+  Mongoose.connect(dbString, { useNewUrlParser: true, useUnifiedTopology: true });
   const db = Mongoose.connection;
 
   async function seed() {

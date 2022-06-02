@@ -5,6 +5,7 @@ import validationError from "./logger.js";
 import { idSpec, placeArray, placeSpec, updatePlaceSpec } from "../models/joi-schemas.js";
 import uploadObject from "../helpers/image-handler.js";
 import fs from "fs";
+import { decodeToken } from "../helpers/utils.js";
 
 const placeApi = {
   findOne: {
@@ -14,6 +15,10 @@ const placeApi = {
     handler: async (request) => {
       try {
         const place = await db.placeStore.getById(request.params.id);
+        const user = decodeToken(request.headers.authorization.split(" ")[1]);
+        if (!place.user._id.equals(user.id)) {
+          throw Boom.unauthorized("You are not authorized to view this place");
+        }
         return place;
       } catch (err) {
         throw Boom.badImplementation(err);
@@ -25,10 +30,25 @@ const placeApi = {
     response: { schema: placeSpec, failAction: validationError },
   },
 
-  allPlaces: {
-    auth: {
-      strategy: "jwt",
+  findOnePublic: {
+    auth: false,
+    handler: async (request) => {
+      try {
+        const place = await db.placeStore.getById(request.params.id);
+        if (place.public) return place;
+        return Boom.unauthorized("This place is not public");
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
     },
+    tags: ["api"],
+    description: "Get place by id",
+    notes: "Returns details of a place",
+    response: { schema: placeSpec, failAction: validationError },
+  },
+
+  allPlaces: {
+    auth: false,
     handler: async () => {
       try {
         const places = await db.placeStore.getAllPublic();

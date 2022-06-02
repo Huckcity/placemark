@@ -29,6 +29,7 @@ const userSchema = new Schema(
       type: String,
       default: "/public/images/default-profile-image.png",
     },
+    dob: Date,
     active: {
       type: Boolean,
       default: true,
@@ -46,6 +47,14 @@ userSchema.pre("save", async function (next) {
     this.password = hash;
     next();
   }
+});
+
+userSchema.pre("findOneAndUpdate", async function (next) {
+  if (this._update.password) {
+    const hash = await bcrypt.hash(this._update.password, 10);
+    this._update.password = hash;
+  }
+  next();
 });
 
 userSchema.methods.checkPassword = async function (password) {

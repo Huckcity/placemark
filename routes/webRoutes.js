@@ -7,6 +7,16 @@ const routes = [
   // Home/Auth routes
   {
     method: "GET",
+    path: "/testing/{user}",
+    config: {
+      auth: false,
+      handler: function (req, h) {
+        return "Welcome " + req.params.user;
+      },
+    },
+  },
+  {
+    method: "GET",
     path: "/",
     config: baseController.index,
   },
@@ -34,6 +44,11 @@ const routes = [
     method: "POST",
     path: "/login",
     config: authController.loginPost,
+  },
+  {
+    method: "GET",
+    path: "/githublogin",
+    config: authController.githubLogin,
   },
 
   // Dashboard routes

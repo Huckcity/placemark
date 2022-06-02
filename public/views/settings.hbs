@@ -7,19 +7,20 @@
         <div class="field">
           <label for="email" class="label">Email:</label>
           <div class="col-sm-10">
-            <input type="email" class="input" id="email" name="email" placeholder="Email" value="{{user.email}}" required>
+            <input type="email" class="input" id="email" name="email" placeholder="Email" value="{{user.email}}" readonly="true" required>
           </div>
         </div>
         <div class="field">
           <label for="password" class="label">Change password:</label>
           <div class="col-sm-10">
-            <input type="password" class="input" id="password" name="password">
+            <input type="password" class="input" id="password" name="password" maxlength="6">
+            <p><small>Max length 6 characters</small></p>
           </div>
         </div>
         <div class="field">
           <label for="password-confirm" class="label">Repeat password:</label>
           <div class="col-sm-10">
-            <input type="password" class="input" id="password-confirm" name="passwordConfirm">
+            <input type="password" class="input" id="password-confirm" name="passwordConfirm" maxlength="6">
           </div>
         </div>
         <div class="field">
@@ -39,6 +40,12 @@
           <div class="col-sm-10">
             <img src="{{user.profileImage}}" alt="Profile image" class="profile-image">
             <input type="file" class="input" name="profileImage">
+          </div>
+        </div>
+        <div class="field">
+          <label for="dob" class="label">Date of birth: </label>
+          <div class="col-sm-10">
+            <input type="date" class="input" id="dob" name="dob" value="{{user.dob}}">
           </div>
         </div>
         <div class="field">

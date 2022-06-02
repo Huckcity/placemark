@@ -6,9 +6,7 @@ import validationError from "./logger.js";
 
 const reviewApi = {
   findOne: {
-    auth: {
-      strategy: "jwt",
-    },
+    auth: false,
     handler: async (request) => {
       try {
         const review = await db.reviewStore.getById(request.params.id);
@@ -24,9 +22,7 @@ const reviewApi = {
   },
 
   findByPlaceId: {
-    auth: {
-      strategy: "jwt",
-    },
+    auth: false,
     handler: async (request) => {
       try {
         const reviews = await db.reviewStore.getByPlaceId(request.params.placeId);
@@ -42,9 +38,7 @@ const reviewApi = {
   },
 
   allReviews: {
-    auth: {
-      strategy: "jwt",
-    },
+    auth: false,
     handler: async () => {
       try {
         const reviews = await db.reviewStore.getAll();

@@ -37,6 +37,14 @@ export const db = {
         this.reviewStore = reviewMongoStore;
         connectMongoose(process.env.MONGO_LIVE_URL);
         break;
+      case "aws":
+        console.log("Using AWS SSM Parameter Store");
+        this.userStore = userMongoStore;
+        this.placeStore = placeMongoStore;
+        this.categoryStore = categoryMongoStore;
+        this.reviewStore = reviewMongoStore;
+        connectMongoose(process.env.PRIVATE_INSTANCE_MONGO_URL);
+        break;
       default:
         throw new Error(`Unknown execution environment: ${env}`);
     }
