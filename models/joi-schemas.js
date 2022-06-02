@@ -72,7 +72,7 @@ export const placeSpec = Joi.object()
   .keys({
     name: Joi.string().required().example("Times Square"),
     description: Joi.string().optional().allow("").example("Long form description"),
-    placeImage: imageSpec.optional(),
+    placeImages: Joi.array().items(imageSpec).optional().example(["Base64 encoded image"]),
     public: Joi.any().optional().example(false),
     location: Joi.object()
       .keys({

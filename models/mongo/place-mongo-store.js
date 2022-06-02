@@ -65,12 +65,22 @@ const placeMongoStore = {
     newPlace.user = userId;
     newPlace.location.lat = place.latitude || 0;
     newPlace.location.lng = place.longitude || 0;
+    if (place.placeImage) {
+      newPlace.placeImages = [place.placeImage];
+    }
     await newPlace.save();
     const savedPlace = await this.getById(newPlace._id);
     return savedPlace;
   },
 
   async update(placeId, place) {
+    const existingPlace = await Place.findById(placeId);
+    if (!existingPlace) {
+      return null;
+    }
+    if (place.placeImage) {
+      place.placeImages = [...existingPlace.placeImages, place.placeImage];
+    }
     const returnedPlace = await Place.findByIdAndUpdate(placeId, place, {
       new: true,
     })
