@@ -238,6 +238,72 @@ const placeApi = {
     description: "Delete all places",
     notes: "Deletes all places",
   },
+
+  deleteImage: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request) => {
+      try {
+        const user = decodeToken(request.headers.authorization.split(" ")[1]);
+        const place = await db.placeStore.getById(request.params.placeId);
+        if (place.user._id.equals(user.id)) {
+          place.placeImages = place.placeImages.filter((image) => {
+            const imageName = image.split("/").pop();
+            return imageName !== request.params.imageName;
+          });
+          await db.placeStore.update(request.params.placeId, place);
+          return true;
+        }
+        throw Boom.unauthorized("User not authorized to update place");
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Delete image from place",
+    notes: "Deletes image from place",
+    validate: {
+      failAction: validationError,
+    },
+  },
+
+  addImage: {
+    auth: {
+      strategy: "jwt",
+    },
+    payload: {
+      parse: true,
+      allow: "multipart/form-data",
+      multipart: true,
+      maxBytes: 1024 * 1024 * 100,
+      timeout: false,
+      output: "file",
+    },
+    handler: async (request) => {
+      try {
+        const user = decodeToken(request.headers.authorization.split(" ")[1]);
+        const place = await db.placeStore.getById(request.payload.placeId);
+        if (place.user._id.equals(user.id)) {
+          if (uploadObject(place._id, request.payload.image)) {
+            const imageUrl = `https://placemark-storage.fra1.digitaloceanspaces.com/${place._id}/${request.payload.image.filename}`;
+            place.placeImages.push(imageUrl);
+            await db.placeStore.update(place._id, place);
+            return true;
+          }
+        }
+        throw Boom.unauthorized("User not authorized to update place");
+      } catch (err) {
+        throw Boom.badImplementation(err);
+      }
+    },
+    tags: ["api"],
+    description: "Add image to place",
+    notes: "Adds image to place",
+    validate: {
+      failAction: validationError,
+    },
+  },
 };
 
 export default placeApi;

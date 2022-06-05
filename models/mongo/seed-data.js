@@ -127,12 +127,45 @@ export default {
       user: "->users.admin",
       name: "Cavan",
       location: {
-        lat: 53.3498,
-        lng: -6.2603,
+        lat: 53.99080616403882,
+        lng: -7.363272744684517,
       },
       category: "->categories.park",
       description:
         "Cavan is the county town of County Cavan in Ireland. The town lies in Ulster, near the border with County Fermanagh in Northern Ireland. The town is on the main N3 road that links Dublin with Enniskillen, Ballyshannon and Donegal Town.",
+    },
+    "The Great Wall of China": {
+      user: "->users.admin",
+      name: "The Great Wall of China",
+      location: {
+        lat: 40.45,
+        lng: 116.25,
+      },
+      category: "->categories.landmark",
+      description:
+        "The Great Wall of China is a series of fortifications along the northern borders of China. It is the longest manmade structure in the world, and the second longest in the world after the Great Pyramid of Giza. The Great Wall is the only surviving example of a massive stone-girded wall, and is the only structure to survive intact after being attacked by the Chinese in the Hundred Years' War. The Great Wall is located in the north-eastern part of China, in the province of Xinjiang, in the People's Republic of China.",
+    },
+    "Dublin Castle": {
+      user: "->users.admin",
+      name: "Dublin Castle",
+      location: {
+        lat: 53.3498,
+        lng: -6.2603,
+      },
+      category: "->categories.landmark",
+      description:
+        "The Dublin Castle is a historic castle in Dublin, Ireland. It is the seat of the Irish Parliament and the home of the Irish monarch, King Edward IV. It is one of the most prominent landmarks in the city, and is a must-see attraction for visitors to the city. The castle is located in the centre of the city, and is the largest castle in the country. The castle is one of the most visited tourist attractions in the country, and is the most visited tourist attraction in the world.",
+    },
+    "The Great Pyramid of Giza": {
+      user: "->users.basic2",
+      name: "The Great Pyramid of Giza",
+      location: {
+        lat: 29.9791,
+        lng: 31.1341,
+      },
+      category: "->categories.landmark",
+      description:
+        "The Great Pyramid of Giza is the largest Egyptian pyramid and tomb of Fourth Dynasty pharaoh Khufu. Built in the 26th century BC during a period of around 27 years, it is the oldest of the Seven Wonders of the Ancient World, and the only one to remain largely intact.",
     },
     "The National Gallery": {
       user: "->users.admin",

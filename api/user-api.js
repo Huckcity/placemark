@@ -169,6 +169,35 @@ const userApi = {
       failAction: validationError,
     },
   },
+
+  githubLogin: {
+    auth: "github",
+    handler: async (request, h) => {
+      console.log(request.auth.credentials);
+      if (request.auth.isAuthenticated) {
+        const existingUser = await db.userStore.getByEmail(request.auth.credentials.profile.email);
+        console.log(existingUser);
+        if (!existingUser) {
+          const viewData = {
+            error: "No account exists with that email address.",
+          };
+          return h.view("login", viewData).takeover();
+        }
+        request.cookieAuth.set({
+          _id: existingUser._id,
+          email: existingUser.email,
+          username: existingUser.username,
+          scope: existingUser.role,
+          role: existingUser.role,
+          github_id: request.auth.credentials.profile.id,
+          github_username: request.auth.credentials.profile.username,
+          github_access_token: request.auth.credentials.token,
+        });
+        return h.redirect("/dashboard");
+      }
+      return h.redirect("/login");
+    },
+  },
 };
 
 export default userApi;
