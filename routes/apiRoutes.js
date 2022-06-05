@@ -87,6 +87,16 @@ const apiRoutes = [
     path: "/api/places/user/{id}",
     config: placeApi.findByUser,
   },
+  {
+    method: "POST",
+    path: "/api/places/image/{placeId}/{imageName}",
+    config: placeApi.deleteImage,
+  },
+  {
+    method: "POST",
+    path: "/api/places/image/add",
+    config: placeApi.addImage,
+  },
 
   // Category API Routes
 
