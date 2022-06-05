@@ -169,6 +169,11 @@ const apiRoutes = [
     path: "/api/users/authenticate",
     config: userApi.authenticate,
   },
+  {
+    method: "GET",
+    path: "/api/githublogin",
+    config: userApi.githubLogin,
+  },
 ];
 
 export default apiRoutes;
